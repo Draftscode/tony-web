@@ -1,0 +1,22 @@
+{
+    "label": {
+        "create_pdf": "PDF Erstellen",
+        "type": "Was?",
+        "insurer": "Versicherer",
+        "scope": "Leistung",
+        "suggestion": "Vorschlag",
+        "oneTimePayment": "Einmalzahlung",
+        "contribution": "monatl. Beitrag",
+        "party": "VN",
+        "nr": "Vers.Nr.",
+        "fromTo": "Laufzeit",
+        "new": "Neu",
+        "acquisition": "Übernahme",
+        "inventory": "Bestand",
+        "terminated": "wird gekündigt",
+        "move": "Zeile verschieben"
+    },
+    "date": {
+        "datetime": "dd.MM.yy HH:MM"
+    }
+}

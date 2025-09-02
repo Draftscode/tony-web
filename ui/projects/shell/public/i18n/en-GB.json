@@ -1,0 +1,13 @@
+{
+    "label": {
+        "create_pdf": "Create PDF",
+        "new": "New",
+        "acquisition": "Acquisition",
+        "inventory": "Inventory",
+        "terminated": "Terminated",
+        "move": "Move"
+    },
+    "date": {
+        "datetime": "dd.MM.yy HH:MM"
+    }
+}

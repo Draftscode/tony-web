@@ -1,0 +1,20 @@
+<div class="flex w-full h-full bg-surface-100">
+    <p-card class="m-auto">
+        <form [formGroup]="formGroup" class="flex gap-2 flex-col p-4 min-w-[300px]" (ngSubmit)="submit()">
+            <span class="text-2xl">Login</span>
+
+            <div class="flex flex-col">
+                <label for="username">Username</label>
+                <input id="username" formControlName="username" pInputText />
+            </div>
+            <div class="flex flex-col">
+                <label for="password">Password</label>
+                <p-password inputStyleClass="w-full" inputId="password" id="password" formControlName="password" [feedback]="false" />
+            </div>
+            <p-divider />
+            <div class="flex justify-end">
+                <p-button type="submit" [disabled]="formGroup.invalid" label="Login" />
+            </div>
+        </form>
+    </p-card>
+</div>

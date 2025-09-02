@@ -1,0 +1,105 @@
+services:
+  # API and UI services for the Insurer application
+    # API and UI services for the Insurer application
+  tonym_api:
+    container_name: tonym_api
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+    networks:
+      - app_network
+    depends_on:
+      - database
+    profiles:
+      - prod
+
+
+  # Development version of the API service 
+  tonym_api_dev:
+    container_name: tonym_api_dev
+    build:
+      dockerfile: Dockerfile
+      context: ./api
+      # only build dev stage from Dockerfile
+      target: development
+    volumes:
+      # {local dir}:{dir in container}
+      - ./api/src:/usr/src/app/src
+      # prevent our host files from overriding
+      - /usr/src/app/node_modules
+    ports:
+      - 3000:3000
+    env_file:
+      - .env
+    command: npm run start:dev
+    profiles:
+      - dev
+    networks:
+      - app_network
+
+    # Client application for the Insurer, with both production and development configurations
+  tonym_client:
+    container_name: tonym_client
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "4200:80"
+    # depends_on:
+    #   - insurer_api
+    networks:
+      - app_network
+    profiles:
+      - prod
+
+  # Development version of the client application
+  tonym_client_dev:
+    container_name: tonym_client_dev
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+      target: development
+    ports:
+      - "4200:4200"
+    networks:
+      - app_network
+    volumes:
+      - ./ui:/usr/src/app
+      - /usr/src/app/node_modules
+    working_dir: /usr/src/app
+    command: sh -c "ng serve --host 0.0.0.0 --poll 2000"
+    profiles:
+      - dev
+
+  database:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER}"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+    networks:
+      - app_network
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+networks:
+  app_network:
+    driver: bridge

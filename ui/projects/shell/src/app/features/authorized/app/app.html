@@ -1,0 +1,130 @@
+@if(true) {
+<div class="flex w-full relative h-full overflow-hidden">
+    <div class="flex-none flex h-full sidebar shadow-sm z-1 border-r-1 border-gray-50 dark:border-gray-600 flex-col"
+        [class.open]="_isSidebarOpen()">
+        <p-menu [model]="_sidebarItems()" class="flex justify-center w-full h-full"
+            styleClass="w-full h-full border-none rounded-none flex flex-col">
+            <ng-template #start>
+                <div class="flex w-full justify-between p-2 items-center">
+                    <span class="inline-flex items-center gap-1 px-2 py-2">
+                        <svg width="33" height="35" viewBox="0 0 33 35" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            class="block mx-auto">
+                            <path d="..." fill="var(--primary-color)" />
+                        </svg>
+                        <span class="text-xl font-semibold">
+                            <img [src]="'./images/logo-raw'+(_themeService.isDark()?'-dark':'')+'.png'" height="100"
+                                width="auto" alt="Logo">
+                        </span>
+                    </span>
+                    <p-button (onClick)="_toggleSidebar()" [text]="false" [rounded]="true" [outlined]="true"
+                        icon="pi pi-times" />
+                </div>
+                <p-divider />
+                <div class="flex justify-center w-full px-2 gap-1">
+                    <p-inputgroup>
+                        <p-inputgroup-addon>
+                            <i class="pi pi-search"></i>
+                        </p-inputgroup-addon>
+                        <input class="w-full" pSize="small" [value]="fileService.query()"
+                            (input)="onInput(search.value)" #search pInputText placeholder="Suche" />
+                        <p-inputgroup-addon>
+                            <p-button [disabled]="!fileService.query()" (onClick)="fileService.search('')"
+                                icon="pi pi-times" severity="secondary" />
+                        </p-inputgroup-addon>
+                    </p-inputgroup>
+                    <p-button pTooltip="Aktualisieren"
+                        [disabled]="!_sidebarItems().length || fileService.isLoading()"
+                        [text]="true" icon="pi pi-refresh" (onClick)="fileService.refresh()" severity="secondary" />
+                </div>
+                <div class="w-full px-2 text-sm text-gray-400"><b>{{_sidebarItems().length || 0}}</b> Dateien</div>
+                @if(!_sidebarItems().length) {
+                <div class="flex justify-center text-gray-400"> Keine Dateien</div>
+                }
+            </ng-template>
+            <ng-template #submenuheader let-item>
+                <span class="text-primary font-bold">{{ item.label }}</span>
+            </ng-template>
+            <ng-template #item let-item>
+                <div class="flex items-center justify-between" [routerLink]="item.routerLink" #rla="routerLinkActive"
+                    [queryParams]="item.queryParams" [routerLinkActive]="'bg-highlight'">
+                    <a pRipple class="flex flex-col p-menu-item-link gap-0 w-full justify-start items-start">
+                        <div class="flex w-full items-center">
+                            <span [class]="item.icon"></span>
+                            <span class="ml-2">{{ item.label }}</span>
+                        </div>
+                        @if(item.details) {
+                        <div class="text-gray-400 text-sm text-left">
+                            {{item.details | date:('date.datetime'|translate)}}
+                        </div>
+                        }
+                    </a>
+                    <p-button (onClick)="$event.stopPropagation(); op.toggle($event)" [text]="true"
+                        icon="pi pi-ellipsis-v" />
+                </div>
+                <p-popover #op>
+                    <div class="flex flex-col">
+                        <p-button label="Editieren" (onClick)="onEditFile(item)" icon="pi pi-pencil" [text]="true" />
+                        <p-button label="Löschen" (onClick)="_onDeleteFile(item.label)" icon="pi pi-trash"
+                            [text]="true" />
+                    </div>
+                </p-popover>
+            </ng-template>
+            <ng-template #end>
+                <p-divider class="mb-1" />
+                <div class="flex px-2 w-full">
+                    <p-button icon="pi pi-plus" class="w-full" styleClass="w-full" (onClick)="onCreateFile()"
+                        label="Erstellen" severity="secondary" [text]="true" />
+                </div>
+            </ng-template>
+        </p-menu>
+    </div>
+    <div class="grow w-full h-full flex flex-col overflow-hidden main-content" [class.is-shifted]="_isSidebarOpen()">
+        <div
+            class="w-full flex items-center justify-between bg-surface-0 dark:bg-surface-900 border-b-1 border-surface-200 dark:border-surface-600">
+            <p-menubar class="w-full" class="w-full bg-transparent! border-none! rounded-none" [model]="_menuItems()">
+                <ng-template #start>
+                    <div class="flex items-center space-x-1">
+                        @if(!_isSidebarOpen()) {
+                        <p-button (onClick)="_toggleSidebar()" [text]="true" icon="pi pi-bars" />
+                        <img [src]="'./images/logo-raw-no-text'+(_themeService.isDark()?'-dark':'')+'.png'"
+                            [style.height]="'28px'" alt="Logo">
+                        }
+                    </div>
+                </ng-template>
+                <ng-template #end>
+                    <div class="flex items-center space-x-1">
+                        @if(!isInitialized()) {
+                        <div class="flex gap-1 items-center">
+                            <span class="text-xs text-gray-900 dark:text-gray-100">Lade Daten</span>
+                            <p-progress-spinner class="flex" ariaLabel="loading"
+                                [style]="{ width: '20px', height: '20px' }" />
+                        </div>
+                        }
+
+        
+                        <p-button pTooltip="Nachtmodus umschalten" tooltipPosition="bottom" [rounded]="true"
+                            [text]="true" size="small" (onClick)="_themeService.toggleDarkMode()"
+                            [icon]="'pi pi-'+ (_themeService.isDark() ? 'sun':'moon')" />
+
+                    </div>
+                </ng-template>
+            </p-menubar>
+        </div>
+        <div class="h-full w-full p-4 bg-surface-100 dark:bg-surface-950! gap-4 flex flex-col overflow-hidden">
+            <div class="w-full h-full overflow-auto">
+                <div class="flex items-center justify-center flex-col w-full h-full">
+                    <router-outlet />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-toast />
+
+<p-dialog header="Logs" [modal]="true" [(visible)]="_isLogVisible" styleClass="max-w-full">
+    <pre class="w-full overflow-auto">
+        <code [innerHTML]="_logs()"></code>
+   </pre>
+</p-dialog>
+}
