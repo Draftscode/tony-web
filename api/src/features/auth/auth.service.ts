@@ -31,7 +31,7 @@ export class AuthService {
         private readonly datasource: DataSource
     ) {
         try {
-            this.register('admin2', 'admin2', true);
+            this.register('admin', 'admin', true);
         } catch { }
     }
 
@@ -59,6 +59,7 @@ export class AuthService {
             secret: process.env.JWT_REFRESH_SECRET,
         });
 
+
         // Optionally check DB if token exists and is not revoked
         const user = await this.usersService.getUser(payload.sub);
         if (!user) throw new UnauthorizedException();
@@ -71,7 +72,8 @@ export class AuthService {
 
         const newRefreshToken = this.jwtService.sign(
             { username: user.username, sub: user.id }, {
-            expiresIn: '7d'
+            secret: this.configService.get('JWT_REFRESH_SECRET'),
+            expiresIn: '2d'
         })
 
         return {
@@ -101,7 +103,7 @@ export class AuthService {
 
             refresh_token: this.jwtService.sign(payload, {
                 secret: this.configService.get('JWT_REFRESH_SECRET'),
-                expiresIn: '7d'
+                expiresIn: '2d'
             })
         };
     }

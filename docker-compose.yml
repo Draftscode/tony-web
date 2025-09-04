@@ -93,12 +93,8 @@ services:
       retries: 10
     networks:
       - app_network
-
-  adminer:
-    image: adminer
-    restart: always
     ports:
-      - 8080:8080
+      - 5432:5432
 
 networks:
   app_network:

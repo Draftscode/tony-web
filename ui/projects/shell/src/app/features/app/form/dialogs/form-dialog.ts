@@ -11,8 +11,8 @@ import { InputNumber } from "primeng/inputnumber";
 import { InputTextModule } from "primeng/inputtext";
 import { SelectModule } from "primeng/select";
 import { TooltipModule } from "primeng/tooltip";
-import { GdvMember, GdvService } from "../../../../data-access/gdv.service";
-
+import { BlaudirektService } from "../../../../data-access/blaudirekt.service";
+import { CompanyComponent } from "../../../../dialogs/company";
 export type SuggestionType = 'inventory' | 'terminated' | 'new' | 'acquisition';
 
 export type Suggestion = {
@@ -20,6 +20,7 @@ export type Suggestion = {
     label: string;
 }
 
+type GdvMember = any;
 export type FormArrayType = {
     nr: FormControl<string | null>;
     party: FormControl<string | null>;//VN
@@ -48,12 +49,12 @@ export type FormType = {
     selector: 'form-dialog',
     templateUrl: 'form-dialog.html',
     imports: [ReactiveFormsModule, CheckboxModule, ButtonModule, InputNumber, AutoCompleteModule, TooltipModule,
-        DividerModule, InputTextModule, SelectModule, DatePickerModule, TranslateModule]
+        DividerModule, InputTextModule, SelectModule, DatePickerModule, TranslateModule, CompanyComponent]
 })
 export class FormDialogComponent {
     private readonly pDialogRef = inject<DynamicDialogRef<FormDialogComponent>>(DynamicDialogRef);
     private readonly pDialogConfig = inject<DynamicDialogConfig<any>>(DynamicDialogConfig);
-    private readonly gdvService = inject(GdvService);
+    private readonly blaudirektService = inject(BlaudirektService);
     private readonly ngxTranslate = inject(TranslateService);
 
     constructor() {
@@ -115,7 +116,7 @@ export class FormDialogComponent {
     }
 
     protected async searchInsurers(query: string) {
-        const insurers = await this.gdvService.getGdvMembers(query);
+        const insurers = await this.blaudirektService.searchCompanies(query)
         const customInsurer = {
             name: `${query}`,
             image: '',

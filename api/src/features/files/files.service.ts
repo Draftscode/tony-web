@@ -35,8 +35,6 @@ export class FilesService {
                 where: { filename },
             });
 
-            console.log(file)
-
             if (file) {
                 // update existing file
                 manager.merge(FileEntity, file, fileDto);
@@ -44,7 +42,6 @@ export class FilesService {
                 fileDto.filename = filename;
                 // create a new one
                 file = manager.create(FileEntity, fileDto);
-                console.log('-->', file)
             }
 
             await manager.save(file);

@@ -9,6 +9,7 @@ export function authGuard(activatedRoute: ActivatedRouteSnapshot, route: RouterS
     const status$ = toObservable(resource.status);
     const router = inject(Router);
     return status$.pipe(
+        tap(console.log),
         filter(status => ['idle', 'loading', 'reloading'].indexOf(status) === -1),
         map(status => {
             if (status === 'error') {

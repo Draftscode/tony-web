@@ -19,8 +19,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { TooltipModule } from "primeng/tooltip";
 import { distinctUntilChanged, lastValueFrom, map, take } from "rxjs";
 import { FileService } from "../../../data-access/file.service";
-import { GdvMember } from "../../../data-access/gdv.service";
-import { PdfService } from "../../../data-access/pdf.service";
+import { FallbackImageDirective } from "../../../utils/fallback-image.directive";
 import { normalizeSuggestion } from "../../../utils/normalize-suggestion";
 import { Content, TableRow } from "../../../utils/to-pdf";
 import { CDatePipe } from "./c-date.pipe";
@@ -31,7 +30,8 @@ import { MonthlyPipe } from "./monthly.pipe";
 import { NewPipe } from "./new.pipe";
 import { SavingsPipe } from "./savings.pipe";
 import { TotalPipe } from "./total.pipe";
-import { FallbackImageDirective } from "../../../utils/fallback-image.directive";
+
+type GdvMember = any;
 
 type Header = {
     label: string;
@@ -100,7 +100,6 @@ export default class FormComponent {
     private readonly pDialog = inject(DialogService);
     private readonly ngCdr = inject(ChangeDetectorRef);
     protected readonly _suggestions = signal<string[]>([]);
-    protected readonly _pdfService = inject(PdfService);
     private readonly _ngActiveRoute = inject(ActivatedRoute);
     protected readonly _filename = toSignal(
         this._ngActiveRoute.params.pipe(map(q => decodeURIComponent(q['id'])), distinctUntilChanged()));
@@ -173,7 +172,7 @@ export default class FormComponent {
 
     constructor() {
         effect(() => {
-            const isLoading = this._pdfService.isLoading() || this.fileService.isLoading();
+            const isLoading = this.fileService.isLoading();
             if (isLoading) {
                 this._formGroup.disable();
             } else {
@@ -219,7 +218,7 @@ export default class FormComponent {
 
         const form = this.getData(true);
 
-        lastValueFrom(this._pdfService.createPdf(form));
+        lastValueFrom(this.fileService.createPdf(form));
     }
 
     private getData(transformDate: boolean = false) {
@@ -282,6 +281,7 @@ export default class FormComponent {
         const ref = this.pDialog.open(
             FormDialogComponent,
             {
+                modal: true,
                 header: 'Zeile bearbeiten',
                 data: this._formGroup.controls.groups.at(groupIndex).controls.items.at(rowIndex).value,
                 closable: true,
@@ -349,6 +349,8 @@ export default class FormComponent {
         const ref = this.pDialog.open(
             FormDialogComponent,
             {
+
+                modal: true,
                 data: null,
                 header: 'Zeile hinzufügen',
                 closable: true,

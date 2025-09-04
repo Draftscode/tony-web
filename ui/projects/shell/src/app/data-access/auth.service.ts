@@ -27,14 +27,16 @@ export class AuthService {
     readonly refreshToken = computed(() => this.credentials()?.refreshToken ?? '');
     readonly accessToken = computed(() => this.credentials()?.accessToken ?? '');
 
+    private readonly timestamp = signal<string | null>(null);
+
     canRefresh() {
         return !!this.credentials()?.refreshToken
     }
 
     readonly me = httpResource(() => {
-        return  {
+        return this.timestamp() ? {
             url: `${environment.origin}/auth/me`,
-        }
+        } : undefined;
     }, {
         parse: TUser.parse,
         defaultValue: undefined
@@ -50,7 +52,9 @@ export class AuthService {
         } else {
             sessionStorage.setItem('credentials', JSON.stringify(credentials ?? {}));
         }
+
         this.credentials.set(credentials ?? null);
+        this.timestamp.set(new Date().toISOString());
     }
 
     getCredentials() {
@@ -58,6 +62,7 @@ export class AuthService {
         if (creds) {
             this.credentials.set(JSON.parse(creds) ?? null);
         }
+        this.timestamp.set(new Date().toISOString())
     }
 
     async login(username: string, password: string) {
@@ -81,7 +86,7 @@ export class AuthService {
     refresh() {
         return this.http.post<{ access_token: string; refresh_token: string }>(
             `${environment.origin}/auth/refresh`,
-            { refreshToken: this.credentials()?.refreshToken },
+            { refreshToken: this.refreshToken() },
             {
                 headers: new HttpHeaders().set(InterceptorSkipReason.skipAuth, '')
             }

@@ -11,9 +11,10 @@
         <p-divider />
         <div class="inline-flex flex-col w-full">
             <label for="customer">Blaudirekt Kunden-Suche</label>
-            <p-autocomplete appendTo="body" inputStyleClass="w-full" class="w-full" (onClear)="searchContracts()" [showClear]="true"
-                (onSelect)="searchContracts($event.value.Id)" [inputId]="'name'" formControlName="customer"
-                [optionLabel]="labelFn" [dropdown]="false" [minQueryLength]="1" (completeMethod)="search($event.query)"
+            <p-autocomplete [dropdown]="true" [completeOnFocus]="true" appendTo="body" inputStyleClass="w-full"
+                class="w-full" (onClear)="searchContracts()" [showClear]="true"
+                (onSelect)="searchContracts($event.value.id)" [inputId]="'name'" formControlName="customer"
+                [optionLabel]="'displayName'" [minQueryLength]="1" (completeMethod)="search($event.query)"
                 [suggestions]="blaudirektService.customers.value()" />
         </div>
         @if(contracts().length) {
@@ -22,12 +23,12 @@
                 [indeterminate]="isIndeterminate()" (onChange)="toggleSelection()" inputId="select-all" />
             <label for="select-all">Alle auswählen</label>
         </div>
-        @for(contract of contracts(); track contract.Id) {
+        @for(contract of contracts(); track contract.id) {
         <div class="flex w-full flex-col">
             <div class="flex gap-4 items-center">
                 <p-checkbox name="contracts" formControlName="selectedContracts" [value]="contract"
-                    [inputId]="''+contract.Id" />
-                <app-company [contract]="contract" />
+                    [inputId]="contract.id" />
+                <app-company [company]="contract.company"/>
             </div>
         </div>
         }

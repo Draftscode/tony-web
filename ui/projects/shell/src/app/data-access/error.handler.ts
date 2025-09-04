@@ -14,5 +14,4 @@ export class GlobalErrorHandler implements ErrorHandler {
             this._pMessage.add({ severity: 'error', life: 10_000, summary: 'Local Error', detail: 'something went wrong', closable: true });
         }
     }
-
 }

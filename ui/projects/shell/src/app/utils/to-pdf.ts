@@ -1,10 +1,9 @@
-import { GdvMember } from "../data-access/gdv.service";
 import { Suggestion } from "../features/app/form/dialogs/form-dialog";
 
 
 export type TableRow = {
     type: string;
-    insurer: GdvMember;
+    insurer: any;
     scope: string;
     suggestion: Suggestion;
     oneTimePayment: number;

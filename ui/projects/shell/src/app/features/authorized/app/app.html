@@ -93,13 +93,6 @@
                 </ng-template>
                 <ng-template #end>
                     <div class="flex items-center space-x-1">
-                        @if(!isInitialized()) {
-                        <div class="flex gap-1 items-center">
-                            <span class="text-xs text-gray-900 dark:text-gray-100">Lade Daten</span>
-                            <p-progress-spinner class="flex" ariaLabel="loading"
-                                [style]="{ width: '20px', height: '20px' }" />
-                        </div>
-                        }
 
         
                         <p-button pTooltip="Nachtmodus umschalten" tooltipPosition="bottom" [rounded]="true"

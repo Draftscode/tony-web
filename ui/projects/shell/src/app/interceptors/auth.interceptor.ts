@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest, HttpStatusCode } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { BehaviorSubject, catchError, filter, finalize, Observable, Subject, switchMap, take, takeUntil, throwError, timeout } from "rxjs";
+import { BehaviorSubject, catchError, filter, finalize, Observable, switchMap, take, throwError, timeout } from "rxjs";
 import { AuthService } from "../data-access/auth.service";
 
 export enum InterceptorSkipReason {
@@ -12,11 +12,19 @@ export class ShouldWait {
     shouldWait = new BehaviorSubject<boolean>(false);
 }
 
+
+
 export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
 
     const authService = inject(AuthService);
     const shouldWaitService = inject(ShouldWait);
 
+
+    const copyWithCredentials = (req: HttpRequest<unknown>) => {
+        return req.clone({
+            headers: req.headers.append('Authorization', `Bearer ${authService.accessToken()}`)
+        })
+    }
     const handle401 = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
         if (authService.canRefresh() && !shouldWaitService.shouldWait.getValue()) {
             shouldWaitService.shouldWait.next(true);
@@ -27,7 +35,7 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
                     return throwError(() => e);
                 }),
                 switchMap(() => {
-                    return next(req)
+                    return next(copyWithCredentials(req))
                 }),
                 finalize(() => shouldWaitService.shouldWait.next(false)),
             )
@@ -37,7 +45,7 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
             filter(wait => !wait),
             timeout(40_000), // ensure this does not queue longer than 40 secs
             take(1),
-            switchMap(_ => next(req)),
+            switchMap(_ => next(copyWithCredentials(req))),
         );
     }
 
@@ -48,11 +56,7 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
         }));
     }
 
-    return next(
-        req.clone({
-            headers: req.headers.append('Authorization', `Bearer ${authService.accessToken()}`)
-        })
-    ).pipe(
+    return next(copyWithCredentials(req)).pipe(
         catchError((e: HttpErrorResponse) => {
             if (e instanceof HttpErrorResponse && e.status === HttpStatusCode.Unauthorized) {
                 return handle401(req, next);

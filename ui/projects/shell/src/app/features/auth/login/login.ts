@@ -7,6 +7,7 @@ import { DividerModule } from "primeng/divider";
 import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
 import { AuthService } from "../../../data-access/auth.service";
+import { ThemeService } from "../../../data-access/theme.service";
 
 @Component({
     selector: 'app-login',
@@ -16,6 +17,7 @@ import { AuthService } from "../../../data-access/auth.service";
 export default class LoginPage {
     private readonly authService = inject(AuthService);
     private readonly router = inject(Router);
+    protected readonly themeService = inject(ThemeService);
 
     protected readonly formGroup = new FormGroup({
         username: new FormControl<string | null>('', [Validators.required]),
@@ -28,6 +30,7 @@ export default class LoginPage {
 
         try {
             await this.authService.login(payload.username!, payload.password!);
+            console.log('LOGIN DNE')
             this.router.navigate(['/', 'app']);
         } catch {
 

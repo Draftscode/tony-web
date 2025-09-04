@@ -3,6 +3,7 @@ import { inject, Injectable, resource, signal } from "@angular/core";
 import { MessageService } from "primeng/api";
 import { finalize, lastValueFrom, map, Observable, tap } from "rxjs";
 import { environment } from "../../environments/environment";
+import { Content, toPdf } from "../utils/to-pdf";
 
 
 type DropboxFile = {
@@ -86,6 +87,19 @@ export class FileService {
         } finally {
             this.isLoading.set(false)
         }
+    }
+
+    createPdf<T extends Content>(contents: T) {
+        this.isLoading.set(true);
+
+        const html = toPdf(contents);
+
+        return this.http.post(`${environment.origin}/files/pdf`, { contents: html }, { responseType: 'blob' }).pipe(
+            tap((blob) => {
+                const fileURL = URL.createObjectURL(blob);
+                window.open(fileURL, '_blank');
+            }),
+            finalize(() => this.isLoading.set(false)));
     }
 
     async writeFile<T>(filename: string, contents: T) {

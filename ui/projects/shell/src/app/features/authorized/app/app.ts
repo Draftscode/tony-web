@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
-import { Component, computed, effect, inject, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, computed, inject, signal } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -22,7 +22,6 @@ import { debounceTime, Subject, take } from 'rxjs';
 import { FileService } from '../../../data-access/file.service';
 import { ThemeService } from '../../../data-access/theme.service';
 import { FileDialogComponent } from '../../../dialogs/file.dialog';
-import { InitService } from '../../../init.service';
 import * as packageJson from './../../../../../../../package.json';
 
 @Component({
@@ -44,11 +43,11 @@ export default class App {
   protected readonly _themeService = inject(ThemeService);
   protected readonly fileService = inject(FileService);
   private readonly pDialog = inject(DialogService);
+  private readonly router = inject(Router);
+  private readonly activatedRoute = inject(ActivatedRoute);
 
   protected readonly _isLogVisible = signal<boolean>(false);
   protected readonly _logs = signal<string | null>(null);
-
-  private readonly initService = inject(InitService);
 
   protected readonly _sidebarItems = computed(() => this.fileService.files().map(i => {
     return {
@@ -65,8 +64,6 @@ export default class App {
   constructor() {
     this._ngxTranslate.use('de-DE');
     this.fileService.connectQuery(this.query$.pipe(debounceTime(500)));
-
-    this.initService.initAll();
   }
 
   protected _toggleSidebar() {
@@ -77,8 +74,8 @@ export default class App {
     this.query$.next(query);
   }
 
-  protected _onDeleteFile(filename: string) {
-    this.fileService.deleteFile(filename);
+  protected async _onDeleteFile(filename: string) {
+    await this.fileService.deleteFile(filename);
   }
 
   protected async _onLogs() {
@@ -87,8 +84,6 @@ export default class App {
 
   protected _onAppClose() {
   }
-
-  protected readonly isInitialized = this.initService.initialized;
 
   protected onCreateFile() {
     const ref = this.pDialog.open(FileDialogComponent, {
@@ -99,9 +94,10 @@ export default class App {
       width: '420px'
     });
 
-    ref.onClose.pipe(take(1)).subscribe(result => {
+    ref.onClose.pipe(take(1)).subscribe(async result => {
       if (result?.type === 'manually') {
-        this.fileService.writeFile(result.data.name, result.data.contents);
+        await this.fileService.writeFile(result.data.name, result.data.contents);
+        this.router.navigate(['./', result.data.name], { relativeTo: this.activatedRoute });
       }
     });
   }

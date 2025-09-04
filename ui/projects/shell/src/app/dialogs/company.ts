@@ -1,23 +1,19 @@
-import { Component, computed, inject, input } from "@angular/core";
-import { BlaudirectContract, BlaudirektService } from "../data-access/blaudirekt.service";
+import { Component, input } from "@angular/core";
+import { BlaudirektCompany } from "../data-access/blaudirekt.service";
+import { FallbackImageDirective } from "../utils/fallback-image.directive";
 
 @Component({
     selector: 'app-company',
+    imports: [FallbackImageDirective],
     template: `
     @if(company(); as company) {
     <div class="flex gap-2 items-center">
-        <img style="height: 32px; width: 100px; object-fit: contain" [src]="company.Logos[0].Pfad" alt="Company Logo" />
-        <span>{{company.Text}}</span>
+        <img class="shrink-0 h-[32px] w-[100px] object-contain" fallback="images/empty.jpg" [src]="company.logo" alt="Company Logo" />
+        <span>{{company.name}}</span>
     </div>
     }
     `
 })
 export class CompanyComponent {
-    private readonly blaudirektService = inject(BlaudirektService);
-    contract = input<BlaudirectContract>();
-
-    protected readonly company = computed(() => {
-        const company = this.blaudirektService.companies()?.find(company => company.Value === this.contract()?.Gesellschaft);
-        return company;
-    });
+    company = input<BlaudirektCompany>();
 }

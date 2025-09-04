@@ -9,13 +9,15 @@ import { DynamicDialogConfig, DynamicDialogRef } from "primeng/dynamicdialog";
 import { InputTextModule } from "primeng/inputtext";
 import { KeyFilterModule } from 'primeng/keyfilter';
 import { MessageModule } from "primeng/message";
+import { SelectModule } from "primeng/select";
 import { BlaudirectContract, BlaudirektCustomer, BlaudirektService } from "../data-access/blaudirekt.service";
 import { CompanyComponent } from "./company";
+
 
 @Component({
     selector: 'file-dialog',
     templateUrl: 'file.dialog.html',
-    imports: [ReactiveFormsModule, FormsModule, MessageModule, CheckboxModule, AutoCompleteModule, CompanyComponent,
+    imports: [ReactiveFormsModule, FormsModule, MessageModule, SelectModule, CheckboxModule, AutoCompleteModule, CompanyComponent,
         KeyFilterModule, InputTextModule, ButtonModule, DividerModule]
 })
 export class FileDialogComponent {
@@ -35,14 +37,6 @@ export class FileDialogComponent {
 
     constructor() {
         this.formGroup.controls.name.patchValue(this.pDialogConf.data?.name, { emitEvent: false });
-
-        effect(() => {
-            if (this.blaudirektService.isInitialized()) {
-                this.formGroup.controls.customer.enable();
-            } else {
-                this.formGroup.controls.customer.disable();
-            }
-        });
     }
 
     protected toggleSelection() {
@@ -65,13 +59,11 @@ export class FileDialogComponent {
         return isChecked;
     });
 
+    protected readonly customers = this.blaudirektService.customers
+
+
     protected search(query: string) {
         this.blaudirektService.search(query);
-    }
-
-
-    protected labelFn(item: BlaudirektCustomer): string {
-        return item.Person.Vorname ? `${item.Person.Vorname} ${item.Person.Nachname}` : item.Person.Firma;
     }
 
     protected async searchContracts(customerId?: string) {
@@ -85,37 +77,37 @@ export class FileDialogComponent {
 
 
         let contents = {};
-        if (raw.customer?.Id) {
+        if (raw.customer?.id) {
             const items = raw.selectedContracts?.map(contract => {
                 const fromTo = [
-                    contract.Laufzeit?.Beginn ? new Date(contract.Laufzeit.Beginn).toISOString() : null,
-                    contract.Laufzeit?.Beginn ? new Date(contract.Laufzeit.Ablauf).toISOString() : null,
+                    contract.duration?.begin ? new Date(contract.duration.begin).toISOString() : null,
+                    contract.duration?.end ? new Date(contract.duration.end).toISOString() : null,
                 ];
-                const company = this.blaudirektService.companies().find(comp => comp.Value === contract.Gesellschaft);
-                const division = this.blaudirektService.divisions().find(div => div.Value === contract.Sparte);
 
                 return {
-                    contribution: contract.Beitrag.Brutto,
+                    contribution: contract.payment.grossAmount,
                     fromTo,
-                    insurer: { image: company?.Logos[0].Pfad, name: company?.Text },
-                    monthly: contract.Beitrag.Zahlweise === '5',
-                    nr: contract.Versicherungsscheinnummer,
+                    insurer: { image: contract.company.logoId, name: contract.company.name },
+                    monthly: contract.payment.interval.id !== '1',
+                    nr: contract.policyNumber,
                     oneTimePayment: 0,
-                    party: raw.customer ? this.labelFn(raw.customer) : '-',
+                    party: raw.customer ? raw.customer.displayName : '-',
                     scope: "",
                     suggestion: { value: 'acquisition', label: 'Übernahme' },
-                    type: division?.Text
+                    type: contract.line.text
                 };
             });
 
+
             contents = {
                 persons: [{
-                    firstname: raw.customer?.Person.Vorname ?? raw.customer?.Person.Ansprechpartner,
-                    lastname: raw.customer?.Person.Nachname,
-                    street: raw.customer?.Hauptwohnsitz.Strasse,
-                    city: raw.customer?.Hauptwohnsitz.Ort,
-                    company: raw.customer?.Person.Firma,
-                    zipCode: raw.customer?.Hauptwohnsitz.Postleitzahl
+                    firstname: raw.customer?.firstname,
+                    lastname: raw.customer?.lastname,
+                    street: raw.customer?.mainAddress?.street,
+                    streetNo: raw.customer?.mainAddress?.streetNo,
+                    city: raw.customer?.mainAddress?.city,
+                    company: raw.customer?.displayName !== `${raw.customer.firstname} ${raw.customer.lastname}` ? raw.customer.displayName : '',
+                    zipCode: raw.customer?.mainAddress?.zip
                 }],
                 groups: [{
                     name: 'Bestand',
