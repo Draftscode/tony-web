@@ -1,3 +1,4 @@
+import { TranslateService } from "@ngx-translate/core";
 import { Suggestion } from "../features/app/form/dialogs/form-dialog";
 
 
@@ -20,9 +21,12 @@ export type Group = {
 }
 
 type Person = {
+    title: string;
     firstname: string;
     lastname: string;
     street: string;
+    gender: string;
+    email: string;
     company: string;
     city: string;
     streetNo: string;
@@ -34,7 +38,7 @@ export type Content = {
     groups: Group[],
 }
 
-export function toPdf(content: Content) {
+export function toPdf(content: Content, translate: TranslateService) {
 
     const styles = `
     .wrapper {
@@ -133,7 +137,7 @@ export function toPdf(content: Content) {
                 contrib = (contrib / 12);
             }
 
-            const img = row['insurer']?.image ? row['insurer'].image : defaultImage;
+            const img = row['insurer']?.logo ? row['insurer'].logo : defaultImage;
 
             cells += `<td>
             <div>${row['type'] ?? '-'}</div></td>`;
@@ -225,13 +229,14 @@ export function toPdf(content: Content) {
 
         tables += table
     })
-
     let personHtml = ``;
     let signature = ``;
     content.persons.forEach(person => {
+        const salutation = translate.instant(`label.salutation.${person.gender}`);
         personHtml += `
         <div class="p">
         ${person.company ? `<div style="padding: 4px">${person.company}</div>` : ''}
+    <div style="padding: 4px">${salutation} ${person.title}</div>
     <div style="padding: 4px">${person.firstname} ${person.lastname}</div>
     <div style="padding: 4px">${person.street ?? ''} ${person.streetNo ?? ''}</div>
     <div style="padding: 4px">${person.zipCode ?? ''}</div>

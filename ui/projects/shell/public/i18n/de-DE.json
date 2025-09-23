@@ -14,7 +14,17 @@
         "acquisition": "Übernahme",
         "inventory": "Bestand",
         "terminated": "wird gekündigt",
-        "move": "Zeile verschieben"
+        "move": "Zeile verschieben",
+        "gender": {
+            "male": "männlich",
+            "female": "weiblich",
+            "other": "divers"
+        },
+        "salutation": {
+            "male": "Herr",
+            "female": "Frau",
+            "other": ""
+        }
     },
     "date": {
         "datetime": "dd.MM.yy HH:MM"

@@ -80,19 +80,19 @@ export class FileDialogComponent {
         if (raw.customer?.id) {
             const items = raw.selectedContracts?.map(contract => {
                 const fromTo = [
-                    contract.duration?.begin ? new Date(contract.duration.begin).toISOString() : null,
-                    contract.duration?.end ? new Date(contract.duration.end).toISOString() : null,
+                    contract.start ? new Date(contract.start).toISOString() : null,
+                    contract.end ? new Date(contract.end).toISOString() : null,
                 ];
 
                 return {
                     contribution: contract.payment.grossAmount,
                     fromTo,
-                    insurer: { image: contract.company.logoId, name: contract.company.name },
+                    insurer: { logo: contract.company.logo, name: contract.company.name },
                     monthly: contract.payment.interval.id !== '1',
                     nr: contract.policyNumber,
                     oneTimePayment: 0,
                     party: raw.customer ? raw.customer.displayName : '-',
-                    scope: "",
+                    scope: contract.risk,
                     suggestion: { value: 'acquisition', label: 'Übernahme' },
                     type: contract.line.text
                 };
@@ -101,6 +101,8 @@ export class FileDialogComponent {
 
             contents = {
                 persons: [{
+                    title: raw.customer.title,
+                    gender: raw.customer.gender,
                     firstname: raw.customer?.firstname,
                     lastname: raw.customer?.lastname,
                     street: raw.customer?.mainAddress?.street,

@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { inject, Injectable, resource, signal } from "@angular/core";
+import { TranslateService } from "@ngx-translate/core";
 import { MessageService } from "primeng/api";
 import { finalize, lastValueFrom, map, Observable, tap } from "rxjs";
 import { environment } from "../../environments/environment";
@@ -18,6 +19,7 @@ export class FileService {
     private readonly http = inject(HttpClient);
     private readonly _isLoading = signal<boolean>(false);
     private readonly pMessage = inject(MessageService);
+    private readonly translateService = inject(TranslateService);
 
     readonly query = signal<string>('');
     private readonly timestamp = signal<string>(new Date().toISOString());
@@ -92,7 +94,7 @@ export class FileService {
     createPdf<T extends Content>(contents: T) {
         this.isLoading.set(true);
 
-        const html = toPdf(contents);
+        const html = toPdf(contents, this.translateService);
 
         return this.http.post(`${environment.origin}/files/pdf`, { contents: html }, { responseType: 'blob' }).pipe(
             tap((blob) => {

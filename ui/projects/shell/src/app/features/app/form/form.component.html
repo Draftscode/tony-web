@@ -27,6 +27,24 @@
                 </div>
                 <div class="inline-flex space-x-4">
                     <div class="inline-flex flex-col space-y-1">
+                        <label for="gender">Anrede</label>
+                        <p-select [options]="genders()" size="small" formControlName="gender" id="gender">
+                            <ng-template #item let-item>
+                                {{('label.salutation.'+item)|translate}}
+                            </ng-template>
+                            <ng-template #selectedItem>
+                                {{('label.salutation.'+_formGroup.controls.persons.at(personIdx).controls.gender.value)|translate}}
+                            </ng-template>
+                        </p-select>
+                    </div>
+
+                    <div class="inline-flex flex-col space-y-1">
+                        <label for="title">Titel</label>
+                        <input pSize="small" required formControlName="title" pInputText id="title" />
+                    </div>
+                </div>
+                <div class="inline-flex space-x-4">
+                    <div class="inline-flex flex-col space-y-1">
                         <label for="firstname">Vorname *</label>
                         <input pSize="small" required formControlName="firstname" pInputText id="firstname" />
                     </div>
@@ -138,7 +156,7 @@
                                 <div class="flex flex-row gap-2 items-center">
 
                                     <img class="p-1 w-[100px] h-[32px] object-contain min-w-[100px]" alt="Insurer"
-                                        [src]="item.controls.insurer.value?.image" fallback="images/empty.jpg" />
+                                        [src]="item.controls.insurer.value?.logo" fallback="images/empty.jpg" />
                                     {{ item.controls.insurer.value?.name }}
                                 </div>
                             </td>

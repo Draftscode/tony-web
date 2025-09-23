@@ -6,8 +6,16 @@ export class ThemeService {
 
     constructor() {
         const htmlElement = document.documentElement;
-        const isDark = htmlElement.classList.contains('p-dark');
-        this._isDark.set(isDark);
+
+
+        const isPreferenceDark: boolean = !!window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (isPreferenceDark) {
+            this.toggleDarkMode();
+        }
+        this._isDark.set(isPreferenceDark);
+
+
     }
 
     toggleDarkMode(): void {

@@ -23,6 +23,8 @@ export type BlaudirektCustomer = {
     firstname: string;
     displayName: string;
     lastname: string;
+    gender: string;
+    title: string;
 }
 
 export enum PaymentCycle {
@@ -46,18 +48,18 @@ export type BlaudirectContract = {
     agencyId: string;
     applicationId: string;
     company: BlaudirektCompany;
-    duration: { begin: string; end: string; };
     id: string;
     line: BlaudirekContractLine;
     payment: BlaudirektPayment;
     policyNumber: string;
     publicId: string;
     risk: string;
+    start?: string;
+    end?: string;
 }
 
 export type BlaudirektCompany = {
     id: string;
-    logoId: string;
     name: string;
     logo: string;
 }

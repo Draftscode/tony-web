@@ -14,10 +14,12 @@ import { DialogService } from "primeng/dynamicdialog";
 import { InputTextModule } from 'primeng/inputtext';
 import { PopoverModule } from "primeng/popover";
 import { ProgressBarModule } from 'primeng/progressbar';
+import { SelectModule } from "primeng/select";
 import { TableModule } from 'primeng/table';
 import { TextareaModule } from 'primeng/textarea';
 import { TooltipModule } from "primeng/tooltip";
 import { distinctUntilChanged, lastValueFrom, map, take } from "rxjs";
+import { BlaudirektCompany } from "../../../data-access/blaudirekt.service";
 import { FileService } from "../../../data-access/file.service";
 import { FallbackImageDirective } from "../../../utils/fallback-image.directive";
 import { normalizeSuggestion } from "../../../utils/normalize-suggestion";
@@ -31,8 +33,6 @@ import { NewPipe } from "./new.pipe";
 import { SavingsPipe } from "./savings.pipe";
 import { TotalPipe } from "./total.pipe";
 
-type GdvMember = any;
-
 type Header = {
     label: string;
     width?: number;
@@ -44,7 +44,7 @@ export type FormArrayType = {
     nr: FormControl<string | null>;
     party: FormControl<string | null>;//VN
     fromTo: FormControl<string | null>;
-    insurer: FormControl<GdvMember | null>;
+    insurer: FormControl<BlaudirektCompany | null>;
     scope: FormControl<string | null>;
     suggestion: FormControl<Suggestion | null>;
     oneTimePayment: FormControl<number | null>;
@@ -59,6 +59,8 @@ export type FormList = {
 }
 
 type Person = {
+    title: string;
+    gender: string;
     zipCode: string;
     streetNo: string;
     street: string;
@@ -69,6 +71,8 @@ type Person = {
 }
 
 type PersonType = {
+    title: FormControl<string | null>;
+    gender: FormControl<string | null>;
     zipCode: FormControl<string | null>;
     streetNo: FormControl<string | null>;
     street: FormControl<string | null>;
@@ -87,7 +91,7 @@ export type FormType = {
     host: { class: 'w-full h-full' },
     selector: 'app-form',
     imports: [AutoCompleteModule, TranslateModule, DatePickerModule,
-        InputTextModule, TableModule, ProgressBarModule, DialogModule,
+        InputTextModule, TableModule, ProgressBarModule, DialogModule, SelectModule,
         TextareaModule, ReactiveFormsModule, CardModule, TotalPipe, FallbackImageDirective,
         AutoCompleteModule, ButtonModule, DividerModule, CDatePipe, TooltipModule,
         SavingsPipe, ExistedPipe, NewPipe, MonthlyPipe, PopoverModule
@@ -108,6 +112,7 @@ export default class FormComponent {
     protected isNew = signal<boolean>(false);
     private readonly router = inject(Router);
     private readonly ngxTranslate = inject(TranslateService);
+    protected readonly genders = signal(['male', 'female', 'other']);
 
     protected readonly _formGroup = new FormGroup<FormType>({
         persons: new FormArray<FormGroup<PersonType>>([]),
@@ -243,6 +248,8 @@ export default class FormComponent {
 
     protected addPerson(p: Partial<Person> = {}) {
         const person = new FormGroup<PersonType>({
+            title: new FormControl<string | null>(p.title ?? null),
+            gender: new FormControl<string | null>(p.gender ?? null),
             firstname: new FormControl<string | null>(p.firstname ?? null, [Validators.required]),
             lastname: new FormControl<string | null>(p.lastname ?? null, [Validators.required]),
             street: new FormControl<string | null>(p.street ?? null),
@@ -331,7 +338,7 @@ export default class FormComponent {
             fromTo: new FormControl<string | null>(data.fromTo),
             party: new FormControl<string | null>(data.party),
             type: new FormControl<string | null>(data.type),
-            insurer: new FormControl<GdvMember | null>(data.insurer),
+            insurer: new FormControl<BlaudirektCompany | null>(data.insurer),
             scope: new FormControl<string | null>(data.scope),
             suggestion: new FormControl<Suggestion | null>(normalizeSuggestion(data.suggestion, this.ngxTranslate)),
             oneTimePayment: new FormControl<number>(data.oneTimePayment),

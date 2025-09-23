@@ -30,4 +30,10 @@ export class CustomerEntity {
 
     @OneToMany(() => ContractEntity, (contract) => contract.company)
     contracts: Relation<ContractEntity[]>;
+
+    @Column({ nullable: true })
+    gender: string;
+
+    @Column({ nullable: true })
+    title: string;
 }

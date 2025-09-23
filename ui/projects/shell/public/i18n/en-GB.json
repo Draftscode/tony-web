@@ -5,7 +5,16 @@
         "acquisition": "Acquisition",
         "inventory": "Inventory",
         "terminated": "Terminated",
-        "move": "Move"
+        "move": "Move",
+        "gender": {
+            "male": "Male",
+            "female": "Female",
+            "other": "Other"
+        },
+        "salutation": {
+            "mr": "Mr.",
+            "mrs": "Mrs."
+        }
     },
     "date": {
         "datetime": "dd.MM.yy HH:MM"

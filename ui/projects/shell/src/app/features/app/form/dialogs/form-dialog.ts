@@ -11,7 +11,7 @@ import { InputNumber } from "primeng/inputnumber";
 import { InputTextModule } from "primeng/inputtext";
 import { SelectModule } from "primeng/select";
 import { TooltipModule } from "primeng/tooltip";
-import { BlaudirektService } from "../../../../data-access/blaudirekt.service";
+import { BlaudirektCompany, BlaudirektService } from "../../../../data-access/blaudirekt.service";
 import { CompanyComponent } from "../../../../dialogs/company";
 export type SuggestionType = 'inventory' | 'terminated' | 'new' | 'acquisition';
 
@@ -20,12 +20,11 @@ export type Suggestion = {
     label: string;
 }
 
-type GdvMember = any;
 export type FormArrayType = {
     nr: FormControl<string | null>;
     party: FormControl<string | null>;//VN
     fromTo: FormControl<string | null>;
-    insurer: FormControl<GdvMember | null>;
+    insurer: FormControl<BlaudirektCompany | null>;
     scope: FormControl<string | null>;
     suggestion: FormControl<Suggestion | null>;
     oneTimePayment: FormControl<number | null>;
@@ -73,7 +72,7 @@ export class FormDialogComponent {
                 fromTo: new FormControl<string | null>(fromTo),
                 party: new FormControl<string | null>(data.party),
                 type: new FormControl<string | null>(data.type),
-                insurer: new FormControl<GdvMember | null>(data.insurer),
+                insurer: new FormControl<BlaudirektCompany | null>(data.insurer),
                 scope: new FormControl<string | null>(data.scope),
                 suggestion: new FormControl<Suggestion | null>(data.suggestion),
                 oneTimePayment: new FormControl<number>(data.oneTimePayment),
@@ -88,7 +87,7 @@ export class FormDialogComponent {
         fromTo: new FormControl<string | null>(null),
         party: new FormControl<string | null>(null),
         type: new FormControl<string | null>(null),
-        insurer: new FormControl<GdvMember | null>(null),
+        insurer: new FormControl<BlaudirektCompany | null>(null),
         scope: new FormControl<string | null>(null),
         suggestion: new FormControl<Suggestion | null>({ value: 'new', label: this.ngxTranslate.instant('label.new') }),
         oneTimePayment: new FormControl<number>(0),
@@ -96,7 +95,7 @@ export class FormDialogComponent {
         monthly: new FormControl<boolean>(true),
     });
 
-    protected insurers = signal<GdvMember[]>([]);
+    protected insurers = signal<BlaudirektCompany[]>([]);
 
     protected close() {
         if (this._formGroup.invalid) { return; }
@@ -104,8 +103,9 @@ export class FormDialogComponent {
         const values = this._formGroup.getRawValue();
         if (typeof values.insurer === 'string') {
             values.insurer = {
+                id: '',
                 name: values.insurer,
-                image: '',
+                logo: '',
             };
         }
 
@@ -118,8 +118,9 @@ export class FormDialogComponent {
     protected async searchInsurers(query: string) {
         const insurers = await this.blaudirektService.searchCompanies(query)
         const customInsurer = {
+            id: '',
             name: `${query}`,
-            image: '',
+            logo: '',
         }
         this.insurers.set([customInsurer, ...insurers]);
     }
