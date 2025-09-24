@@ -133,7 +133,6 @@ export class BlaudirektService {
                     params: {
                         page,
                         pageSize,
-                        order,
                         onlyMandantCompanies: false,
                         query: undefined,
                     }
@@ -290,7 +289,6 @@ export class BlaudirektService {
         let numberOfPages = 1;
 
         // fetch companies
-
         for (let i = 1; i <= numberOfPages; i++) {
             const response = await this.fetchCompanies(token, pageSize, i, 'ASC');
             numberOfPages = response.numberOfPages;

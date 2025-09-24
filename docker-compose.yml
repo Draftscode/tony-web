@@ -1,6 +1,5 @@
 services:
   # API and UI services for the Insurer application
-    # API and UI services for the Insurer application
   tonym_api:
     container_name: tonym_api
     build:
@@ -44,7 +43,7 @@ services:
     networks:
       - app_network
 
-    # Client application for the Insurer, with both production and development configurations
+  # Client application for the Insurer, with both production and development configurations
   tonym_client:
     container_name: tonym_client
     build:
@@ -57,9 +56,9 @@ services:
     #   - insurer_api
     networks:
       - app_network
+      - private
     profiles:
       - prod
-      - private
 
   # Development version of the client application
   tonym_client_dev:
