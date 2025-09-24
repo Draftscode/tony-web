@@ -115,3 +115,6 @@ services:
 networks:
   app_network:
     driver: bridge
+  private:
+    name: private
+    external: true
