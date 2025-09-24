@@ -56,7 +56,6 @@ services:
     #   - insurer_api
     networks:
       - app_network
-      - private
     profiles:
       - prod
 
@@ -109,11 +108,7 @@ services:
       - database
     networks:
       - app_network
-      - private
 
 networks:
   app_network:
     driver: bridge
-  private:
-    name: private
-    external: true
