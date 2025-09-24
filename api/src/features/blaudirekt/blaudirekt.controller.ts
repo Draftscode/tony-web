@@ -7,6 +7,12 @@ export class BlaudirektController {
   constructor(private readonly blaudirektService: BlaudirektService) { }
 
   @UseGuards(JwtAuthGuard)
+  @Get('refresh')
+  refresh() {
+    return this.blaudirektService.fetchDataFromBlaudirekt();
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get('contracts/:customerId')
   getContracts(
     @Param('customerId') customerId: string,

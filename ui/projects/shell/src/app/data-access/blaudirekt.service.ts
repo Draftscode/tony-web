@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { inject, Injectable, resource, signal } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
-import { debounceTime, lastValueFrom, Subject } from "rxjs";
+import { debounceTime, finalize, lastValueFrom, Subject } from "rxjs";
 import { environment } from "../../environments/environment";
 
 export type Contract = {
@@ -75,6 +75,7 @@ export class BlaudirektService {
     private readonly http = inject(HttpClient);
     private readonly query$ = new Subject<string>();
     private readonly query = toSignal(this.query$.pipe(debounceTime(500)));
+    isLoading = signal<boolean>(false);
 
     private readonly _customers = resource({
         params: () => {
@@ -87,6 +88,14 @@ export class BlaudirektService {
 
     search(query: string) {
         this.query$.next(query);
+    }
+
+
+    async refresh() {
+        this.isLoading.set(true);
+        return lastValueFrom(this.http.get<void>(`${environment.origin}/blaudirekt/refresh`).pipe(
+            finalize(() => this.isLoading.set(false))
+        ));
     }
 
     async searchCompanies(query: string = '') {

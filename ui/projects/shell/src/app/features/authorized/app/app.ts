@@ -23,6 +23,7 @@ import { FileService } from '../../../data-access/file.service';
 import { ThemeService } from '../../../data-access/theme.service';
 import { FileDialogComponent } from '../../../dialogs/file.dialog';
 import * as packageJson from './../../../../../../../package.json';
+import { BlaudirektService } from '../../../data-access/blaudirekt.service';
 
 @Component({
   selector: 'app',
@@ -45,6 +46,7 @@ export default class App {
   private readonly pDialog = inject(DialogService);
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
+  protected readonly blaudirectService = inject(BlaudirektService);
 
   protected readonly _isLogVisible = signal<boolean>(false);
   protected readonly _logs = signal<string | null>(null);
