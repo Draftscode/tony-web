@@ -93,9 +93,9 @@
                 <ng-template #end>
                     <div class="flex items-center space-x-1">
 
-                        <p-button (onClick)="blaudirectService.refresh()"
+                        <!-- <p-button (onClick)="blaudirectService.refresh()"
                             [icon]="`pi ${blaudirectService.isLoading()?'pi-spin':''} pi-refresh`"
-                            [disabled]="blaudirectService.isLoading()" />
+                            [disabled]="blaudirectService.isLoading()" /> -->
 
                         <p-button pTooltip="Nachtmodus umschalten" tooltipPosition="bottom" [rounded]="true"
                             [text]="true" size="small" (onClick)="_themeService.toggleDarkMode()"

@@ -67,9 +67,9 @@ export class BlaudirektService {
         private readonly httpService: HttpService
     ) {
 
-        // setTimeout(() => {
-        //     this.fetchDataFromBlaudirekt();
-        // })
+        setTimeout(() => {
+            this.fetchDataFromBlaudirekt();
+        })
     }
 
     private async getAccessToken() {
