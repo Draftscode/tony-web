@@ -48,13 +48,14 @@
         "plural": {
             "files": "File(s)"
         },
+        "search": "Search",
         "files": "Files",
         "password": "Password",
         "login": "Login",
         "user": "User",
         "pdf": "PDF",
         "type": "What?",
-        "scope": "Coverage",
+        "scope": "Benefit",
         "signature": "Signature",
         "suggestion": "Suggestion",
         "oneTimePayment": "One-off payment",
@@ -70,6 +71,7 @@
         "inventory": "Portfolio",
         "terminated": "will be terminated",
         "move": "Move row",
+        "line": "Row",
         "gender": {
             "male": "male",
             "female": "female",
