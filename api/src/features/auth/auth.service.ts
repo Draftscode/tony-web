@@ -1,23 +1,13 @@
-import { HttpException, HttpStatus, Injectable, Scope, UnauthorizedException } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from '@nestjs/jwt';
 import { compareSync, genSaltSync, hashSync } from 'bcrypt';
 import { UserEntity } from "src/entities/user.entity";
 import { DataSource } from "typeorm";
+import { UsersService } from "../users/users.service";
 
-@Injectable()
-export class UsersService {
-    constructor(private readonly datasource: DataSource) { }
 
-    async getUser(id: number) {
-        return this.datasource.manager.findOneOrFail(UserEntity, { where: { id } });
-    }
-
-    async findOne(username: string): Promise<UserEntity | null> {
-        return this.datasource.manager.findOne(UserEntity, { where: { username } });
-    }
-}
-function encodePassword(password: string): string {
+export function encodePassword(password: string): string {
     const salt: string = genSaltSync(10);
     return hashSync(password, salt);
 }
@@ -118,12 +108,6 @@ export class AuthService {
             return false;
         }
 
-        await this.datasource.transaction(async manager => {
-            const newUser = manager.create(UserEntity, { username });
-            newUser.password = encodePassword(password);
-            manager.save(newUser);
-        });
-
-        return true;
+        return !!(await this.usersService.createUser({ username, password }));
     }
 }

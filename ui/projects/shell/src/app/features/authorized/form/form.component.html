@@ -1,5 +1,4 @@
-<p-card class="flex m-auto flex" [class.w-full]="!isNew()" [class.h-full]="!isNew()"
-    [style]="isNew() ? {'width':'auto'}:{'width':'100%'}">
+<p-card class="flex m-auto flex max-w-full" [style]="isNew() ? {'width':'auto'}:{'width':'100%'}">
 
     @if(_filename()) {
     <div class="flex w-full items-center justify-between">
@@ -19,7 +18,7 @@
 
                 <div class="inline-flex space-x-4 justify-between">
                     <div class="inline-flex flex-col space-y-1">
-                        <label for="firstname">Firma</label>
+                        <label for="firstname">{{'person.company'|translate}}</label>
                         <input pSize="small" formControlName="company" pInputText id="company" />
                     </div>
                     <p-button icon="pi pi-trash" severity="warn" [text]="true" size="small"
@@ -27,7 +26,7 @@
                 </div>
                 <div class="inline-flex space-x-4">
                     <div class="inline-flex flex-col space-y-1">
-                        <label for="gender">Anrede</label>
+                        <label for="gender">{{'person.gender'|translate}}</label>
                         <p-select [options]="genders()" size="small" formControlName="gender" id="gender">
                             <ng-template #item let-item>
                                 {{('label.salutation.'+item)|translate}}
@@ -39,19 +38,19 @@
                     </div>
 
                     <div class="inline-flex flex-col space-y-1">
-                        <label for="title">Titel</label>
-                        <input pSize="small" required formControlName="title" pInputText id="title" />
+                        <label for="title">{{'person.title'|translate}}</label>
+                        <input pSize="small" formControlName="title" pInputText id="title" />
                     </div>
                 </div>
                 <div class="inline-flex space-x-4">
                     <div class="inline-flex flex-col space-y-1">
-                        <label for="firstname">Vorname *</label>
-                        <input pSize="small" required formControlName="firstname" pInputText id="firstname" />
+                        <label for="firstname">{{'person.firstname'|translate}} *</label>
+                        <input pSize="small" formControlName="firstname" pInputText id="firstname" />
                     </div>
 
                     <div class="inline-flex flex-col space-y-1">
-                        <label for="lastname">Nachname *</label>
-                        <input pSize="small" required formControlName="lastname" pInputText id="lastname" />
+                        <label for="lastname">{{'person.lastname'|translate}} *</label>
+                        <input pSize="small" formControlName="lastname" pInputText id="lastname" />
                     </div>
 
 
@@ -59,23 +58,23 @@
 
                 <div class="inline-flex space-x-4">
                     <div class="inline-flex flex-col space-y-1">
-                        <label for="firstname">Straße</label>
+                        <label for="firstname">{{'person.address.street'|translate}}</label>
                         <input pSize="small" formControlName="street" pInputText id="street" />
                     </div>
                     <div class="inline-flex flex-col space-y-1">
-                        <label for="firstname">Hausnummer</label>
+                        <label for="firstname">{{'person.address.no'|translate}}</label>
                         <input pSize="small" formControlName="streetNo" pInputText id="streetNo" />
                     </div>
                 </div>
                 <div class="inline-flex space-x-4">
                     <div class="inline-flex flex-col space-y-1">
-                        <label for="firstname">Postleitzahl</label>
+                        <label for="firstname">{{'person.address.zip'|translate}}</label>
                         <input pSize="small" formControlName="zipCode" pInputText id="zipCode" />
                     </div>
                 </div>
                 <div class="inline-flex space-x-4">
                     <div class="inline-flex flex-col space-y-1">
-                        <label for="firstname">Stadt</label>
+                        <label for="firstname">{{'person.address.city'|translate}}</label>
                         <input pSize="small" formControlName="city" pInputText id="city" />
                     </div>
                 </div>
@@ -99,12 +98,13 @@
                     [tableStyle]="{ 'min-width': '50rem', width:'100%' }">
                     <ng-template #header>
                         <tr>
-                            <th style="width:6rem"></th>
+                            <th id="move" style="width:6rem"></th>
                             <th style="min-width: 200px" [id]="'table-header-type'">{{'label.type'|translate}}
                             </th>
                             <th style="min-width: 200px" [id]="'table-header-nr'">{{'label.nr'|translate}}
                             </th>
-                            <th style="min-width: 200px" [id]="'table-header-insurer'">{{'label.insurer'|translate}}
+                            <th style="min-width: 200px" [id]="'table-header-insurer'">
+                                {{'label.insurer.label'|translate}}
                             </th>
                             <th style="min-width: 200px" [id]="'table-header-party'">{{'label.party'|translate}}
                             </th>
@@ -118,9 +118,9 @@
                                 {{'label.oneTimePayment'|translate}}
                             </th>
                             <th style="min-width: 200px" [style.width.px]="100" [id]="'table-header-contribution'">
-                                {{'label.contribution'|translate}}
+                                {{'label.contribution.monthly'|translate}}
                             </th>
-                            <th></th>
+                            <th id="actions"></th>
                         </tr>
                     </ng-template>
                     <ng-template #body let-item let-rowIndex="rowIndex">
@@ -199,7 +199,8 @@
                         <tr>
                             <td colspan="8" class="border-b-0 border-t-2 border-gray-500 dark:border-gray-300">
                                 <div class="flex gap-2">
-                                    <span class="font-semibold">Alt</span><span class="text-gray-500">(monatl.)</span>
+                                    <span class="font-semibold">{{'label.finances.old'|translate}}</span><span
+                                        class="text-gray-500">({{'label.frequency.monthly'|translate}})</span>
                                 </div>
                             </td>
                             <td class="font-semibold border-b-0 border-t-2 border-gray-500 dark:border-gray-300"></td>
@@ -211,7 +212,8 @@
                         <tr>
                             <td colspan="8" class="border-b-0">
                                 <div class="flex gap-2">
-                                    <span class="font-semibold">Neu</span><span class="text-gray-500">(monatl.)</span>
+                                    <span class="font-semibold">{{'label.finances.new'|translate}}</span><span
+                                        class="text-gray-500">({{'label.frequency.monthly'|translate}})</span>
                                 </div>
                             </td>
 
@@ -228,8 +230,8 @@
                         <tr>
                             <td colspan="8" class="border-b-0">
                                 <div class="flex gap-2">
-                                    <span class="font-semibold">Ersparnis</span><span
-                                        class="text-gray-500">(monatl.)</span>
+                                    <span class="font-semibold">{{'label.finances.savings'|translate}}</span><span
+                                        class="text-gray-500">({{'label.frequency.monthly'|translate}})</span>
                                 </div>
                             </td>
                             <td class="font-semibold border-b-0"></td>
@@ -242,20 +244,21 @@
                 </p-table>
                 <div class="w-full flex justify-end">
                     <p-button [disabled]="fileService.isLoading()" icon="pi pi-plus" severity="secondary"
-                        (onClick)="_onAddRow(groupIndex)" size="small" label="Neue Zeile" />
+                        (onClick)="_onAddRow(groupIndex)" size="small"
+                        [label]="'utils.create.value'|translate:{value:'label.line'|translate}" />
                 </div>
 
             </div>
             <p-divider />
             }
         </div>
-        <p-button icon="pi pi-plus" (onClick)="onAddGroup()" severity="secondary" size="small" label="Neue Gruppe" />
+        <p-button icon="pi pi-plus" (onClick)="onAddGroup()" severity="secondary" size="small" [label]="'utils.create.value'|translate:{value:'label.group'|translate}" />
 
         <div class="w-full flex justify-end space-x-2">
             <p-button size="small" [disabled]="fileService.isLoading() || _formGroup.invalid || _formGroup.pristine"
-                (onClick)="onSave()" icon="pi pi-save" [label]="'Speichern'" />
+                (onClick)="onSave()" icon="pi pi-save" [label]="'label.save'|translate" />
             <p-button size="small" [disabled]="fileService.isLoading() || _formGroup.invalid" (onClick)="_onCreatePdf()"
-                icon="pi pi-plus" [label]="'label.create_pdf'|translate" />
+                icon="pi pi-plus" [label]="'utils.create.value'|translate:{value:'label.pdf'|translate}" />
         </div>
     </form>
     }

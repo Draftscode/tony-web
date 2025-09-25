@@ -88,7 +88,7 @@ export type FormType = {
 }
 
 @Component({
-    host: { class: 'w-full h-full' },
+    host: { class: 'w-full h-full p-4' },
     selector: 'app-form',
     imports: [AutoCompleteModule, TranslateModule, DatePickerModule,
         InputTextModule, TableModule, ProgressBarModule, DialogModule, SelectModule,

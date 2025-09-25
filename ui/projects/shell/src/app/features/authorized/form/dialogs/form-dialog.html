@@ -1,19 +1,19 @@
 <form [formGroup]="_formGroup" class="inline-flex flex-col space-y-2 overflow-hidden w-full" (ngSubmit)="close()">
 
     <div class="inline-flex flex-col">
-        <label for="type">Produkt</label>
+        <label for="type">{{'label.product'|translate}}</label>
         <input id="type" pInputText formControlName="type" />
     </div>
     <div class="inline-flex flex-col">
-        <label for="nr">Nr.</label>
+        <label for="nr">{{'label.insurer.no'|translate}}</label>
         <input id="nr" pInputText formControlName="nr" />
     </div>
     <div class="inline-flex flex-col">
-        <label for="party">Versicherungsnehmer (VN)</label>
+        <label for="party">{{'label.insured.label'|translate}}</label>
         <input id="party" pInputText formControlName="party" />
     </div>
     <div class="inline-flex flex-col">
-        <label for="insurer">Versicherer</label>
+        <label for="insurer">{{'label.insurer.label'|translate}}</label>
         <p-auto-complete formControlName="insurer" [dropdown]="true" appendTo="body" optionLabel="name"
             [suggestions]="insurers()" (completeMethod)="searchInsurers($event.query)">
             <ng-template #item let-item>
@@ -24,34 +24,34 @@
         </p-auto-complete>
     </div>
     <div class="inline-flex flex-col">
-        <label for="scope">Leistung</label>
+        <label for="scope">{{'label.scope'|translate}}</label>
         <input id="scope" pInputText formControlName="scope" />
     </div>
     <div class="inline-flex flex-col">
-        <label for="suggestion">Vorschlag</label>
+        <label for="suggestion">{{'label.suggestion'|translate}}</label>
         <p-autocomplete [readonly]="true" appendTo="body" (completeMethod)="onSearch($event.query)"
             [completeOnFocus]="true" [dropdown]="true" [forceSelection]="true" formControlName="suggestion"
             [suggestions]="_suggs" optionLabel="label" optionValue="value" />
     </div>
     <div class="inline-flex flex-col">
-        <label for="fromTo">Laufzeit</label>
+        <label for="fromTo">{{'label.fromTo'|translate}}</label>
         <p-datepicker inputId="fromTo" dateFormat="dd.mm.yy" appendTo="body" formControlName="fromTo"
             selectionMode="range" [readonlyInput]="false" />
     </div>
 
     <div class="flex gap-2">
         <div class="inline-flex flex-col">
-            <label for="oneTimePayment">Einmalig</label>
+            <label for="oneTimePayment">{{'label.oneTimePayment'|translate}}</label>
             <p-inputnumber [minFractionDigits]="2" [maxFractionDigits]="2" inputId="oneTimePayment" mode="decimal"
                 formControlName="oneTimePayment" />
         </div>
         <div class="inline-flex flex-col">
-            <label for="contribution">Beitrag</label>
+            <label for="contribution">{{'label.contribution.label'|translate}}</label>
             <p-inputnumber [minFractionDigits]="2" [maxFractionDigits]="2" inputId="contribution" mode="decimal"
                 formControlName="contribution" />
         </div>
         <div class="inline-flex flex-col">
-            <label for="monthly">Monatl.</label>
+            <label for="monthly">{{'label.frequency.monthly'|translate}}</label>
             <p-checkbox [binary]="true" formControlName="monthly" inputId="monthly" />
         </div>
     </div>
@@ -59,6 +59,6 @@
     <p-divider />
     <div class="w-full flex justify-end">
         <p-button type="submit" [disabled]="_formGroup.invalid" (onClick)="close()" icon="pi pi-plus"
-            [label]="'Speichern'|translate" />
+            [label]="'label.save'|translate" />
     </div>
 </form>

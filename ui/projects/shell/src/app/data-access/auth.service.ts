@@ -5,12 +5,21 @@ import { environment } from "../../environments/environment";
 import { InterceptorSkipReason } from "../interceptors/auth.interceptor";
 
 export type User = {
-
+    id: number;
+    firstnames: string;
+    lastname: string;
+    username: string;
 };
 
 class TUser {
     static parse(value: unknown): User | null {
-        return {};
+        const v = value as never;
+        return {
+            id: v['id'],
+            firstnames: v['firstnames'],
+            lastname: v['lastname'],
+            username: v['username'],
+        } as User;
     }
 }
 
@@ -44,6 +53,10 @@ export class AuthService {
 
     constructor() {
         this.getCredentials();
+    }
+
+    logout() {
+        this.setCredentials(null);
     }
 
     setCredentials(credentials: Credentials | null) {

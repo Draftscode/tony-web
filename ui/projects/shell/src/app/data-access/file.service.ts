@@ -1,18 +1,22 @@
-import { HttpClient, HttpEvent, HttpParams } from "@angular/common/http";
-import { inject, Injectable, resource, signal } from "@angular/core";
+import { HttpClient, HttpEvent, HttpParams, httpResource } from "@angular/common/http";
+import { computed, inject, Injectable, resource, Signal, signal } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { MessageService } from "primeng/api";
 import { finalize, lastValueFrom, map, Observable, tap } from "rxjs";
 import { environment } from "../../environments/environment";
+import { ListResponse } from "../utils/list.model";
 import { Content, toPdf } from "../utils/to-pdf";
 
-
-type DropboxFile = {
+export type DataFile = {
     id: number;
     lastModified: string;
     filename: string;
 }
 
+type ListResult<T> = {
+    items: T[];
+    total: number;
+}
 
 @Injectable({ providedIn: 'root' })
 export class FileService {
@@ -29,7 +33,7 @@ export class FileService {
             return { query: this.query(), timestamp: this.timestamp() }
         },
         loader: ({ params }) => this.listFiles(params.query, params.timestamp),
-        defaultValue: [],
+        defaultValue: { items: [], total: 0 },
     });
 
 
@@ -45,6 +49,21 @@ export class FileService {
 
     }
 
+    getAllFiles(q: Signal<string>) {
+        return httpResource<ListResponse<DataFile>>(() => ({
+            url: `${environment.origin}/files`,
+            method: 'GET',
+            params: {
+                q: q(),
+            }
+        }), {
+            defaultValue: {
+                items: [],
+                total: 0
+            },
+        })
+    }
+
     search(value: string) {
         this.query.set(value);
     }
@@ -54,7 +73,7 @@ export class FileService {
         this._isLoading.set(true);
         const params = new HttpParams().append('q', query);
         return lastValueFrom(
-            this.http.get<DropboxFile[]>(`${environment.origin}/files`, { params }).pipe(
+            this.http.get<ListResult<DataFile>>(`${environment.origin}/files`, { params }).pipe(
                 finalize(() => this._isLoading.set(false)),
             ));
     }
@@ -63,7 +82,7 @@ export class FileService {
         const formData = new FormData();
         files.forEach(file => formData.append('files', file, file.name));
 
-        return this.http.post<DropboxFile>(`${environment.origin}/files/import`, formData, {
+        return this.http.post<DataFile>(`${environment.origin}/files/import`, formData, {
             reportProgress: true,
             observe: 'events', // allows tracking upload progress
         }).pipe(finalize(() => this.refresh()));
@@ -74,7 +93,7 @@ export class FileService {
     async renameFile(fileId: string, toPath: string) {
         this._isLoading.set(true);
         try {
-            const original = this._files.value()?.find(file => `${file.id}` === fileId);
+            const original = this._files.value().items?.find(file => `${file.id}` === fileId);
 
             if (original) {
                 await lastValueFrom(this.http.put<void>(`${environment.origin}/files/move`, {
@@ -135,8 +154,7 @@ export class FileService {
         return this._isLoading;
     }
 
-    get files() {
-        return this._files.value;
-    }
 
+    readonly items = computed(() => this._files.value().items);
+    readonly total = computed(() => this._files.value().total);
 }

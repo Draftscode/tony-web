@@ -1,5 +1,6 @@
 import { TranslateService } from "@ngx-translate/core";
-import { Suggestion } from "../features/app/form/dialogs/form-dialog";
+import { Suggestion } from "../features/authorized/form/dialogs/form-dialog";
+
 
 
 export type TableRow = {
@@ -195,31 +196,31 @@ export function toPdf(content: Content, translate: TranslateService) {
         <table cellspacing="0" cellpadding="0">
         <thead>
             <tr>
-                <th style="width: 10%">Produkt</th>
-                <th style="width: 10%">Vers.Nr.</th>
-                <th style="width: 16%">Versicherer</th>
-                <th style="width: 10%">VN</th>
-                <th style="width: 10%">Vorschlag</th>
-                <th style="width: 20%">Leistung</th>
-                <th style="width: 10%">Laufzeit</th>
-                <th style="width: 7%">Einmalig</th>
-                <th style="width: 7%">Beitrag</th>
+                <th style="width: 10%">${translate.instant('label.product')}</th>
+                <th style="width: 10%">${translate.instant('label.insurer.no')}</th>
+                <th style="width: 16%">${translate.instant('label.insurer.no')}</th>
+                <th style="width: 10%">${translate.instant('label.insured.short')}</th>
+                <th style="width: 10%">${translate.instant('label.suggestion')}</th>
+                <th style="width: 20%">${translate.instant('label.scope')}</th>
+                <th style="width: 10%">${translate.instant('label.fromTo')}</th>
+                <th style="width: 7%">${translate.instant('label.oneTimePayment')}</th>
+                <th style="width: 7%">${translate.instant('label.contribution.label')}</th>
             </tr>
         </thead>
         <tbody>
             ${rows}
             <tr class="border-top">
-                <td colspan="7">Alt (monatl.)</td>
+                <td colspan="7">${translate.instant('label.finances.old')} (${translate.instant('label.frequency.monthly')})</td>
                 <td><b></b></td>  
                 <td><b>${existed.toFixed(2)} €</b></td>
             </tr>
             <tr>
-                <td colspan="7">Neu (monatl.)</td>
+                <td colspan="7">${translate.instant('label.finances.new')} (${translate.instant('label.frequency.monthly')})</td>
                 <td><b>${totalOnce.toFixed(2)} €</b></td>  
                 <td><b>${current.toFixed(2)} €</b></td>
             </tr>
             <tr>
-                <td colspan="7">Ersparnis (monatl.)</td>
+                <td colspan="7">${translate.instant('label.finances.savings')} (${translate.instant('label.frequency.monthly')})</td>
                 <td><b></b></td>  
                 <td><b>${savings.toFixed(2)} €</b></td>
             </tr>
@@ -232,18 +233,18 @@ export function toPdf(content: Content, translate: TranslateService) {
     let personHtml = ``;
     let signature = ``;
     content.persons.forEach(person => {
-        const salutation = translate.instant(`label.salutation.${person.gender}`);
+        const salutation = person.gender ? translate.instant(`label.salutation.${person.gender}`) : '';
         personHtml += `
         <div class="p">
         ${person.company ? `<div style="padding: 4px">${person.company}</div>` : ''}
-    <div style="padding: 4px">${salutation} ${person.title}</div>
+    <div style="padding: 4px">${salutation} ${person.title ?? ''}</div>
     <div style="padding: 4px">${person.firstname} ${person.lastname}</div>
     <div style="padding: 4px">${person.street ?? ''} ${person.streetNo ?? ''}</div>
     <div style="padding: 4px">${person.zipCode ?? ''}</div>
     <div style="padding: 4px">${person.city ?? ''}</div>
   </div>`;
 
-        signature += `<div class="p"><div><b>Unterschift</b></div>
+        signature += `<div class="p"><div><b>${translate.instant('label.signature')}</b></div>
 <div class="signature-field">_______________________________</div>
 <div>${person.firstname} ${person.lastname}</div></div>`;
     })

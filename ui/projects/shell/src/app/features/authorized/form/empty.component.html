@@ -5,7 +5,8 @@
             Seitenmenü aus, oder erstelle eine neue!</span>
         <p-divider />
         <div class="flex justify-end">
-            <p-button icon="pi pi-plus" (onClick)="onCreateFile()" label="Datei erstellen" />
+            <p-button icon="pi pi-plus" (onClick)="onCreateFile()"
+                [label]="'utils.create.value'|translate:{value:'label.file.label'|translate}" />
         </div>
     </div>
 </p-card>

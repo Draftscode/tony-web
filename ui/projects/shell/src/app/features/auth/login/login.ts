@@ -1,6 +1,7 @@
 import { Component, inject } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
+import { TranslateModule } from "@ngx-translate/core";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { DividerModule } from "primeng/divider";
@@ -12,7 +13,8 @@ import { ThemeService } from "../../../data-access/theme.service";
 @Component({
     selector: 'app-login',
     templateUrl: 'login.html',
-    imports: [CardModule, PasswordModule, DividerModule, ButtonModule, InputTextModule, FormsModule, ReactiveFormsModule]
+    imports: [CardModule, PasswordModule, DividerModule, TranslateModule,
+        ButtonModule, InputTextModule, FormsModule, ReactiveFormsModule]
 })
 export default class LoginPage {
     private readonly authService = inject(AuthService);

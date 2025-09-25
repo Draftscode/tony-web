@@ -1,0 +1,47 @@
+@if(true) {
+<div class="flex w-full relative h-full overflow-hidden">
+    <div class="grow w-full h-full flex flex-col overflow-hidden main-content" [class.is-shifted]="_isSidebarOpen()">
+        <div
+            class="w-full flex items-center justify-between bg-surface-0 dark:bg-surface-900 border-b-1 border-surface-200 dark:border-surface-600">
+            <p-menubar class="w-full" class="w-full bg-transparent! border-none! rounded-none" [model]="_menuItems()">
+                <ng-template #start>
+                    <div class="flex items-center space-x-1">
+                        <img [src]="'./images/logo-raw-no-text'+(_themeService.isDark()?'-dark':'')+'.png'"
+                            [style.height]="'28px'" alt="Logo">
+                    </div>
+                </ng-template>
+                <ng-template #end>
+                    <div class="flex items-center space-x-1">
+                        <app-language-selector size="small" />
+                        <p-button [pTooltip]="`theming.switch.${_themeService.isDark()?'daymode':'darkmode'}`|translate"
+                            tooltipPosition="bottom" [rounded]="true" [text]="true" size="small"
+                            (onClick)="_themeService.toggleDarkMode()"
+                            [icon]="'pi pi-'+ (_themeService.isDark() ? 'sun':'moon')" />
+                        <p-button [rounded]="true" [text]="true" (onClick)="onLogout()" icon="pi pi-sign-out" />
+
+                    </div>
+                </ng-template>
+            </p-menubar>
+        </div>
+        <div class="h-full w-full bg-surface-100 dark:bg-surface-950! flex overflow-hidden">
+            <div
+                class="h-full w-[4rem] bg-surface-0 dark:bg-surface-900! border-r-1 border-surface-200 gap-2 dark:border-surface-600 flex flex-col">
+                @for(item of menuItems(); track item.routerLink) {
+                <a [pTooltip]="item.label|translate" class="flex w-full items-center justify-center p-4"
+                    [routerLink]="item.routerLink" [queryParams]="item.queryParams" routerLinkActive="bg-highlight"
+                    [routerLinkActiveOptions]="{ exact: false }">
+                    <i [class]="`${item.icon} text-3xl`"></i>
+                </a>
+                }
+            </div>
+            <div class="w-full h-full overflow-auto">
+                <div class="flex flex-col w-full h-full">
+                    <router-outlet />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-toast />
+}

@@ -19,8 +19,7 @@ export class ThemeService {
         const htmlElement = document.documentElement; // Gets the <html> tag
         htmlElement.classList.toggle('p-dark');
         this.isDark.set(this.isDarkMode());
-        const fav = `${this.isDark() ? 'favicon-dark.ico' : 'favicon.ico'}`;
-        this.setFavicon(fav);
+        this.setFavicon();
     }
 
     private ensureFaviconElement() {
@@ -31,10 +30,13 @@ export class ThemeService {
             link.rel = 'icon';
             document.head.appendChild(link);
         }
+
+        this.setFavicon();
     }
 
 
-    private setFavicon(iconUrl: string) {
+    private setFavicon() {
+        const iconUrl = `${this.isDark() ? 'favicon-dark.ico' : 'favicon.ico'}`;
         const link: HTMLLinkElement | null = document.querySelector(`#${this.faviconId}`);
         if (link) {
             link.href = iconUrl;

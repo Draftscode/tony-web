@@ -1,12 +1,68 @@
 {
+    "person": {
+        "username": "Benutzername",
+        "gender": "Anrede",
+        "title": "Titel",
+        "company": "Firma",
+        "firstname": "Vorname",
+        "lastname": "Nachname",
+        "address": {
+            "city": "Stadt",
+            "no": "Hausnummer",
+            "street": "Straße",
+            "zip": "Postleitzahl"
+        }
+    },
     "label": {
-        "create_pdf": "PDF Erstellen",
+        "frequency": {
+            "monthly": "monatl."
+        },
+        "finances": {
+            "old": "Alt",
+            "new": "Neu",
+            "savings": "Ersparnis"
+        },
+        "language": {
+            "german": "Deutsch",
+            "english": "English",
+            "bulgarian": "Bulgarisch"
+        },
+        "insurer": {
+            "no": "Vers. Nr.",
+            "label": "Versicherer"
+        },
+        "insured": {
+            "label": "Versicherungsnehmer (VN)",
+            "short": "VN"
+        },
+        "group": "Gruppe",
+        "product": "Produkt",
+        "save": "Speichern",
+        "refresh": "Aktualisieren",
+        "import": "Importieren",
+        "file": {
+            "label": "Datei",
+            "name": "Dateiname"
+        },
+        "users": "Benutzer",
+        "plural": {
+            "files": "Datei(en)"
+        },
+        "serach": "Suche",
+        "files": "Dateien",
+        "password": "Passwort",
+        "login": "Anmelden",
+        "user": "Benutzer",
+        "pdf": "PDF",
         "type": "Was?",
-        "insurer": "Versicherer",
         "scope": "Leistung",
+        "signature": "Unterschrift",
         "suggestion": "Vorschlag",
         "oneTimePayment": "Einmalzahlung",
-        "contribution": "monatl. Beitrag",
+        "contribution": {
+            "monthly": "monatl. Beitrag",
+            "label": "Beitrag"
+        },
         "party": "VN",
         "nr": "Vers.Nr.",
         "fromTo": "Laufzeit",
@@ -15,6 +71,7 @@
         "inventory": "Bestand",
         "terminated": "wird gekündigt",
         "move": "Zeile verschieben",
+        "line": "Zeile",
         "gender": {
             "male": "männlich",
             "female": "weiblich",
@@ -26,7 +83,38 @@
             "other": ""
         }
     },
+    "theming": {
+        "switch": {
+            "darkmode": "Nachtmodus umschalten",
+            "daymode": "Tagmodus umschalten"
+        }
+    },
     "date": {
         "datetime": "dd.MM.yy HH:MM"
+    },
+    "utils": {
+        "create": {
+            "value": "{{value}} erstellen"
+        },
+        "edit": {
+            "value": "{{value}} bearbeiten"
+        },
+        "pagination": "{{value}} of {{total}} {{entity}}"
+    },
+    "blaudirekt": {
+        "search": {
+            "customer": "Blaudirekt Kunden-Suche"
+        }
+    },
+    "validation": {
+        "required": "Pflichtfeld"
+    },
+    "action": {
+        "select": {
+            "all": "Alles auswählen"
+        },
+        "confirm": "bestätigen",
+        "delete": "Löschen",
+        "edit": "Bearbeiten"
     }
 }

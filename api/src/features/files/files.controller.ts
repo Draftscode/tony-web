@@ -1,10 +1,11 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, Res, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
-import type { Response } from "express";
-import { FileEntity } from "src/entities/file.entity";
-import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
-import { FilesService, ImportedFile, ImportedFileWrapper } from "./files.service";
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, Req, Res, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { File } from "buffer";
+import type { Request, Response } from "express";
+import { FileEntity } from "src/entities/file.entity";
+import { UserEntity } from "src/entities/user.entity";
+import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
+import { FilesService, ImportedFile, ImportedFileWrapper } from "./files.service";
 
 @Controller('files')
 export class FilesController {
@@ -36,8 +37,9 @@ export class FilesController {
     createOrUpdateFile(
         @Body() file: Partial<FileEntity>,
         @Param('filename') filename: string,
+        @Req() req: Request,
     ) {
-        return this.filesService.createOrUpdateFile(filename, file)
+        return this.filesService.createOrUpdateFile(filename, file, req.user as UserEntity)
     }
 
     @UseGuards(JwtAuthGuard)

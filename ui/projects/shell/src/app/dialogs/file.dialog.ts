@@ -1,6 +1,7 @@
-import { Component, computed, effect, inject, signal } from "@angular/core";
+import { Component, computed, inject, signal } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { TranslateModule } from "@ngx-translate/core";
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
@@ -17,7 +18,8 @@ import { CompanyComponent } from "./company";
 @Component({
     selector: 'file-dialog',
     templateUrl: 'file.dialog.html',
-    imports: [ReactiveFormsModule, FormsModule, MessageModule, SelectModule, CheckboxModule, AutoCompleteModule, CompanyComponent,
+    imports: [ReactiveFormsModule, FormsModule, MessageModule, SelectModule,
+        CheckboxModule, AutoCompleteModule, CompanyComponent, TranslateModule,
         KeyFilterModule, InputTextModule, ButtonModule, DividerModule]
 })
 export class FileDialogComponent {

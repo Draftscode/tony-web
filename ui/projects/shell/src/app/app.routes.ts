@@ -19,14 +19,23 @@ export const routes: Routes = [{
     // canActivate: [authGuard],
     path: 'app',
     canActivate: [authGuard],
-    loadComponent: () => import('./features/authorized/app/app'),
+    loadComponent: () => import('./features/authorized/app/app-authorized'),
     children: [{
         path: '',
         pathMatch: 'full',
-        loadComponent: () => import('./features/app/form/empty.component'),
+        redirectTo: 'files'
     }, {
-        path: ':id',
-        loadComponent: () => import('./features/app/form/form.component'),
+        path: 'files',
+        children: [{
+            path: '',
+            loadComponent: () => import('./features/authorized/form/list/file-list')
+        }, {
+            path: ':id',
+            loadComponent: () => import('./features/authorized/form/form.component'),
+        }],
+    }, {
+        path: 'users',
+        loadComponent: () => import('./features/authorized/user/list/user-list')
     }],
 }, {
     path: '**',

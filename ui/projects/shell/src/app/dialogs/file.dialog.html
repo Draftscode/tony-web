@@ -1,16 +1,16 @@
 <form [formGroup]="formGroup" (ngSubmit)="onClose()">
     <div class="flex flex-col gap-4">
         <div class="inline-flex flex-col">
-            <label for="name">Dateiname *</label>
+            <label for="name">{{'label.file.name'|translate}} *</label>
             <input [invalid]="formGroup.controls.name.invalid" (change)="search(control.value)" #control id="name"
                 formControlName="name" pInputText [pKeyFilter]="blockChars" />
             @if(formGroup.controls.name.hasError('required') && formGroup.controls.name.touched) {
-            <p-message [text]="'* Pflichtfeld'" [severity]="'error'" class="mt-2" />
+            <p-message [text]="`* ${'validation.required'|translate}`" [severity]="'error'" class="mt-2" />
             }
         </div>
         <p-divider />
         <div class="inline-flex flex-col w-full">
-            <label for="customer">Blaudirekt Kunden-Suche</label>
+            <label for="customer">{{'blaudirekt.search.customer'|translate}}</label>
             <p-autocomplete [dropdown]="true" [completeOnFocus]="true" appendTo="body" inputStyleClass="w-full"
                 class="w-full" (onClear)="searchContracts()" [showClear]="true"
                 (onSelect)="searchContracts($event.value.id)" [inputId]="'name'" formControlName="customer"
@@ -21,14 +21,14 @@
         <div class="flex gap-2 items-center">
             <p-checkbox [ngModelOptions]="{standalone: true}" [binary]="true" [ngModel]="isChecked()"
                 [indeterminate]="isIndeterminate()" (onChange)="toggleSelection()" inputId="select-all" />
-            <label for="select-all">Alle auswählen</label>
+            <label for="select-all">{{'action.select.all'|translate}}</label>
         </div>
         @for(contract of contracts(); track contract.id) {
         <div class="flex w-full flex-col">
             <div class="flex gap-4 items-center">
                 <p-checkbox name="contracts" formControlName="selectedContracts" [value]="contract"
                     [inputId]="contract.id" />
-                <app-company [company]="contract.company"/>
+                <app-company [company]="contract.company" />
             </div>
         </div>
         }
@@ -38,6 +38,6 @@
     </div>
     <p-divider />
     <div class="flex justify-end">
-        <p-button [disabled]="formGroup.invalid && formGroup.dirty" (onClick)="onClose()" label="Bestätigen" />
+        <p-button [disabled]="formGroup.invalid && formGroup.dirty" (onClick)="onClose()" [label]="'action.confirm'|translate" />
     </div>
 </form>

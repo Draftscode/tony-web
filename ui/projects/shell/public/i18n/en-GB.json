@@ -1,22 +1,118 @@
 {
+    "person": {
+        "username": "Username",
+        "gender": "Salutation",
+        "title": "Title",
+        "company": "Company",
+        "firstname": "First name",
+        "lastname": "Last name",
+        "address": {
+            "city": "City",
+            "no": "House number",
+            "street": "Street",
+            "zip": "Postcode"
+        }
+    },
     "label": {
-        "create_pdf": "Create PDF",
+        "frequency": {
+            "monthly": "monthly"
+        },
+        "finances": {
+            "old": "Old",
+            "new": "New",
+            "savings": "Savings"
+        },
+        "language": {
+            "german": "German",
+            "english": "English",
+            "bulgarian": "Bulgarian"
+        },
+        "insurer": {
+            "no": "Insurance No.",
+            "label": "Insurer"
+        },
+        "insured": {
+            "label": "Policyholder (PH)",
+            "short": "PH"
+        },
+        "group": "Group",
+        "product": "Product",
+        "save": "Save",
+        "refresh": "Refresh",
+        "import": "Import",
+        "file": {
+            "label": "File",
+            "name": "File name"
+        },
+        "users": "Users",
+        "plural": {
+            "files": "File(s)"
+        },
+        "files": "Files",
+        "password": "Password",
+        "login": "Login",
+        "user": "User",
+        "pdf": "PDF",
+        "type": "What?",
+        "scope": "Coverage",
+        "signature": "Signature",
+        "suggestion": "Suggestion",
+        "oneTimePayment": "One-off payment",
+        "contribution": {
+            "monthly": "Monthly contribution",
+            "label": "Contribution"
+        },
+        "party": "PH",
+        "nr": "Insurance No.",
+        "fromTo": "Duration",
         "new": "New",
-        "acquisition": "Acquisition",
-        "inventory": "Inventory",
-        "terminated": "Terminated",
-        "move": "Move",
+        "acquisition": "Takeover",
+        "inventory": "Portfolio",
+        "terminated": "will be terminated",
+        "move": "Move row",
         "gender": {
-            "male": "Male",
-            "female": "Female",
-            "other": "Other"
+            "male": "male",
+            "female": "female",
+            "other": "other"
         },
         "salutation": {
-            "mr": "Mr.",
-            "mrs": "Mrs."
+            "male": "Mr",
+            "female": "Ms",
+            "other": ""
+        }
+    },
+    "theming": {
+        "switch": {
+            "darkmode": "Switch dark mode",
+            "daymode": "Switch light mode"
         }
     },
     "date": {
-        "datetime": "dd.MM.yy HH:MM"
+        "datetime": "dd/MM/yyyy HH:mm"
+    },
+    "utils": {
+        "create": {
+            "value": "Create {{value}}"
+        },
+        "edit": {
+            "value": "Edit {{value}}"
+        },
+        "pagination": "{{value}} of {{total}} {{entity}}"
+    },
+    "blaudirekt": {
+        "search": {
+            "customer": "Blaudirekt customer search"
+        }
+    },
+    "validation": {
+        "required": "Required field"
+    },
+    "action": {
+        "select": {
+            "all": "Select all"
+        },
+        "confirm": "Confirm",
+        "delete": "Delete",
+        "edit": "Edit"
     }
 }

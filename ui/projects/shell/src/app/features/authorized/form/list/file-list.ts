@@ -1,0 +1,55 @@
+import { DatePipe } from "@angular/common";
+import { Component, computed, inject, signal } from "@angular/core";
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from "@angular/router";
+import { TranslateModule } from "@ngx-translate/core";
+import { MenuItem } from "primeng/api";
+import { ButtonModule } from "primeng/button";
+import { CardModule } from "primeng/card";
+import { DataViewModule } from 'primeng/dataview';
+import { DividerModule } from "primeng/divider";
+import { FileSelectEvent, FileUploadModule } from "primeng/fileupload";
+import { InputGroupModule } from "primeng/inputgroup";
+import { InputGroupAddonModule } from "primeng/inputgroupaddon";
+import { InputTextModule } from "primeng/inputtext";
+import { PopoverModule } from "primeng/popover";
+import { TooltipModule } from "primeng/tooltip";
+import { lastValueFrom } from "rxjs";
+import { FileService } from "../../../../data-access/file.service";
+import { FileStore } from "../../../../data-access/store/file.store";
+
+@Component({
+    selector: 'app-file-list',
+    templateUrl: 'file-list.html',
+    host: { class: 'flex p-4 w-full justify-center' },
+    imports: [DataViewModule, CardModule, RouterLink, TooltipModule, DatePipe,
+        FileUploadModule, DividerModule, RouterLinkActive, TranslateModule,
+        PopoverModule, ButtonModule, InputTextModule, InputGroupAddonModule, InputGroupModule]
+})
+export default class FileList {
+    protected readonly fileService = inject(FileService);
+    protected readonly fileStore = inject(FileStore);
+    private readonly router = inject(Router);
+    private readonly activatedRoute = inject(ActivatedRoute);
+
+    private readonly query = signal<string>('');
+
+    constructor() {
+        this.fileStore.connectQuery(this.query);
+    }
+
+    protected onInput(query: string) {
+        this.query.set(query);
+    }
+
+    protected async onCreateFile() {
+        const result = await this.fileStore.createFile();
+        if (result) {
+            this.router.navigate(['./', result.data.name], { relativeTo: this.activatedRoute });
+        }
+    }
+
+    protected async onImport(event: FileSelectEvent) {
+        await lastValueFrom(this.fileService.importFiles(Array.from(event.files)));
+    }
+
+}

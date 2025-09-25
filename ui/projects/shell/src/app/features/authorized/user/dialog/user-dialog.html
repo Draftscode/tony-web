@@ -1,0 +1,25 @@
+<form class="flex flex-col" [formGroup]="formGroup">
+
+    <div class="flex flex-col">
+        <label for="username">{{'person.username'|translate}}</label>
+        <input id="username" pInputText formControlName="username" />
+    </div>
+    @if(isNew()) {
+    <div class="flex flex-col">
+        <label for="password">{{'label.password'|translate}}</label>
+        <p-password inputId="password" formControlName="password" [feedback]="false" [toggleMask]="true" />
+    </div>
+    }
+    <div class="flex flex-col">
+        <label for="firstname">{{'person.firstname'|translate}}</label>
+        <input id="firstname" pInputText formControlName="firstname" />
+    </div>
+    <div class="flex flex-col">
+        <label for="lastname">{{'person.lastname'|translate}}</label>
+        <input id="lastname" pInputText formControlName="lastname" />
+    </div>
+</form>
+<p-divider />
+<div class="flex justify-end">
+    <p-button (onClick)="close()" label="Speichern" />
+</div>

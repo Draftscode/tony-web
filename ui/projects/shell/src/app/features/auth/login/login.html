@@ -3,20 +3,22 @@
         <form [formGroup]="formGroup" class="flex gap-2 flex-col p-4 min-w-[300px]" (ngSubmit)="submit()">
             <img [src]="`./images/logo/logo-raw${themeService.isDark()?'-dark':''}-w420.png`" alt="Logo"
                 class="object-contain h-[100px]">
-            <span class="text-4xl font-semibold w-full text-center my-8">Login</span>
+            <span class="text-4xl font-semibold w-full text-center my-8">
+                {{'label.login'|translate}}
+            </span>
 
             <div class="flex flex-col">
-                <label for="username">Username</label>
+                <label for="username">{{'person.username'|translate}}</label>
                 <input id="username" formControlName="username" pInputText />
             </div>
             <div class="flex flex-col">
-                <label for="password">Password</label>
-                <p-password inputStyleClass="w-full" inputId="password" id="password" formControlName="password"
+                <label for="password">{{'label.password'|translate}}</label>
+                <p-password inputStyleClass="w-full" [toggleMask]="true" inputId="password" id="password" formControlName="password"
                     [feedback]="false" />
             </div>
             <p-divider />
             <div class="flex justify-end">
-                <p-button type="submit" [disabled]="formGroup.invalid" label="Login" />
+                <p-button type="submit" [disabled]="formGroup.invalid" [label]="'label.login'|translate" />
             </div>
         </form>
     </p-card>

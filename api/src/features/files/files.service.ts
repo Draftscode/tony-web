@@ -1,9 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import puppeteer from "puppeteer";
 import { FileEntity } from "src/entities/file.entity";
+import { UserEntity } from "src/entities/user.entity";
 import { DataSource, ILike } from "typeorm";
-import { usePdfPreset } from "./pdf.preset";
 import { FileDataGroup, FileDataPerson } from "./files.model";
+import { usePdfPreset } from "./pdf.preset";
 
 export type ImportedFile = {
     persons: FileDataPerson[];
@@ -20,12 +21,19 @@ export type ImportedFileWrapper = {
 export class FilesService {
     constructor(private readonly dataSource: DataSource) { }
 
-    getAll(query: string) {
-        return this.dataSource.manager.find(FileEntity, {
+    async getAll(query: string) {
+        const [items, total] = await this.dataSource.manager.findAndCount(FileEntity, {
             where: {
                 filename: ILike(`%${query}%`),
-            }
+            },
+            order: {
+                filename: 'ASC',
+            },
+            take: 100,
+            skip: 0,
         })
+
+        return { items, total };
     }
 
     async importFiles(files: ImportedFileWrapper[]) {
@@ -66,7 +74,7 @@ export class FilesService {
         });
     }
 
-    async createOrUpdateFile(filename: string, fileDto: Partial<FileEntity>) {
+    async createOrUpdateFile(filename: string, fileDto: Partial<FileEntity>, user: UserEntity) {
         return this.dataSource.transaction(async manager => {
             // check if a file with the same filename already exists
             let file = await manager.findOne(FileEntity, {
@@ -79,6 +87,7 @@ export class FilesService {
             } else {
                 fileDto.filename = filename;
                 // create a new one
+                fileDto.userId = user.id;
                 file = manager.create(FileEntity, fileDto);
             }
 

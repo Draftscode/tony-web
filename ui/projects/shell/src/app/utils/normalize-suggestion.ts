@@ -1,5 +1,5 @@
 import { TranslateService } from "@ngx-translate/core";
-import { Suggestion, SuggestionType } from "../features/app/form/dialogs/form-dialog";
+import { Suggestion, SuggestionType } from "../features/authorized/form/dialogs/form-dialog";
 
 export function normalizeSuggestion(sugg: Suggestion | string | null, ngxTranslate: TranslateService): Suggestion | null {
     let value: SuggestionType | null = null;
