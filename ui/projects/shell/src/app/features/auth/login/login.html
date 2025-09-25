@@ -1,8 +1,8 @@
 <div class="flex w-full h-full bg-surface-100 dark:bg-surface-950">
     <p-card class="m-auto">
         <form [formGroup]="formGroup" class="flex gap-2 flex-col p-4 min-w-[300px]" (ngSubmit)="submit()">
-            <img [src]="'./images/logo-raw-no-text'+(themeService.isDark()?'-dark':'')+'.png'" alt="Logo"
-                class="object-contain h-[62px]">
+            <img [src]="`./images/logo/logo-raw${themeService.isDark()?'-dark':''}-w420.png`" alt="Logo"
+                class="object-contain h-[100px]">
             <span class="text-4xl font-semibold w-full text-center my-8">Login</span>
 
             <div class="flex flex-col">

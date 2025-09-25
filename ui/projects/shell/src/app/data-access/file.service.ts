@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpEvent, HttpParams } from "@angular/common/http";
 import { inject, Injectable, resource, signal } from "@angular/core";
 import { TranslateService } from "@ngx-translate/core";
 import { MessageService } from "primeng/api";
@@ -30,7 +30,6 @@ export class FileService {
         },
         loader: ({ params }) => this.listFiles(params.query, params.timestamp),
         defaultValue: [],
-
     });
 
 
@@ -60,6 +59,15 @@ export class FileService {
             ));
     }
 
+    importFiles(files: File[]): Observable<HttpEvent<any>> {
+        const formData = new FormData();
+        files.forEach(file => formData.append('files', file, file.name));
+
+        return this.http.post<DropboxFile>(`${environment.origin}/files/import`, formData, {
+            reportProgress: true,
+            observe: 'events', // allows tracking upload progress
+        }).pipe(finalize(() => this.refresh()));
+    }
 
 
 

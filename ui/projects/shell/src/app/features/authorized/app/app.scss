@@ -33,4 +33,8 @@ $sidebarWidth: 260px;
         height: 100%;
         overflow: auto;
     }
+
+    p-fileupload.no-label .p-button-label {
+        display: none;
+    }
 }

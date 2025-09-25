@@ -30,7 +30,6 @@ export default class LoginPage {
 
         try {
             await this.authService.login(payload.username!, payload.password!);
-            console.log('LOGIN DNE')
             this.router.navigate(['/', 'app']);
         } catch {
 

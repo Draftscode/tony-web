@@ -3,6 +3,18 @@ import puppeteer from "puppeteer";
 import { FileEntity } from "src/entities/file.entity";
 import { DataSource, ILike } from "typeorm";
 import { usePdfPreset } from "./pdf.preset";
+import { FileDataGroup, FileDataPerson } from "./files.model";
+
+export type ImportedFile = {
+    persons: FileDataPerson[];
+    groups: FileDataGroup[];
+};
+
+export type ImportedFileWrapper = {
+    originalName: string;
+    size: number;
+    content: ImportedFile;
+};
 
 @Injectable()
 export class FilesService {
@@ -14,6 +26,32 @@ export class FilesService {
                 filename: ILike(`%${query}%`),
             }
         })
+    }
+
+    async importFiles(files: ImportedFileWrapper[]) {
+        return this.dataSource.manager.transaction(async manager => {
+            const entities = files.map(file => {
+
+                return manager.create(FileEntity, {
+                    filename: file.originalName,
+                    data: {
+                        persons: file.content.persons,
+                        groups: file.content.groups.map(group => ({
+                            ...group,
+                            items: group.items.map(item => ({
+                                ...item,
+                                insurer: item.insurer ? {
+                                    ...item.insurer,
+                                    logo: item.insurer.image ?? item.insurer.logo,
+                                } : undefined
+                            }))
+                        })),
+                    }
+                });
+            });
+
+            return manager.save(FileEntity, entities);
+        });
     }
 
     async removeFile(filename: string) {

@@ -5,7 +5,7 @@ import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/
 import { provideAnimations, } from '@angular/platform-browser/animations';
 import { provideTranslateService } from "@ngx-translate/core";
 import { provideTranslateHttpLoader } from "@ngx-translate/http-loader";
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { DialogService } from 'primeng/dynamicdialog';
 import { routes } from './app.routes';
@@ -30,6 +30,7 @@ export const appConfig: ApplicationConfig = {
     }),
     MessageService,
     DialogService,
+    ConfirmationService,
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideHttpClient(

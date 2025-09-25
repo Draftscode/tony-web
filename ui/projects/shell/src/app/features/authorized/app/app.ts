@@ -2,11 +2,13 @@ import { DatePipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { MenuItem } from 'primeng/api';
+import { ConfirmationService, MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
+import { ConfirmPopupModule } from "primeng/confirmpopup";
 import { DialogModule } from 'primeng/dialog';
 import { DividerModule } from 'primeng/divider';
 import { DialogService } from 'primeng/dynamicdialog';
+import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
@@ -18,12 +20,12 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ScrollerModule } from 'primeng/scroller';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
-import { debounceTime, Subject, take } from 'rxjs';
+import { debounceTime, lastValueFrom, Subject, take } from 'rxjs';
+import { BlaudirektService } from '../../../data-access/blaudirekt.service';
 import { FileService } from '../../../data-access/file.service';
 import { ThemeService } from '../../../data-access/theme.service';
 import { FileDialogComponent } from '../../../dialogs/file.dialog';
 import * as packageJson from './../../../../../../../package.json';
-import { BlaudirektService } from '../../../data-access/blaudirekt.service';
 
 @Component({
   selector: 'app',
@@ -31,7 +33,7 @@ import { BlaudirektService } from '../../../data-access/blaudirekt.service';
     RouterOutlet, PopoverModule, RouterLinkActive, MessageModule,
     DividerModule, DialogModule, TooltipModule, DatePipe, InputTextModule,
     RouterLink, ToastModule, MenubarModule, TranslateModule, InputGroupModule,
-    InputGroupAddonModule, ScrollerModule,
+    InputGroupAddonModule, ScrollerModule, FileUploadModule,
     MenuModule, ButtonModule, ProgressSpinnerModule],
   templateUrl: './app.html',
   styleUrl: 'app.scss',
@@ -47,6 +49,7 @@ export default class App {
   private readonly router = inject(Router);
   private readonly activatedRoute = inject(ActivatedRoute);
   protected readonly blaudirectService = inject(BlaudirektService);
+  private readonly confirmService = inject(ConfirmationService);
 
   protected readonly _isLogVisible = signal<boolean>(false);
   protected readonly _logs = signal<string | null>(null);
@@ -72,12 +75,35 @@ export default class App {
     this._isSidebarOpen.update(s => !s);
   }
 
+  protected async onImport(event: FileSelectEvent) {
+    console.log(event.files)
+    await lastValueFrom(this.fileService.importFiles(Array.from(event.files)));
+  }
+
   protected onInput(query: string) {
     this.query$.next(query);
   }
 
-  protected async _onDeleteFile(filename: string) {
-    await this.fileService.deleteFile(filename);
+  protected _onDeleteFile(event: MouseEvent, filename: string) {
+    this.confirmService.confirm({
+      target: event.currentTarget as EventTarget,
+      message: 'Are you sure you want to proceed?',
+      icon: 'pi pi-exclamation-triangle',
+      rejectButtonProps: {
+        label: 'Cancel',
+        severity: 'secondary',
+        outlined: true
+      },
+      acceptButtonProps: {
+        label: 'Save'
+      },
+      accept: async () => {
+        await this.fileService.deleteFile(filename);
+      },
+      reject: () => {
+      }
+    })
+
   }
 
   protected async _onLogs() {

@@ -2,33 +2,46 @@ import { Injectable, signal } from "@angular/core";
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
-    private readonly _isDark = signal<boolean>(false);
+    readonly isDark = signal<boolean>(false);
+    private readonly faviconId = 'appFavicon';
 
     constructor() {
-        const htmlElement = document.documentElement;
-
-
+        this.ensureFaviconElement();
         const isPreferenceDark: boolean = !!window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
         if (isPreferenceDark) {
             this.toggleDarkMode();
         }
-        this._isDark.set(isPreferenceDark);
-
-
+        this.isDark.set(isPreferenceDark);
     }
 
     toggleDarkMode(): void {
         const htmlElement = document.documentElement; // Gets the <html> tag
         htmlElement.classList.toggle('p-dark');
-        this._isDark.set(this.isDarkMode());
+        this.isDark.set(this.isDarkMode());
+        const fav = `${this.isDark() ? 'favicon-dark.ico' : 'favicon.ico'}`;
+        this.setFavicon(fav);
+    }
+
+    private ensureFaviconElement() {
+        let link: HTMLLinkElement | null = document.querySelector(`#${this.faviconId}`);
+        if (!link) {
+            link = document.createElement('link');
+            link.id = this.faviconId;
+            link.rel = 'icon';
+            document.head.appendChild(link);
+        }
+    }
+
+
+    private setFavicon(iconUrl: string) {
+        const link: HTMLLinkElement | null = document.querySelector(`#${this.faviconId}`);
+        if (link) {
+            link.href = iconUrl;
+        }
     }
 
     private isDarkMode(): boolean {
         return document.documentElement.classList.contains('p-dark');
-    }
-
-    get isDark() {
-        return this._isDark;
     }
 }
