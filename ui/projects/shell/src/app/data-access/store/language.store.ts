@@ -21,9 +21,9 @@ export const LanguageStore = signalStore(
             image: 'flag-for-united-kingdom.svg',
             label: 'english',
         }, {
-            key: 'bg-BG',
-            image: 'flag-for-bulgaria.svg',
-            label: 'bulgarian',
+            key: 'hu-HU',
+            image: 'flag-for-hungaria.svg',
+            label: 'hungarian',
         }] as DataLanguage[],
     }),
     withProps(store => ({

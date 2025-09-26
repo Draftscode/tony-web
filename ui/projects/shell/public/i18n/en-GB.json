@@ -25,7 +25,8 @@
         "language": {
             "german": "German",
             "english": "English",
-            "bulgarian": "Bulgarian"
+            "bulgarian": "Bulgarian",
+            "hungarian": "Hungarian"
         },
         "insurer": {
             "no": "Insurance No.",

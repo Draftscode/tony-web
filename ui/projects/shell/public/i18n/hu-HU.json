@@ -1,0 +1,121 @@
+{
+    "person": {
+        "username": "Felhasználónév",
+        "gender": "Megszólítás",
+        "title": "Cím",
+        "company": "Cég",
+        "firstname": "Keresztnév",
+        "lastname": "Vezetéknév",
+        "address": {
+            "city": "Város",
+            "no": "Házszám",
+            "street": "Utca",
+            "zip": "Irányítószám"
+        }
+    },
+    "label": {
+        "frequency": {
+            "monthly": "havi"
+        },
+        "finances": {
+            "old": "Régi",
+            "new": "Új",
+            "savings": "Megtakarítás"
+        },
+        "language": {
+            "german": "Német",
+            "english": "Angol",
+            "bulgarian": "Bolgár",
+            "hungarian": "Magyar"
+        },
+        "insurer": {
+            "no": "Bizt. sz.",
+            "label": "Biztosító"
+        },
+        "insured": {
+            "label": "Biztosított (BIZT)",
+            "short": "BIZT"
+        },
+        "group": "Csoport",
+        "product": "Termék",
+        "save": "Mentés",
+        "refresh": "Frissítés",
+        "import": "Importálás",
+        "file": {
+            "label": "Fájl",
+            "name": "Fájlnév"
+        },
+        "users": "Felhasználók",
+        "plural": {
+            "files": "Fájl(ok)"
+        },
+        "search": "Keresés",
+        "files": "Fájlok",
+        "password": "Jelszó",
+        "login": "Bejelentkezés",
+        "user": "Felhasználó",
+        "pdf": "PDF",
+        "type": "Mi?",
+        "scope": "Szolgáltatás",
+        "signature": "Aláírás",
+        "suggestion": "Javaslat",
+        "oneTimePayment": "Egyszeri befizetés",
+        "contribution": {
+            "monthly": "Havi hozzájárulás",
+            "label": "Hozzájárulás"
+        },
+        "party": "BIZT",
+        "nr": "Bizt. sz.",
+        "fromTo": "Időtartam",
+        "new": "Új",
+        "acquisition": "Átvétel",
+        "inventory": "Állomány",
+        "terminated": "meg fog szűnni",
+        "move": "Sor áthelyezése",
+        "line": "Sor",
+        "gender": {
+            "male": "férfi",
+            "female": "nő",
+            "other": "egyéb"
+        },
+        "salutation": {
+            "male": "Úr",
+            "female": "Asszony",
+            "other": ""
+        }
+    },
+    "theming": {
+        "switch": {
+            "darkmode": "Sötét mód váltása",
+            "daymode": "Világos mód váltása"
+        }
+    },
+    "date": {
+        "datetime": "yyyy.MM.dd HH:mm"
+    },
+    "utils": {
+        "create": {
+            "value": "{{value}} létrehozása"
+        },
+        "edit": {
+            "value": "{{value}} szerkesztése"
+        },
+        "pagination": "{{value}} / {{total}} {{entity}}"
+    },
+    "blaudirekt": {
+        "search": {
+            "customer": "Blaudirekt ügyfélkeresés"
+        }
+    },
+    "validation": {
+        "required": "Kötelező mező"
+    },
+    "action": {
+        "select": {
+            "all": "Összes kijelölése"
+        },
+        "confirm": "Megerősítés",
+        "delete": "Törlés",
+        "edit": "Szerkesztés"
+    }
+}
