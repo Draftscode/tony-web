@@ -7,7 +7,7 @@ import { CardModule } from "primeng/card";
 import { DividerModule } from "primeng/divider";
 import { InputTextModule } from "primeng/inputtext";
 import { PasswordModule } from "primeng/password";
-import { AuthService } from "../../../data-access/auth.service";
+import { AccountStore } from "../../../data-access/store/account.store";
 import { ThemeService } from "../../../data-access/theme.service";
 
 @Component({
@@ -17,7 +17,7 @@ import { ThemeService } from "../../../data-access/theme.service";
         ButtonModule, InputTextModule, FormsModule, ReactiveFormsModule]
 })
 export default class LoginPage {
-    private readonly authService = inject(AuthService);
+    private readonly accountStore = inject(AccountStore);
     private readonly router = inject(Router);
     protected readonly themeService = inject(ThemeService);
 
@@ -31,7 +31,7 @@ export default class LoginPage {
         const payload = this.formGroup.getRawValue();
 
         try {
-            await this.authService.login(payload.username!, payload.password!);
+            await this.accountStore.login(payload.username!, payload.password!);
             this.router.navigate(['/', 'app']);
         } catch {
 

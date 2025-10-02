@@ -8,7 +8,6 @@ import { CheckboxModule } from "primeng/checkbox";
 import { DividerModule } from "primeng/divider";
 import { DynamicDialogConfig, DynamicDialogRef } from "primeng/dynamicdialog";
 import { InputTextModule } from "primeng/inputtext";
-import { KeyFilterModule } from 'primeng/keyfilter';
 import { MessageModule } from "primeng/message";
 import { SelectModule } from "primeng/select";
 import { BlaudirectContract, BlaudirektCustomer, BlaudirektService } from "../data-access/blaudirekt.service";
@@ -20,10 +19,9 @@ import { CompanyComponent } from "./company";
     templateUrl: 'file.dialog.html',
     imports: [ReactiveFormsModule, FormsModule, MessageModule, SelectModule,
         CheckboxModule, AutoCompleteModule, CompanyComponent, TranslateModule,
-        KeyFilterModule, InputTextModule, ButtonModule, DividerModule]
+        InputTextModule, ButtonModule, DividerModule]
 })
 export class FileDialogComponent {
-    protected readonly blockChars: RegExp = /^(?!.* {2})[A-Za-z0-9ÄÖÜäöüß\-, ]*$/u;
     private readonly pDialogRef = inject<DynamicDialogRef<FileDialogComponent>>(DynamicDialogRef);
     protected readonly pDialogConf = inject<DynamicDialogConfig<any>>(DynamicDialogConfig);
 
@@ -36,8 +34,12 @@ export class FileDialogComponent {
     });
 
     protected readonly contracts = signal<BlaudirectContract[]>([]);
+    protected readonly formValues = toSignal(this.formGroup.valueChanges);
+    protected readonly customers = this.blaudirektService.customers
+    protected readonly isNew = signal<boolean>(true);
 
     constructor() {
+        this.isNew.set(!this.pDialogConf.data?.name)
         this.formGroup.controls.name.patchValue(this.pDialogConf.data?.name, { emitEvent: false });
     }
 
@@ -49,7 +51,6 @@ export class FileDialogComponent {
         }
     }
 
-    protected readonly formValues = toSignal(this.formGroup.valueChanges);
 
     protected isIndeterminate = computed(() => {
         const isIndeterminate = !!(this.formValues()?.selectedContracts?.length && (this.contracts().length !== (this.formValues()?.selectedContracts?.length ?? 0)));
@@ -61,7 +62,6 @@ export class FileDialogComponent {
         return isChecked;
     });
 
-    protected readonly customers = this.blaudirektService.customers
 
 
     protected search(query: string) {

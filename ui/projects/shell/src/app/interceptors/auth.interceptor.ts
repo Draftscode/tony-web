@@ -1,47 +1,29 @@
-import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest, HttpStatusCode } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
-import { BehaviorSubject, catchError, filter, finalize, Observable, switchMap, take, throwError, timeout } from "rxjs";
-import { AuthService } from "../data-access/auth.service";
+import { HttpContextToken, HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest, HttpStatusCode } from "@angular/common/http";
+import { inject } from "@angular/core";
+import { toObservable } from "@angular/core/rxjs-interop";
+import { catchError, filter, from, Observable, switchMap, take, throwError, timeout } from "rxjs";
+import { AccountStore } from "../data-access/store/account.store";
 
-export enum InterceptorSkipReason {
-    skipAuth = 'X-Skip-Auth-Interceptor',
-}
-
-@Injectable({ providedIn: 'root' })
-export class ShouldWait {
-    shouldWait = new BehaviorSubject<boolean>(false);
-}
-
+export const SKIP_AUTH_INTERCEPTION = new HttpContextToken(() => false);
 
 
 export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
 
-    const authService = inject(AuthService);
-    const shouldWaitService = inject(ShouldWait);
-
+    const accountStore = inject(AccountStore);
+    const shouldWait$ = toObservable(accountStore.isRefreshing);
 
     const copyWithCredentials = (req: HttpRequest<unknown>) => {
         return req.clone({
-            headers: req.headers.append('Authorization', `Bearer ${authService.accessToken()}`)
+            headers: req.headers.append('Authorization', `Bearer ${accountStore.accessToken()}`)
         })
     }
     const handle401 = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
-        if (authService.canRefresh() && !shouldWaitService.shouldWait.getValue()) {
-            shouldWaitService.shouldWait.next(true);
-            return authService.refresh().pipe(
-                catchError(e => {
-                    authService.setCredentials(null);
-                    shouldWaitService.shouldWait.next(false);
-                    return throwError(() => e);
-                }),
-                switchMap(() => {
-                    return next(copyWithCredentials(req))
-                }),
-                finalize(() => shouldWaitService.shouldWait.next(false)),
-            )
+        if (accountStore.canRefresh() && !accountStore.isRefreshing()) {
+            return from(accountStore.refresh()).pipe(
+                switchMap(() => next(copyWithCredentials(req))));
         }
 
-        return shouldWaitService.shouldWait.pipe(
+        return shouldWait$.pipe(
             filter(wait => !wait),
             timeout(40_000), // ensure this does not queue longer than 40 secs
             take(1),
@@ -50,15 +32,14 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
     }
 
 
-    if (req.headers.has(InterceptorSkipReason.skipAuth)) {
-        return next(req.clone({
-            headers: req.headers.delete('X-Skip-Auth-Interceptor'),
-        }));
+    if (req.context.has(SKIP_AUTH_INTERCEPTION)) {
+        return next(req);
     }
 
     return next(copyWithCredentials(req)).pipe(
         catchError((e: HttpErrorResponse) => {
             if (e instanceof HttpErrorResponse && e.status === HttpStatusCode.Unauthorized) {
+                console.log('ERR')
                 return handle401(req, next);
             }
             return throwError(() => e);

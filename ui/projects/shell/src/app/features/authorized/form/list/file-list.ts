@@ -1,8 +1,7 @@
 import { DatePipe } from "@angular/common";
-import { Component, computed, inject, signal } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { TranslateModule } from "@ngx-translate/core";
-import { MenuItem } from "primeng/api";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { DataViewModule } from 'primeng/dataview';
@@ -13,8 +12,6 @@ import { InputGroupAddonModule } from "primeng/inputgroupaddon";
 import { InputTextModule } from "primeng/inputtext";
 import { PopoverModule } from "primeng/popover";
 import { TooltipModule } from "primeng/tooltip";
-import { lastValueFrom } from "rxjs";
-import { FileService } from "../../../../data-access/file.service";
 import { FileStore } from "../../../../data-access/store/file.store";
 
 @Component({
@@ -26,12 +23,11 @@ import { FileStore } from "../../../../data-access/store/file.store";
         PopoverModule, ButtonModule, InputTextModule, InputGroupAddonModule, InputGroupModule]
 })
 export default class FileList {
-    protected readonly fileService = inject(FileService);
     protected readonly fileStore = inject(FileStore);
     private readonly router = inject(Router);
     private readonly activatedRoute = inject(ActivatedRoute);
 
-    private readonly query = signal<string>('');
+    protected readonly query = signal<string>('');
 
     constructor() {
         this.fileStore.connectQuery(this.query);
@@ -44,12 +40,12 @@ export default class FileList {
     protected async onCreateFile() {
         const result = await this.fileStore.createFile();
         if (result) {
-            this.router.navigate(['./', result.data.name], { relativeTo: this.activatedRoute });
+            this.router.navigate(['./', result.filename], { relativeTo: this.activatedRoute });
         }
     }
 
     protected async onImport(event: FileSelectEvent) {
-        await lastValueFrom(this.fileService.importFiles(Array.from(event.files)));
+        this.fileStore.importFiles(Array.from(event.files));
     }
 
 }

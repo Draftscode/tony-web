@@ -9,7 +9,7 @@
     </div>
     <p-divider />
     <form [formGroup]="_formGroup" class="inline-flex flex-col space-y-2 overflow-auto w-full p-2">
-        @if(fileService.isLoading()) {
+        @if(fileStore.isLoading()) {
         <p-progressbar mode="indeterminate" [style]="{ height: '6px' }" />
         }
         <div formArrayName="persons" class="inline-flex flex-col space-y-2 w-full">
@@ -185,10 +185,10 @@
                             <td>
                                 <div class="inline-flex gap-1">
 
-                                    <p-button [text]="true" size="small" [disabled]="fileService.isLoading()"
+                                    <p-button [text]="true" size="small" [disabled]="fileStore.isLoading()"
                                         icon="pi pi-pencil" severity="secondary"
                                         (onClick)="onEditRow(groupIndex,rowIndex)" />
-                                    <p-button [text]="true" size="small" [disabled]="fileService.isLoading()"
+                                    <p-button [text]="true" size="small" [disabled]="fileStore.isLoading()"
                                         icon="pi pi-trash" severity="danger"
                                         (onClick)="_onRemoveRow(groupIndex,rowIndex)" />
                                 </div>
@@ -243,7 +243,7 @@
                     </ng-template>
                 </p-table>
                 <div class="w-full flex justify-end">
-                    <p-button [disabled]="fileService.isLoading()" icon="pi pi-plus" severity="secondary"
+                    <p-button [disabled]="fileStore.isLoading()" icon="pi pi-plus" severity="secondary"
                         (onClick)="_onAddRow(groupIndex)" size="small"
                         [label]="'utils.create.value'|translate:{value:'label.line'|translate}" />
                 </div>
@@ -255,9 +255,9 @@
         <p-button icon="pi pi-plus" (onClick)="onAddGroup()" severity="secondary" size="small" [label]="'utils.create.value'|translate:{value:'label.group'|translate}" />
 
         <div class="w-full flex justify-end space-x-2">
-            <p-button size="small" [disabled]="fileService.isLoading() || _formGroup.invalid || _formGroup.pristine"
+            <p-button size="small" [disabled]="fileStore.isLoading() || _formGroup.invalid || _formGroup.pristine"
                 (onClick)="onSave()" icon="pi pi-save" [label]="'label.save'|translate" />
-            <p-button size="small" [disabled]="fileService.isLoading() || _formGroup.invalid" (onClick)="_onCreatePdf()"
+            <p-button size="small" [disabled]="fileStore.isLoading() || _formGroup.invalid" (onClick)="_onCreatePdf()"
                 icon="pi pi-plus" [label]="'utils.create.value'|translate:{value:'label.pdf'|translate}" />
         </div>
     </form>

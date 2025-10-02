@@ -94,6 +94,9 @@
         "datetime": "dd.MM.yy HH:MM"
     },
     "utils": {
+        "list": {
+            "empty": "Keine Ergebnisse."
+        },
         "create": {
             "value": "{{value}} erstellen"
         },

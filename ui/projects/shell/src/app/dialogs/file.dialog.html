@@ -3,11 +3,12 @@
         <div class="inline-flex flex-col">
             <label for="name">{{'label.file.name'|translate}} *</label>
             <input [invalid]="formGroup.controls.name.invalid" (change)="search(control.value)" #control id="name"
-                formControlName="name" pInputText [pKeyFilter]="blockChars" />
+                formControlName="name" pInputText />
             @if(formGroup.controls.name.hasError('required') && formGroup.controls.name.touched) {
-            <p-message [text]="`* ${'validation.required'|translate}`" [severity]="'error'" class="mt-2" />
+            <p-message [severity]="'error'" class="mt-2">* {{'validation.required'|translate}}</p-message>
             }
         </div>
+        @if(isNew()) {
         <p-divider />
         <div class="inline-flex flex-col w-full">
             <label for="customer">{{'blaudirekt.search.customer'|translate}}</label>
@@ -17,6 +18,7 @@
                 [optionLabel]="'displayName'" [minQueryLength]="1" (completeMethod)="search($event.query)"
                 [suggestions]="blaudirektService.customers.value()" />
         </div>
+        }
         @if(contracts().length) {
         <div class="flex gap-2 items-center">
             <p-checkbox [ngModelOptions]="{standalone: true}" [binary]="true" [ngModel]="isChecked()"
@@ -38,6 +40,7 @@
     </div>
     <p-divider />
     <div class="flex justify-end">
-        <p-button [disabled]="formGroup.invalid && formGroup.dirty" (onClick)="onClose()" [label]="'action.confirm'|translate" />
+        <p-button [disabled]="formGroup.invalid && formGroup.dirty" (onClick)="onClose()"
+            [label]="'action.confirm'|translate" />
     </div>
 </form>

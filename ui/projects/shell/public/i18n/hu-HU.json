@@ -94,6 +94,9 @@
         "datetime": "yyyy.MM.dd HH:mm"
     },
     "utils": {
+        "list": {
+            "empty": "No results."
+        },
         "create": {
             "value": "{{value}} létrehozása"
         },

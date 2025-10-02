@@ -11,12 +11,13 @@ import { ScrollerModule } from 'primeng/scroller';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import * as packageJson from '../../../../../../../package.json';
-import { AuthService } from '../../../data-access/auth.service';
 import { BlaudirektService } from '../../../data-access/blaudirekt.service';
-import { FileService } from '../../../data-access/file.service';
+import { AccountStore } from '../../../data-access/store/account.store';
 import { ThemeService } from '../../../data-access/theme.service';
 import { LanguageSelector } from '../../language/selector/language-selector';
-
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { map } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app',
   imports: [
@@ -32,10 +33,10 @@ export default class App {
   protected readonly _isSidebarOpen = signal<boolean>(false);
   protected readonly _menuItems = signal<MenuItem[]>([]);
   protected readonly _themeService = inject(ThemeService);
-  protected readonly fileService = inject(FileService);
   private readonly router = inject(Router);
   protected readonly blaudirectService = inject(BlaudirektService);
-  protected readonly authService = inject(AuthService);
+  protected readonly accountStore = inject(AccountStore);
+  private readonly breakpointObserver = inject(BreakpointObserver);
 
   protected readonly _isLogVisible = signal<boolean>(false);
   protected readonly _logs = signal<string | null>(null);
@@ -54,11 +55,16 @@ export default class App {
 
 
   protected onLogout() {
-    this.authService.logout();
+    this.accountStore.logout();
     this.router.navigate(['/auth']);
   }
 
   protected _toggleSidebar() {
     this._isSidebarOpen.update(s => !s);
   }
+
+  protected readonly isSmall = toSignal(this.breakpointObserver.observe([
+    Breakpoints.Small,
+    Breakpoints.XSmall,
+  ]).pipe(map(result => result.matches)));
 }

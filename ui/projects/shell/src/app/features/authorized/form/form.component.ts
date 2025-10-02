@@ -20,7 +20,6 @@ import { TextareaModule } from 'primeng/textarea';
 import { TooltipModule } from "primeng/tooltip";
 import { distinctUntilChanged, lastValueFrom, map, take } from "rxjs";
 import { BlaudirektCompany } from "../../../data-access/blaudirekt.service";
-import { FileService } from "../../../data-access/file.service";
 import { FallbackImageDirective } from "../../../utils/fallback-image.directive";
 import { normalizeSuggestion } from "../../../utils/normalize-suggestion";
 import { Content, TableRow } from "../../../utils/to-pdf";
@@ -32,6 +31,7 @@ import { MonthlyPipe } from "./monthly.pipe";
 import { NewPipe } from "./new.pipe";
 import { SavingsPipe } from "./savings.pipe";
 import { TotalPipe } from "./total.pipe";
+import { FileStore } from "../../../data-access/store/file.store";
 
 type Header = {
     label: string;
@@ -108,7 +108,7 @@ export default class FormComponent {
     protected readonly _filename = toSignal(
         this._ngActiveRoute.params.pipe(map(q => decodeURIComponent(q['id'])), distinctUntilChanged()));
     private readonly pMessage = inject(MessageService)
-    protected readonly fileService = inject(FileService);
+    protected readonly fileStore = inject(FileStore);
     protected isNew = signal<boolean>(false);
     private readonly router = inject(Router);
     private readonly ngxTranslate = inject(TranslateService);
@@ -177,7 +177,7 @@ export default class FormComponent {
 
     constructor() {
         effect(() => {
-            const isLoading = this.fileService.isLoading();
+            const isLoading = this.fileStore.isLoading();
             if (isLoading) {
                 this._formGroup.disable();
             } else {
@@ -194,7 +194,7 @@ export default class FormComponent {
             if (!filename) { return; }
             untracked(async () => {
 
-                const content = await this.fileService.readFile<Content>(filename);
+                const content = await this.fileStore.readFile<Content>(filename);
                 this._formGroup.patchValue(content);
                 this._formGroup.controls.groups.clear();
                 this._formGroup.controls.persons.clear();
@@ -223,7 +223,7 @@ export default class FormComponent {
 
         const form = this.getData(true);
 
-        lastValueFrom(this.fileService.createPdf(form));
+        this.fileStore.createPdf(form);
     }
 
     private getData(transformDate: boolean = false) {
@@ -274,7 +274,7 @@ export default class FormComponent {
         const date = this.cDatePipe.transform([new Date()]);
         const filename = this._filename() ?? `${data.persons[0].firstname} ${data.persons[0].lastname} - ${date}`;
 
-        await this.fileService.writeFile(filename, data);
+        await this.fileStore.writeFile(filename, data);
         this._formGroup.markAsPristine();
         this.pMessage.add({ closable: true, severity: 'success', summary: 'Speichern erfolgreich', detail: 'Die Datei wurde erfolgreich gespeichert.', life: 5000 });
     }
