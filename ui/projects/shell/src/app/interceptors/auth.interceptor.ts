@@ -13,10 +13,15 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
     const shouldWait$ = toObservable(accountStore.isRefreshing);
 
     const copyWithCredentials = (req: HttpRequest<unknown>) => {
+        if (!accountStore.accessToken()) {
+            return req;
+        }
+
         return req.clone({
             headers: req.headers.append('Authorization', `Bearer ${accountStore.accessToken()}`)
-        })
+        });
     }
+
     const handle401 = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
         if (accountStore.canRefresh() && !accountStore.isRefreshing()) {
             return from(accountStore.refresh()).pipe(
@@ -39,7 +44,6 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
     return next(copyWithCredentials(req)).pipe(
         catchError((e: HttpErrorResponse) => {
             if (e instanceof HttpErrorResponse && e.status === HttpStatusCode.Unauthorized) {
-                console.log('ERR')
                 return handle401(req, next);
             }
             return throwError(() => e);
