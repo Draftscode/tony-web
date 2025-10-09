@@ -6,8 +6,8 @@ import { ConfirmationService } from "primeng/api";
 import { DialogService } from "primeng/dynamicdialog";
 import { lastValueFrom, switchMap, take } from "rxjs";
 import { UserDialog } from "../../features/authorized/user/dialog/user-dialog";
-import { User } from "../auth.service";
-import { UserService } from "../user.service";
+import { User } from "../provider/auth.service";
+import { UserService } from "../provider/user.service";
 
 export const UserStore = signalStore(
     { providedIn: 'root' },

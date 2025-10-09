@@ -19,7 +19,8 @@ import { TableModule } from 'primeng/table';
 import { TextareaModule } from 'primeng/textarea';
 import { TooltipModule } from "primeng/tooltip";
 import { distinctUntilChanged, lastValueFrom, map, take } from "rxjs";
-import { BlaudirektCompany } from "../../../data-access/blaudirekt.service";
+import { BlaudirektCompany } from "../../../data-access/provider/blaudirekt.service";
+import { FileStore } from "../../../data-access/store/file.store";
 import { FallbackImageDirective } from "../../../utils/fallback-image.directive";
 import { normalizeSuggestion } from "../../../utils/normalize-suggestion";
 import { Content, TableRow } from "../../../utils/to-pdf";
@@ -31,7 +32,6 @@ import { MonthlyPipe } from "./monthly.pipe";
 import { NewPipe } from "./new.pipe";
 import { SavingsPipe } from "./savings.pipe";
 import { TotalPipe } from "./total.pipe";
-import { FileStore } from "../../../data-access/store/file.store";
 
 type Header = {
     label: string;
@@ -88,7 +88,7 @@ export type FormType = {
 }
 
 @Component({
-    host: { class: 'w-full h-full p-4' },
+    host: { class: 'w-full h-full p-4 m-auto' },
     selector: 'app-form',
     imports: [AutoCompleteModule, TranslateModule, DatePickerModule,
         InputTextModule, TableModule, ProgressBarModule, DialogModule, SelectModule,

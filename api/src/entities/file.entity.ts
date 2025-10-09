@@ -19,7 +19,7 @@ export class FileEntity {
     @Column({ nullable: true })
     userId: number;
 
-    @ManyToOne(() => UserEntity, (user) => user.files, { nullable: true })
+    @ManyToOne(() => UserEntity, (user) => user.files, { nullable: true, eager: true })
     @JoinColumn({ name: "userId" }) // defines the foreign key column
     user: Relation<UserEntity>;
 

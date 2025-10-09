@@ -1,27 +1,21 @@
 import { HttpClient, HttpContext, httpResource } from "@angular/common/http";
 import { inject, Injectable, Signal } from "@angular/core";
 import { map } from "rxjs";
-import { environment } from "../../environments/environment";
-import { SKIP_AUTH_INTERCEPTION } from "../interceptors/auth.interceptor";
+import { environment } from "../../../environments/environment";
+import { SKIP_AUTH_INTERCEPTION } from "../../interceptors/auth.interceptor";
+
+export type Role = {
+    name: string;
+    id: number;
+}
 
 export type User = {
     id: number;
+    roles: Role[];
     firstnames: string;
     lastname: string;
     username: string;
 };
-
-class TUser {
-    static parse(value: unknown): User | null {
-        const v = value as never;
-        return {
-            id: v['id'],
-            firstnames: v['firstnames'],
-            lastname: v['lastname'],
-            username: v['username'],
-        } as User;
-    }
-}
 
 export type Credentials = {
     accessToken: string;

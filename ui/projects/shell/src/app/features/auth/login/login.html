@@ -7,14 +7,18 @@
                 {{'label.login'|translate}}
             </span>
 
+            @if(error()) {
+            <p-message class="max-w-[300px] text-center" severity="error">{{'auth.error.login'|translate}}</p-message>
+            }
+
             <div class="flex flex-col">
                 <label for="username">{{'person.username'|translate}}</label>
                 <input id="username" formControlName="username" pInputText />
             </div>
             <div class="flex flex-col">
                 <label for="password">{{'label.password'|translate}}</label>
-                <p-password inputStyleClass="w-full" [toggleMask]="true" inputId="password" id="password" formControlName="password"
-                    [feedback]="false" />
+                <p-password inputStyleClass="w-full" [toggleMask]="true" inputId="password" id="password"
+                    formControlName="password" [feedback]="false" />
             </div>
             <p-divider />
             <div class="flex justify-end">

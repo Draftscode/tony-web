@@ -1,0 +1,16 @@
+{
+    "person": {
+        "username": "Felhasználónév",
+        "gender": "Megszólítás",
+        "title": "Cím",
+        "company": "Cég",
+        "firstname": "Keresztnév",
+        "lastname": "Vezetéknév",
+        "address": {
+            "city": "Város",
+            "no": "Házszám",
+            "street": "Utca",
+            "zip": "Irányítószám"
+        }
+    }
+}

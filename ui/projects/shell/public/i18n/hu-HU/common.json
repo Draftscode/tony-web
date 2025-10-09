@@ -1,18 +1,4 @@
 {
-    "person": {
-        "username": "Felhasználónév",
-        "gender": "Megszólítás",
-        "title": "Cím",
-        "company": "Cég",
-        "firstname": "Keresztnév",
-        "lastname": "Vezetéknév",
-        "address": {
-            "city": "Város",
-            "no": "Házszám",
-            "street": "Utca",
-            "zip": "Irányítószám"
-        }
-    },
     "label": {
         "frequency": {
             "monthly": "havi"
@@ -84,15 +70,6 @@
             "other": ""
         }
     },
-    "theming": {
-        "switch": {
-            "darkmode": "Sötét mód váltása",
-            "daymode": "Világos mód váltása"
-        }
-    },
-    "date": {
-        "datetime": "yyyy.MM.dd HH:mm"
-    },
     "utils": {
         "list": {
             "empty": "No results."
@@ -105,14 +82,6 @@
         },
         "pagination": "{{value}} / {{total}} {{entity}}"
     },
-    "blaudirekt": {
-        "search": {
-            "customer": "Blaudirekt ügyfélkeresés"
-        }
-    },
-    "validation": {
-        "required": "Kötelező mező"
-    },
     "action": {
         "select": {
             "all": "Összes kijelölése"
@@ -120,5 +89,14 @@
         "confirm": "Megerősítés",
         "delete": "Törlés",
         "edit": "Szerkesztés"
+    },
+    "date": {
+        "datetime": "yyyy.MM.dd HH:mm"
+    },
+    "theming": {
+        "switch": {
+            "darkmode": "Sötét mód váltása",
+            "daymode": "Világos mód váltása"
+        }
     }
 }

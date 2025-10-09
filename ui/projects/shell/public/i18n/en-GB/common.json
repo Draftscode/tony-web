@@ -1,18 +1,4 @@
 {
-    "person": {
-        "username": "Username",
-        "gender": "Salutation",
-        "title": "Title",
-        "company": "Company",
-        "firstname": "First name",
-        "lastname": "Last name",
-        "address": {
-            "city": "City",
-            "no": "House number",
-            "street": "Street",
-            "zip": "Postcode"
-        }
-    },
     "label": {
         "frequency": {
             "monthly": "monthly"
@@ -84,15 +70,6 @@
             "other": ""
         }
     },
-    "theming": {
-        "switch": {
-            "darkmode": "Switch dark mode",
-            "daymode": "Switch light mode"
-        }
-    },
-    "date": {
-        "datetime": "dd/MM/yyyy HH:mm"
-    },
     "utils": {
         "list": {
             "empty": "No results."
@@ -105,14 +82,6 @@
         },
         "pagination": "{{value}} of {{total}} {{entity}}"
     },
-    "blaudirekt": {
-        "search": {
-            "customer": "Blaudirekt customer search"
-        }
-    },
-    "validation": {
-        "required": "Required field"
-    },
     "action": {
         "select": {
             "all": "Select all"
@@ -120,5 +89,14 @@
         "confirm": "Confirm",
         "delete": "Delete",
         "edit": "Edit"
+    },
+    "date": {
+        "datetime": "dd/MM/yyyy HH:mm"
+    },
+    "theming": {
+        "switch": {
+            "darkmode": "Switch dark mode",
+            "daymode": "Switch light mode"
+        }
     }
 }

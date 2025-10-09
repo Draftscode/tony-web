@@ -3,13 +3,13 @@ import { provideRouter } from '@angular/router';
 
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
 import { provideAnimations, } from '@angular/platform-browser/animations';
-import { provideTranslateService } from "@ngx-translate/core";
-import { provideTranslateHttpLoader } from "@ngx-translate/http-loader";
+import { provideTranslateLoader, provideTranslateService } from "@ngx-translate/core";
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 import { DialogService } from 'primeng/dynamicdialog';
 import { routes } from './app.routes';
 import { GlobalErrorHandler } from './data-access/error.handler';
+import { JsonFileLoader } from './data-access/translate.loader';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { tonyMThemePreset } from './theme';
 
@@ -21,12 +21,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimations(),
     provideTranslateService({
-      loader: provideTranslateHttpLoader({
-        prefix: '/i18n/',
-        suffix: '.json'
-      }),
-      fallbackLang: 'en-GB',
-      lang: 'de-DE'
+      loader: provideTranslateLoader(JsonFileLoader),
     }),
     MessageService,
     DialogService,

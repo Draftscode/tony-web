@@ -45,6 +45,7 @@
                         @if(item.lastModified) {
                         <div class="text-gray-400 text-sm text-left">
                             {{item.lastModified | date:('date.datetime'|translate)}}
+                            <app-user [user]="item.user.username" />
                         </div>
                         }
                     </div>

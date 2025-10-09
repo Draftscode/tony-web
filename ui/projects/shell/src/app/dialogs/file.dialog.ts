@@ -10,7 +10,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from "primeng/dynamicdialog";
 import { InputTextModule } from "primeng/inputtext";
 import { MessageModule } from "primeng/message";
 import { SelectModule } from "primeng/select";
-import { BlaudirectContract, BlaudirektCustomer, BlaudirektService } from "../data-access/blaudirekt.service";
+import { BlaudirectContract, BlaudirektCustomer, BlaudirektService } from "../data-access/provider/blaudirekt.service";
 import { CompanyComponent } from "./company";
 
 

@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import { inject, Injectable, resource, signal } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { debounceTime, finalize, lastValueFrom, Subject } from "rxjs";
-import { environment } from "../../environments/environment";
+import { environment } from "../../../environments/environment";
 
 export type Contract = {
 

@@ -2,7 +2,7 @@ import { computed, inject } from "@angular/core";
 import { patchState, signalStore, withComputed, withHooks, withMethods, withProps, withState } from "@ngrx/signals";
 import { lastValueFrom } from "rxjs";
 import { withResources } from "../../utils/signals";
-import { AuthService, Credentials } from "../auth.service";
+import { AuthService, Credentials } from "../provider/auth.service";
 
 export const AccountStore = signalStore(
     { providedIn: 'root' },

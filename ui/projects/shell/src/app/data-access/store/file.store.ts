@@ -7,7 +7,7 @@ import { finalize, lastValueFrom, switchMap, take, tap } from "rxjs";
 import { FileDialogComponent } from "../../dialogs/file.dialog";
 import { withResources } from "../../utils/signals";
 import { Content, toPdf } from "../../utils/to-pdf";
-import { DataFile, FileService } from "../file.service";
+import { DataFile, FileService } from "../provider/file.service";
 
 export const FileStore = signalStore(
     { providedIn: 'root' },

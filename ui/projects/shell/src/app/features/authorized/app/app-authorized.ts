@@ -1,4 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Component, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
@@ -10,14 +12,12 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ScrollerModule } from 'primeng/scroller';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
-import * as packageJson from '../../../../../../../package.json';
-import { BlaudirektService } from '../../../data-access/blaudirekt.service';
-import { AccountStore } from '../../../data-access/store/account.store';
-import { ThemeService } from '../../../data-access/theme.service';
-import { LanguageSelector } from '../../language/selector/language-selector';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { map } from 'rxjs';
-import { toSignal } from '@angular/core/rxjs-interop';
+import * as packageJson from '../../../../../../../package.json';
+import { BlaudirektService } from '../../../data-access/provider/blaudirekt.service';
+import { ThemeService } from '../../../data-access/provider/theme.service';
+import { AccountStore } from '../../../data-access/store/account.store';
+import { LanguageSelector } from '../../language/selector/language-selector';
 @Component({
   selector: 'app',
   imports: [
@@ -41,17 +41,24 @@ export default class App {
   protected readonly _isLogVisible = signal<boolean>(false);
   protected readonly _logs = signal<string | null>(null);
 
-  protected readonly menuItems = signal<MenuItem[]>([{
-    id: 'files',
-    routerLink: ['files'],
-    label: 'label.files',
-    icon: 'pi pi-folder-open'
-  }, {
-    id: 'users',
-    routerLink: ['users'],
-    label: 'label.users',
-    icon: 'pi pi-users'
-  }]);
+  protected readonly menuItems = computed<MenuItem[]>(() => {
+    const items: MenuItem[] = [{
+      id: 'files',
+      routerLink: ['files'],
+      label: 'label.files',
+      icon: 'pi pi-folder-open'
+    }];
+
+    if (this.accountStore.me.value()?.roles.find(role => role.name === 'admin')) {
+      items.push({
+        id: 'users',
+        routerLink: ['users'],
+        label: 'label.users',
+        icon: 'pi pi-users'
+      });
+    }
+    return items;
+  });
 
 
   protected onLogout() {

@@ -1,13 +1,15 @@
 import { HttpClient, HttpEvent, httpResource } from "@angular/common/http";
 import { inject, Injectable, Signal } from "@angular/core";
 import { map, Observable } from "rxjs";
-import { environment } from "../../environments/environment";
-import { ListResponse } from "../utils/list.model";
+import { environment } from "../../../environments/environment";
+import { ListResponse } from "../../utils/list.model";
+import { User } from "./auth.service";
 
 export type DataFile = {
     id: number;
     lastModified: string;
     filename: string;
+    user: User;
 }
 
 @Injectable({ providedIn: 'root' })

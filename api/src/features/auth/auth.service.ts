@@ -1,10 +1,11 @@
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from "@nestjs/common";
+import { HttpException, HttpStatus, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from '@nestjs/jwt';
 import { compareSync, genSaltSync, hashSync } from 'bcrypt';
 import { UserEntity } from "src/entities/user.entity";
 import { DataSource } from "typeorm";
-import { UsersService } from "../users/users.service";
+import type { IUserRepository } from "../../common/contracts/user-repository.interface";
+import { USER_REPOSITORY } from "../../common/contracts/user-repository.interface";
 
 
 export function encodePassword(password: string): string {
@@ -16,13 +17,10 @@ export function encodePassword(password: string): string {
 export class AuthService {
     constructor(
         private readonly configService: ConfigService,
-        private readonly usersService: UsersService,
+        @Inject(USER_REPOSITORY) private readonly usersService: IUserRepository,
         private readonly jwtService: JwtService,
         private readonly datasource: DataSource
     ) {
-        try {
-            this.register('admin', 'admin', true);
-        } catch { }
     }
 
     async getMe() {
@@ -30,7 +28,12 @@ export class AuthService {
     }
 
     async validateUser(username: string, pass: string): Promise<any> {
-        const user = await this.usersService.findOne(username);
+        const user = await this.usersService.findOne(username, {
+            select: {
+                id: true,
+                password: true,
+            }
+        });
 
         if (!user) { return null; }
 
@@ -75,7 +78,10 @@ export class AuthService {
     async validateToken(jwt: string) {
         try {
             const v = this.jwtService.verify(jwt);
-            const { password, ...rest } = await this.usersService.getUser(v.sub);
+            const u = await this.usersService.getUser(v.sub);
+            if (!u) return false;
+
+            const { password, ...rest } = u;
             return rest;
         } catch (e) {
             console.error(e);
@@ -83,8 +89,9 @@ export class AuthService {
         }
     }
 
-    async login(user: any) {
-        const payload = { username: user.username, sub: user.userId };
+    async login(user: UserEntity) {
+        const payload = { username: user.username, sub: user.id };
+
         return {
             access_token: this.jwtService.sign(payload, {
                 secret: this.configService.get('JWT_SECRET'),

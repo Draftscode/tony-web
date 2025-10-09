@@ -1,11 +1,17 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Inject, Injectable } from "@nestjs/common";
 import { UserEntity } from "src/entities/user.entity";
 import { DataSource, ILike } from "typeorm";
+import { ROLE_REPOSITORY } from "../../common/contracts/roles-repository.interface";
+import type { IUserRepository, UserRepositoryOptions } from "../../common/contracts/user-repository.interface";
 import { encodePassword } from "../auth/auth.service";
+import { RoleService } from "../roles/roles.service";
 
 @Injectable()
-export class UsersService {
-    constructor(private readonly datasource: DataSource) { }
+export class UsersService implements IUserRepository {
+    constructor(
+        private readonly datasource: DataSource,
+        @Inject(ROLE_REPOSITORY) private readonly roleRepo: RoleService,
+    ) { }
 
     async getUser(id: number) {
         return this.datasource.manager.findOneOrFail(UserEntity, { where: { id } });
@@ -24,8 +30,8 @@ export class UsersService {
         });
     }
 
-    async findOne(username: string): Promise<UserEntity | null> {
-        return this.datasource.manager.findOne(UserEntity, { where: { username } });
+    async findOne(username: string, options?: Partial<UserRepositoryOptions>): Promise<UserEntity | null> {
+        return this.datasource.manager.findOne(UserEntity, { where: { username }, select: options?.select });
     }
 
     async getAll(query: string = '') {
@@ -42,6 +48,12 @@ export class UsersService {
 
     async editUser(id: number, user: Partial<UserEntity>) {
         return this.datasource.manager.transaction(async manager => {
+
+            if (user.roles !== undefined) {
+                user.roles = await this.roleRepo.findByIds(user.roles?.map(r => r.id) ?? []);
+                return manager.save(UserEntity, { id, ...user });
+            }
+
             return manager.update(UserEntity, { id }, user);
         });
     }

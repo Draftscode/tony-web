@@ -13,13 +13,14 @@ import { InputTextModule } from "primeng/inputtext";
 import { PopoverModule } from "primeng/popover";
 import { TooltipModule } from "primeng/tooltip";
 import { FileStore } from "../../../../data-access/store/file.store";
+import { UserComponent } from "../../../../shared/ui/user/user.component";
 
 @Component({
     selector: 'app-file-list',
     templateUrl: 'file-list.html',
-    host: { class: 'flex p-4 w-full justify-center' },
+    host: { class: 'flex p-4 w-full justify-center m-auto' },
     imports: [DataViewModule, CardModule, RouterLink, TooltipModule, DatePipe,
-        FileUploadModule, DividerModule, RouterLinkActive, TranslateModule,
+        FileUploadModule, DividerModule, RouterLinkActive, TranslateModule, UserComponent,
         PopoverModule, ButtonModule, InputTextModule, InputGroupAddonModule, InputGroupModule]
 })
 export default class FileList {

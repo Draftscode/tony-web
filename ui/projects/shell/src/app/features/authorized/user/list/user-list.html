@@ -5,6 +5,7 @@
                 <th id="username">{{'person.username'|translate}}</th>
                 <th id="firstname">{{'person.firstname'|translate}}</th>
                 <th id="lastname">{{'person.lastname'|translate}}</th>
+                <th id="roles">Rolle(n)</th>
                 <th id="actions"></th>
             </tr>
         </ng-template>
@@ -13,6 +14,11 @@
                 <td>{{ user.username }}</td>
                 <td>{{ user.firstname }}</td>
                 <td>{{ user.lastname }}</td>
+                <td>
+                    @for(role of user.roles; track role.id) {
+                    <app-role [role]="role.name" />
+                    }
+                </td>
                 <td>
                     <div class="w-full flex justify-end">
                         <p-button (onClick)="op.toggle($event)" [text]="true" icon="pi pi-ellipsis-v" />

@@ -11,7 +11,7 @@ import { InputNumber } from "primeng/inputnumber";
 import { InputTextModule } from "primeng/inputtext";
 import { SelectModule } from "primeng/select";
 import { TooltipModule } from "primeng/tooltip";
-import { BlaudirektCompany, BlaudirektService } from "../../../../data-access/blaudirekt.service";
+import { BlaudirektCompany, BlaudirektService } from "../../../../data-access/provider/blaudirekt.service";
 import { CompanyComponent } from "../../../../dialogs/company";
 export type SuggestionType = 'inventory' | 'terminated' | 'new' | 'acquisition';
 

@@ -1,15 +1,21 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from './features/auth/auth.module';
 import { BlaudirektModule } from './features/blaudirekt/blaudirekt.module';
 import { ClientsModule } from './features/client/clients.module';
 import { FilesModule } from './features/files/files.module';
-import { ScheduleModule } from '@nestjs/schedule';
+import { RolesModule } from './features/roles/roles.module';
+import { UserModule } from './features/users/users.module';
 
 @Module({
   imports: [
+    RolesModule,
+    AuthModule,
+    UserModule,
     ScheduleModule.forRoot(),
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
@@ -23,9 +29,11 @@ import { ScheduleModule } from '@nestjs/schedule';
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        migrations: [__dirname + '/migrations/*{.ts,.js}'],
         synchronize: true,
         retryAttempts: 10,
         retryDelay: 3000,
+        migrationsRun: true,
       }),
       inject: [ConfigService],
     }),

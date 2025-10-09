@@ -1,18 +1,4 @@
 {
-    "person": {
-        "username": "Benutzername",
-        "gender": "Anrede",
-        "title": "Titel",
-        "company": "Firma",
-        "firstname": "Vorname",
-        "lastname": "Nachname",
-        "address": {
-            "city": "Stadt",
-            "no": "Hausnummer",
-            "street": "Straße",
-            "zip": "Postleitzahl"
-        }
-    },
     "label": {
         "frequency": {
             "monthly": "monatl."
@@ -84,15 +70,6 @@
             "other": ""
         }
     },
-    "theming": {
-        "switch": {
-            "darkmode": "Nachtmodus umschalten",
-            "daymode": "Tagmodus umschalten"
-        }
-    },
-    "date": {
-        "datetime": "dd.MM.yy HH:MM"
-    },
     "utils": {
         "list": {
             "empty": "Keine Ergebnisse."
@@ -103,15 +80,7 @@
         "edit": {
             "value": "{{value}} bearbeiten"
         },
-        "pagination": "{{value}} of {{total}} {{entity}}"
-    },
-    "blaudirekt": {
-        "search": {
-            "customer": "Blaudirekt Kunden-Suche"
-        }
-    },
-    "validation": {
-        "required": "Pflichtfeld"
+        "pagination": "{{value}} von {{total}} {{entity}}"
     },
     "action": {
         "select": {
@@ -120,5 +89,14 @@
         "confirm": "bestätigen",
         "delete": "Löschen",
         "edit": "Bearbeiten"
+    },
+    "date": {
+        "datetime": "dd.MM.yy HH:MM"
+    },
+    "theming": {
+        "switch": {
+            "darkmode": "Nachtmodus umschalten",
+            "daymode": "Tagmodus umschalten"
+        }
     }
 }

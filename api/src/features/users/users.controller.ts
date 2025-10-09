@@ -1,14 +1,17 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
-import { UserEntity } from "src/entities/user.entity";
-import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Post, Put, Query, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Roles } from "../../common/decorators/roles.decorator";
+import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
+import { RolesGuard } from "../../common/guards/roles.guard";
+import { UserEntity } from "../../entities/user.entity";
 import { UsersService } from "./users.service";
-import { JWEDecryptionFailed } from "jose/errors";
 
 @Controller('users')
 export class UsersController {
     constructor(private readonly userService: UsersService) { }
 
-    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(ClassSerializerInterceptor)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('admin')
     @Get()
     getAll(
         @Query('q') query: string,
@@ -16,7 +19,9 @@ export class UsersController {
         return this.userService.getAll(query);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(ClassSerializerInterceptor)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('admin')
     @Put(':id')
     editUser(
         @Param('id') id: string,
@@ -25,7 +30,8 @@ export class UsersController {
         return this.userService.editUser(Number(id), user);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('admin')
     @Delete(':id')
     deleteUser(
         @Param('id') id: string
@@ -33,7 +39,9 @@ export class UsersController {
         return this.userService.deleteUser(Number(id));
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(ClassSerializerInterceptor)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('admin')
     @Post()
     createUser(
         @Body() user: Partial<UserEntity>,

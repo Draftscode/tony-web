@@ -4,7 +4,8 @@ import { File } from "buffer";
 import type { Request, Response } from "express";
 import { FileEntity } from "src/entities/file.entity";
 import { UserEntity } from "src/entities/user.entity";
-import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
+import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
+import { User } from "../auth/data-access/authorized-request";
 import { FilesService, ImportedFile, ImportedFileWrapper } from "./files.service";
 
 @Controller('files')
@@ -38,8 +39,9 @@ export class FilesController {
         @Body() file: Partial<FileEntity>,
         @Param('filename') filename: string,
         @Req() req: Request,
+        @User() user: UserEntity,
     ) {
-        return this.filesService.createOrUpdateFile(filename, file, req.user as UserEntity)
+        return this.filesService.createOrUpdateFile(filename, file, user)
     }
 
     @UseGuards(JwtAuthGuard)

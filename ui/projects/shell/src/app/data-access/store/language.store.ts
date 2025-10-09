@@ -1,5 +1,5 @@
 import { computed, inject } from "@angular/core";
-import { patchState, signalStore, withComputed, withHooks, withMethods, withProps, withState } from "@ngrx/signals";
+import { patchState, signalStore, withComputed, withMethods, withProps, withState } from "@ngrx/signals";
 import { TranslateService } from "@ngx-translate/core";
 
 export type DataLanguage = {
@@ -38,10 +38,4 @@ export const LanguageStore = signalStore(
             patchState(store, { key });
         }
     })),
-    withHooks(store => ({
-        onInit: () => {
-            store.translateService.use(navigator.language);
-            patchState(store, { key: navigator.language });
-        }
-    }))
 )

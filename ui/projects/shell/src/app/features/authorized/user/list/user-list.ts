@@ -6,11 +6,11 @@ import { DividerModule } from "primeng/divider";
 import { PopoverModule } from "primeng/popover";
 import { TableModule } from "primeng/table";
 import { UserStore } from "../../../../data-access/store/user.store";
-
+import { RoleComponent } from "../../../../shared/ui/role/role.component";
 @Component({
     selector: 'app-user-list',
     templateUrl: './user-list.html',
-    imports: [TableModule, CardModule, DividerModule, TranslateModule, ButtonModule, PopoverModule],
+    imports: [TableModule, CardModule, RoleComponent, DividerModule, TranslateModule, ButtonModule, PopoverModule],
     host: { class: 'flex w-full justify-center p-4' }
 })
 export default class UserListComponent {

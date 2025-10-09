@@ -1,5 +1,5 @@
 import { Component, input } from "@angular/core";
-import { BlaudirektCompany } from "../data-access/blaudirekt.service";
+import { BlaudirektCompany } from "../data-access/provider/blaudirekt.service";
 import { FallbackImageDirective } from "../utils/fallback-image.directive";
 
 @Component({
