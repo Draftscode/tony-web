@@ -1,5 +1,5 @@
 import { Component, inject, signal } from "@angular/core";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { DividerModule } from "primeng/divider";
@@ -10,7 +10,7 @@ import { RoleComponent } from "../../../../shared/ui/role/role.component";
 @Component({
     selector: 'app-user-list',
     templateUrl: './user-list.html',
-    imports: [TableModule, CardModule, RoleComponent, DividerModule, TranslateModule, ButtonModule, PopoverModule],
+    imports: [TableModule, CardModule, RoleComponent, DividerModule, TranslatePipe, ButtonModule, PopoverModule],
     host: { class: 'flex w-full justify-center p-4' }
 })
 export default class UserListComponent {

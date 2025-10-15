@@ -10,7 +10,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # install dev dependencies only
-RUN npm i && \
+RUN npm i --legacy-peer-deps && \
     npm i -g @angular/cli
 
 COPY . .

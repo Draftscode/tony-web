@@ -1,6 +1,6 @@
 import { Component, inject, signal } from "@angular/core";
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
@@ -48,7 +48,7 @@ export type FormType = {
     selector: 'form-dialog',
     templateUrl: 'form-dialog.html',
     imports: [ReactiveFormsModule, CheckboxModule, ButtonModule, InputNumber, AutoCompleteModule, TooltipModule,
-        DividerModule, InputTextModule, SelectModule, DatePickerModule, TranslateModule, CompanyComponent]
+        DividerModule, InputTextModule, SelectModule, DatePickerModule, TranslatePipe, CompanyComponent]
 })
 export class FormDialogComponent {
     private readonly pDialogRef = inject<DynamicDialogRef<FormDialogComponent>>(DynamicDialogRef);

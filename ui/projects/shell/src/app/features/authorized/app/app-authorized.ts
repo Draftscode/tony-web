@@ -2,7 +2,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
@@ -20,14 +20,13 @@ import { FcmService } from '../../../data-access/provider/fcm.service';
 import { ThemeService } from '../../../data-access/provider/theme.service';
 import { AccountStore } from '../../../data-access/store/account.store';
 import { SettingsStore } from '../../../data-access/store/settings.store';
-import { LanguageSelector } from '../../language/selector/language-selector';
 import { SettingsComponent } from '../settings/settings.component';
 @Component({
   selector: 'app',
   imports: [
     RouterOutlet, MessageModule, RouterLinkActive, DrawerModule,
-    DividerModule, TooltipModule, LanguageSelector, SettingsComponent,
-    RouterLink, ToastModule, MenubarModule, TranslateModule, ScrollerModule,
+    DividerModule, TooltipModule, SettingsComponent,
+    RouterLink, ToastModule, MenubarModule, TranslatePipe, ScrollerModule,
     ButtonModule, ProgressSpinnerModule],
   templateUrl: 'app-authorized.html',
   styleUrl: 'app-authorized.scss',

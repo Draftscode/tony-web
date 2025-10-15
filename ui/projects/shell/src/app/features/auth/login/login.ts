@@ -1,20 +1,20 @@
 import { Component, inject, signal } from "@angular/core";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { DividerModule } from "primeng/divider";
 import { InputTextModule } from "primeng/inputtext";
 import { MessageModule } from "primeng/message";
 import { PasswordModule } from "primeng/password";
-import { AccountStore } from "../../../data-access/store/account.store";
 import { ThemeService } from "../../../data-access/provider/theme.service";
+import { AccountStore } from "../../../data-access/store/account.store";
 
 @Component({
     selector: 'app-login',
     templateUrl: 'login.html',
-    imports: [CardModule, MessageModule, PasswordModule, DividerModule, TranslateModule,
+    imports: [CardModule, MessageModule, PasswordModule, DividerModule, TranslatePipe,
         ButtonModule, InputTextModule, FormsModule, ReactiveFormsModule]
 })
 export default class LoginPage {

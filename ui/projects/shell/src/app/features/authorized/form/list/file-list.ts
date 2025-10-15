@@ -1,7 +1,7 @@
 import { DatePipe } from "@angular/common";
 import { Component, inject, signal } from "@angular/core";
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from "@angular/router";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { DataViewModule } from 'primeng/dataview';
@@ -20,7 +20,7 @@ import { UserComponent } from "../../../../shared/ui/user/user.component";
     templateUrl: 'file-list.html',
     host: { class: 'flex p-4 w-full justify-center' },
     imports: [DataViewModule, CardModule, RouterLink, TooltipModule, DatePipe,
-        FileUploadModule, DividerModule, RouterLinkActive, TranslateModule, UserComponent,
+        FileUploadModule, DividerModule, RouterLinkActive, TranslatePipe, UserComponent,
         PopoverModule, ButtonModule, InputTextModule, InputGroupAddonModule, InputGroupModule]
 })
 export default class FileList {

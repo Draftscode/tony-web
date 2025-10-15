@@ -1,6 +1,6 @@
 import { Component, inject } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
 import { DividerModule } from "primeng/divider";
@@ -8,7 +8,7 @@ import { FileStore } from "../../../data-access/store/file.store";
 
 @Component({
     selector: 'app-empty',
-    imports: [DividerModule, ButtonModule, CardModule, TranslateModule],
+    imports: [DividerModule, ButtonModule, CardModule, TranslatePipe],
     templateUrl: 'empty.component.html',
     host: { class: 'w-full h-full flex items-center justify-center' }
 })

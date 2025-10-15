@@ -13,15 +13,9 @@
                 </ng-template>
                 <ng-template #end>
                     <div class="flex items-center space-x-1">
-                        <p-button icon="pi pi-cog" [text]="true" size="large"
+                        <p-button [rounded]="true" icon="pi pi-cog" [text]="true" size="large" tooltipPosition="bottom"
                             [pTooltip]="'settings.menu.open'|translate" (onClick)="settingsStore.toggle()" />
-                        <app-language-selector size="large" />
-                        <p-button [pTooltip]="`theming.switch.${_themeService.isDark()?'daymode':'darkmode'}`|translate"
-                            tooltipPosition="bottom" [rounded]="true" [text]="true" size="large"
-                            (onClick)="_themeService.toggleDarkMode()"
-                            [icon]="'pi pi-'+ (_themeService.isDark() ? 'sun':'moon')" />
-                        <p-button [rounded]="true" [text]="true" (onClick)="onLogout()" icon="pi pi-sign-out" />
-
+                        <p-button [rounded]="true" [text]="true" size="large" (onClick)="onLogout()" icon="pi pi-sign-out" />
                     </div>
                 </ng-template>
             </p-menubar>

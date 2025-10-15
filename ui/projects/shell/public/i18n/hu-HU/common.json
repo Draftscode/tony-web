@@ -108,6 +108,23 @@
         "menu": {
             "label": "Beállítások",
             "open": "Menü megnyitása"
+        },
+        "notification": {
+            "label": "Értesítések",
+            "enabled": {
+                "summary": "Benachrichtigungen aktiviert",
+                "detail": "Benachrichtigungen wurden aktiviert und sie werden jetzt über neue Events informiert."
+            },
+            "disabled": {
+                "summary": "Benachrichtigungen deaktiviert",
+                "detail": "Benachrichtigungen wurden deaktivier und sie werden jetzt nicht mehr über neue Events informiert."
+            }
+        },
+        "language": {
+            "label": ""
+        },
+        "darkmode": {
+            "label": ""
         }
     }
 }

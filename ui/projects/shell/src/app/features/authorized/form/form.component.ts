@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, effect, inject, signal, untracked } from 
 import { toSignal } from "@angular/core/rxjs-interop";
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { MessageService } from "primeng/api";
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { ButtonModule } from "primeng/button";
@@ -90,7 +90,7 @@ export type FormType = {
 @Component({
     host: { class: 'w-full h-full p-4 m-auto' },
     selector: 'app-form',
-    imports: [AutoCompleteModule, TranslateModule, DatePickerModule,
+    imports: [AutoCompleteModule, TranslatePipe, DatePickerModule,
         InputTextModule, TableModule, ProgressBarModule, DialogModule, SelectModule,
         TextareaModule, ReactiveFormsModule, CardModule, TotalPipe, FallbackImageDirective,
         AutoCompleteModule, ButtonModule, DividerModule, CDatePipe, TooltipModule,

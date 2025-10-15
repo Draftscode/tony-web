@@ -1,6 +1,6 @@
 import { Component, inject, linkedSignal, signal } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { TranslateModule } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { ButtonModule } from "primeng/button";
 import { DividerModule } from "primeng/divider";
 import { DynamicDialogConfig, DynamicDialogRef } from "primeng/dynamicdialog";
@@ -15,7 +15,7 @@ import { RoleComponent } from "../../../../shared/ui/role/role.component";
     selector: 'app-user-dialog',
     templateUrl: 'user-dialog.html',
     imports: [ButtonModule, PasswordModule, PickListModule,
-        ReactiveFormsModule, TranslateModule, InputTextModule, DividerModule,
+        ReactiveFormsModule, TranslatePipe, InputTextModule, DividerModule,
         RoleComponent],
 })
 export class UserDialog {

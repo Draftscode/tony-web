@@ -108,6 +108,23 @@
         "menu": {
             "label": "Settings",
             "open": "Open menu"
+        },
+        "notification": {
+            "label": "Notifications",
+                        "enabled": {
+                "summary": "Benachrichtigungen aktiviert",
+                "detail": "Benachrichtigungen wurden aktiviert und sie werden jetzt über neue Events informiert."
+            },
+            "disabled": {
+                "summary": "Benachrichtigungen deaktiviert",
+                "detail": "Benachrichtigungen wurden deaktivier und sie werden jetzt nicht mehr über neue Events informiert."
+            }
+        },
+        "language": {
+            "label": "Language"
+        },
+        "darkmode": {
+            "label": "Darkmode"
         }
     }
 }

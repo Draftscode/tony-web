@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Messaging } from '@angular/fire/messaging';
 import { getToken, onMessage } from 'firebase/messaging';
 import { environment } from '../../../environments/environment';
@@ -7,9 +7,15 @@ import { environment } from '../../../environments/environment';
 export class FcmService {
     private readonly messaging = inject(Messaging);
 
+    readonly isGranted = signal<boolean>(false);
+
+    constructor() {
+        this.isGranted.set(Notification.permission === 'granted');
+    }
+
     requestPermission(): Promise<string> {
         return Notification.requestPermission().then((permission) => {
-            console.log('p', permission)
+            this.isGranted.set(Notification.permission === 'granted');
             if (permission === 'granted') {
                 return getToken(this.messaging, { vapidKey: environment.vapid });
             } else {

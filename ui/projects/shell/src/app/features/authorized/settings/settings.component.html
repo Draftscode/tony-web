@@ -1,0 +1,45 @@
+<div class="flex flex-col">
+    <div class="flex flex-col gap-1">
+        <div class="flex gap-1 items-center">
+            <i class="pi pi-bell"></i>
+            <label for="notification">{{'settings.notification.label'|translate}}</label>
+        </div>
+        <p-toggleswitch [ngModel]="fcm.isGranted()" (onChange)="$event ? requestPermission($event):null"
+            inputId="notification" />
+    </div>
+    <p-divider />
+    <div class="flex flex-col gap-1">
+        <div class="flex gap-1 items-center">
+            <i [class]="`pi pi-${themeStore.isDark() ? 'sun':'moon'}`"></i>
+            <label for="darkmode">{{'settings.darkmode.label'|translate}}</label>
+        </div>
+        <p-toggleswitch (onChange)="themeStore.toggleDarkMode()"
+            [pTooltip]="`theming.switch.${themeStore.isDark()?'daymode':'darkmode'}`|translate" tooltipPosition="bottom"
+            inputId="darkmode" [ngModel]="themeStore.isDark()" />
+    </div>
+    <p-divider />
+    <div class="flex flex-col gap-1">
+        <div class="flex gap-1 items-center">
+            <i class="pi pi-flag"></i>
+            <label for="language">{{'settings.language.label'|translate}}</label>
+        </div>
+        <p-select (onChange)="languageStore.use($event.value.key)" inputId="language"
+            [options]="languageStore.languages()" [ngModel]="languageStore.currentLanguage()">
+            <ng-template #selectedItem let-item>
+                <ng-container [ngTemplateOutlet]="language" [ngTemplateOutletContext]="{$implicit: item}" />
+            </ng-template>
+            <ng-template #item let-item>
+                <ng-container [ngTemplateOutlet]="language" [ngTemplateOutletContext]="{$implicit: item}" />
+            </ng-template>
+        </p-select>
+    </div>
+</div>
+
+<ng-template #language let-item>
+    @if(item) {
+    <span class="flex gap-1 items-center">
+        <img [src]="`images/flags/${item.image}`" class="h-[24px]" alt="Flag" />
+        {{`label.language.${item.label}`|translate}}
+    </span>
+    }
+</ng-template>
