@@ -13,9 +13,11 @@
                 </ng-template>
                 <ng-template #end>
                     <div class="flex items-center space-x-1">
-                        <app-language-selector size="small" />
+                        <p-button icon="pi pi-cog" [text]="true" size="large"
+                            [pTooltip]="'settings.menu.open'|translate" (onClick)="settingsStore.toggle()" />
+                        <app-language-selector size="large" />
                         <p-button [pTooltip]="`theming.switch.${_themeService.isDark()?'daymode':'darkmode'}`|translate"
-                            tooltipPosition="bottom" [rounded]="true" [text]="true" size="small"
+                            tooltipPosition="bottom" [rounded]="true" [text]="true" size="large"
                             (onClick)="_themeService.toggleDarkMode()"
                             [icon]="'pi pi-'+ (_themeService.isDark() ? 'sun':'moon')" />
                         <p-button [rounded]="true" [text]="true" (onClick)="onLogout()" icon="pi pi-sign-out" />
@@ -38,6 +40,10 @@
             </div>
             }
             <div class="w-full h-full flex overflow-auto flex-col">
+                <p-drawer (visibleChange)="settingsStore.toggle($event)" [visible]="settingsStore.isVisible()"
+                    [header]="'settings.menu.label'|translate" position="right">
+                    <app-settings />
+                </p-drawer>
                 <div class="flex flex-col w-full h-full min-h-0 overflow-auto">
                     <router-outlet />
                 </div>

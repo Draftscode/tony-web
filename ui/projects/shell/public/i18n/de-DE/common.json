@@ -12,7 +12,7 @@
             "german": "Deutsch",
             "english": "English",
             "bulgarian": "Bulgarisch",
-            "hungarian": "Ungraisch"
+            "hungarian": "Ungarisch"
         },
         "insurer": {
             "no": "Vers. Nr.",
@@ -97,6 +97,17 @@
         "switch": {
             "darkmode": "Nachtmodus umschalten",
             "daymode": "Tagmodus umschalten"
+        }
+    },
+    "messages": {
+        "confirmation": {
+            "delete": "Möchten Sie diesen Eintrag wirklich löschen?"
+        }
+    },
+    "settings": {
+        "menu": {
+            "label": "Einstellungen",
+            "open": "Menü öffnen"
         }
     }
 }

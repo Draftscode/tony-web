@@ -18,7 +18,7 @@ import { UserComponent } from "../../../../shared/ui/user/user.component";
 @Component({
     selector: 'app-file-list',
     templateUrl: 'file-list.html',
-    host: { class: 'flex p-4 w-full justify-center m-auto' },
+    host: { class: 'flex p-4 w-full justify-center' },
     imports: [DataViewModule, CardModule, RouterLink, TooltipModule, DatePipe,
         FileUploadModule, DividerModule, RouterLinkActive, TranslateModule, UserComponent,
         PopoverModule, ButtonModule, InputTextModule, InputGroupAddonModule, InputGroupModule]

@@ -98,5 +98,16 @@
             "darkmode": "Switch dark mode",
             "daymode": "Switch light mode"
         }
+    },
+    "messages": {
+        "confirmation": {
+            "delete": "Are you sure you want to delete this entry?"
+        }
+    },
+    "settings": {
+        "menu": {
+            "label": "Settings",
+            "open": "Open menu"
+        }
     }
 }

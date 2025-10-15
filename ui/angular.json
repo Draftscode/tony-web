@@ -21,6 +21,7 @@
             "tsConfig": "projects/shell/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
+              "projects/shell/src/firebase-messaging-sw.js",
               {
                 "glob": "**/*",
                 "input": "projects/shell/public"

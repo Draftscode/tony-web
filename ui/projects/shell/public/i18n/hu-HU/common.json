@@ -98,5 +98,16 @@
             "darkmode": "Sötét mód váltása",
             "daymode": "Világos mód váltása"
         }
+    },
+    "messages": {
+        "confirmation": {
+            "delete": "Biztosan törölni szeretné ezt a bejegyzést?"
+        }
+    },
+    "settings": {
+        "menu": {
+            "label": "Beállítások",
+            "open": "Menü megnyitása"
+        }
     }
 }

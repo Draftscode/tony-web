@@ -1,7 +1,8 @@
 import { inject } from "@angular/core";
 import { toObservable } from '@angular/core/rxjs-interop';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from "@angular/router";
-import { catchError, filter, map, of, timeout } from "rxjs";
+import { catchError, filter, map, of } from "rxjs";
+import { environment } from "../../environments/environment";
 import { AccountStore } from "../data-access/store/account.store";
 
 export function authGuard(activatedRoute: ActivatedRouteSnapshot, route: RouterStateSnapshot) {
@@ -21,6 +22,10 @@ export function authGuard(activatedRoute: ActivatedRouteSnapshot, route: RouterS
         }),
         catchError(e => of('error')),
         map(status => {
+            if (!environment.prod) {
+                return true;
+            }
+
             if (status === 'error' || !accountStore.accessToken()) {
                 return router.createUrlTree(['/', 'auth', 'login']);
             }

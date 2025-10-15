@@ -12,6 +12,9 @@ import { GlobalErrorHandler } from './data-access/error.handler';
 import { JsonFileLoader } from './data-access/translate.loader';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { tonyMThemePreset } from './theme';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideMessaging, getMessaging } from '@angular/fire/messaging';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,6 +31,8 @@ export const appConfig: ApplicationConfig = {
     ConfirmationService,
     provideZonelessChangeDetection(),
     provideRouter(routes),
+    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+    provideMessaging(() => getMessaging()),
     provideHttpClient(
       withFetch(),
       withInterceptors([authInterceptor]),
