@@ -6,7 +6,7 @@ import { DividerModule } from "primeng/divider";
 import { PopoverModule } from "primeng/popover";
 import { TableModule } from "primeng/table";
 import { UserStore } from "../../../../data-access/store/user.store";
-import { RoleComponent } from "../../../../shared/ui/role/role.component";
+import { RoleComponent } from "../../../../ui/role/role.component";
 @Component({
     selector: 'app-user-list',
     templateUrl: './user-list.html',

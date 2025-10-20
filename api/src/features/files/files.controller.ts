@@ -71,7 +71,7 @@ export class FilesController {
 
 
 
-    @UseGuards(JwtAuthGuard)
+    // @UseGuards(JwtAuthGuard)
     @Post('pdf')
     async createPdf(@Body('contents') contents: string, @Res() res: Response) {
         const buffer = await this.filesService.createPdf(contents);

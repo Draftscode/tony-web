@@ -19,17 +19,17 @@ export const AccountStore = signalStore(
     withProps(store => ({
         authService: inject(AuthService),
         setCredentials: (credentials: Credentials | null) => {
-            if (!credentials) {
-                sessionStorage.removeItem('credentials');
+            if (credentials) {
+                localStorage.setItem('credentials', JSON.stringify(credentials ?? {}));
             } else {
-                sessionStorage.setItem('credentials', JSON.stringify(credentials ?? {}));
+                localStorage.removeItem('credentials');
             }
 
             patchState(store, { credentials });
         },
 
         getCredentials: () => {
-            const creds = sessionStorage.getItem('credentials');
+            const creds = localStorage.getItem('credentials');
             if (creds) {
                 patchState(store, { credentials: JSON.parse(creds) ?? null });
             }
@@ -48,7 +48,7 @@ export const AccountStore = signalStore(
         },
         refresh: async () => {
             const token = store.refreshToken();
-            if (!token) { throw Error('no refresh token'); }
+            if (!token) { throw new Error('no refresh token'); }
 
             patchState(store, { isRefreshing: true });
             try {

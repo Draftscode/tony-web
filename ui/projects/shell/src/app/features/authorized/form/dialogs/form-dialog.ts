@@ -1,4 +1,4 @@
-import { Component, inject, signal } from "@angular/core";
+import { Component, computed, inject } from "@angular/core";
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { AutoCompleteModule } from "primeng/autocomplete";
@@ -6,13 +6,21 @@ import { ButtonModule } from "primeng/button";
 import { CheckboxModule } from "primeng/checkbox";
 import { DatePickerModule } from "primeng/datepicker";
 import { DividerModule } from "primeng/divider";
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { InputGroupModule } from "primeng/inputgroup";
+import { InputGroupAddonModule } from "primeng/inputgroupaddon";
 import { InputNumber } from "primeng/inputnumber";
 import { InputTextModule } from "primeng/inputtext";
+import { PopoverModule } from "primeng/popover";
 import { SelectModule } from "primeng/select";
 import { TooltipModule } from "primeng/tooltip";
-import { BlaudirektCompany, BlaudirektService } from "../../../../data-access/provider/blaudirekt.service";
+import { lastValueFrom, take } from "rxjs";
+import { BlaudirektCompany } from "../../../../data-access/provider/blaudirekt.service";
+import { DivisionStore } from "../../../../data-access/store/division.store";
+import { InsurerStore } from "../../../../data-access/store/insurer.store";
+import { BlocksAssistantDialog } from "../../../../dialogs/blocks-assistant/blocks-assistant.dialog";
 import { CompanyComponent } from "../../../../dialogs/company";
+import { TextareaModule } from "primeng/textarea";
 export type SuggestionType = 'inventory' | 'terminated' | 'new' | 'acquisition';
 
 export type Suggestion = {
@@ -47,14 +55,18 @@ export type FormType = {
     standalone: true,
     selector: 'form-dialog',
     templateUrl: 'form-dialog.html',
-    imports: [ReactiveFormsModule, CheckboxModule, ButtonModule, InputNumber, AutoCompleteModule, TooltipModule,
-        DividerModule, InputTextModule, SelectModule, DatePickerModule, TranslatePipe, CompanyComponent]
+    imports: [
+        InputGroupModule, InputGroupAddonModule, PopoverModule, TextareaModule,
+        ReactiveFormsModule, CheckboxModule, ButtonModule, InputNumber, AutoCompleteModule, TooltipModule,
+        DividerModule, InputTextModule, SelectModule, DatePickerModule, TranslatePipe, SelectModule, CompanyComponent]
 })
 export class FormDialogComponent {
     private readonly pDialogRef = inject<DynamicDialogRef<FormDialogComponent>>(DynamicDialogRef);
     private readonly pDialogConfig = inject<DynamicDialogConfig<any>>(DynamicDialogConfig);
-    private readonly blaudirektService = inject(BlaudirektService);
     private readonly ngxTranslate = inject(TranslateService);
+    protected readonly insurerStore = inject(InsurerStore);
+    protected readonly divisionStore = inject(DivisionStore);
+    private readonly dialogService = inject(DialogService);
 
     constructor() {
         const data = this.pDialogConfig.data;
@@ -82,6 +94,22 @@ export class FormDialogComponent {
         }
     }
 
+    protected async onAssistant() {
+        const ref = this.dialogService.open(BlocksAssistantDialog, {
+            data: {
+                division: this._formGroup.controls.type.value
+            },
+            modal: true,
+            header: 'Assistant',
+            closable: true,
+        });
+
+        const result = await lastValueFrom(ref.onClose.pipe(take(1)));
+        if (result?.type === 'manually') {
+            this._formGroup.controls.scope.patchValue(result.data);
+        }
+    }
+
     protected readonly _formGroup = new FormGroup<FormArrayType>({
         nr: new FormControl<string | null>(null),
         fromTo: new FormControl<string | null>(null),
@@ -95,7 +123,15 @@ export class FormDialogComponent {
         monthly: new FormControl<boolean>(true),
     });
 
-    protected insurers = signal<BlaudirektCompany[]>([]);
+    protected insurers = computed(() => {
+        const customInsurer = {
+            id: '',
+            name: `${this.insurerStore.filter.query()}`,
+            logo: '',
+        }
+
+        return (this.insurerStore.insurers.value()?.items ?? []).concat(customInsurer);
+    })
 
     protected close() {
         if (this._formGroup.invalid) { return; }
@@ -113,16 +149,6 @@ export class FormDialogComponent {
             type: 'manually',
             data: values,
         })
-    }
-
-    protected async searchInsurers(query: string) {
-        const insurers = await this.blaudirektService.searchCompanies(query)
-        const customInsurer = {
-            id: '',
-            name: `${query}`,
-            logo: '',
-        }
-        this.insurers.set([customInsurer, ...insurers]);
     }
 
     protected _suggs: Suggestion[] = [];

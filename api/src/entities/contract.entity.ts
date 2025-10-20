@@ -2,6 +2,7 @@ import type { Relation } from "typeorm";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { CompanyEntity } from "./company.entity";
 import { CustomerEntity } from "./customer.entity";
+import { DivisionEntity } from "./division.entity";
 
 export type Line = {
     group: string;
@@ -34,8 +35,12 @@ export class ContractEntity {
     @Column({ nullable: true })
     customerId: string;
 
-    @Column({ type: 'jsonb' })
-    line: Line;
+    @ManyToOne(() => DivisionEntity, (division) => division.contracts, { nullable: true, eager: true })
+    @JoinColumn({ name: "divisionId" })
+    division: Relation<DivisionEntity>;
+
+    @Column({ nullable: true })
+    divisionId: string;
 
     @Column({ type: 'jsonb' })
     payment: PaymentInfo;

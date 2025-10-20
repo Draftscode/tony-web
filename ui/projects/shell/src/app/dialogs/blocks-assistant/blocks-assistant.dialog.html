@@ -1,0 +1,21 @@
+<div class="flex flex-col gap-2">
+    @for(block of ngForm.blocks; track block) {
+    <div class="flex flex-col gap-1">
+        <div class="flex gap-1 items-center">
+            <label for="value">{{block.key().value()}}</label>
+        </div>
+        <p-inputgroup>
+            
+            <input [placeholder]="block.placeholder().value()" pInputText [control]="block.value" />
+            <p-inputgroup-addon>
+                <i class="flex pi pi-info-circle" [pTooltip]="block.description().value()"></i>
+
+            </p-inputgroup-addon>
+        </p-inputgroup>
+    </div>
+    }
+    <p-divider />
+    <div class="flex w-full justify-end">
+        <p-button (onClick)="close()" label="Übernehmen" />
+    </div>
+</div>

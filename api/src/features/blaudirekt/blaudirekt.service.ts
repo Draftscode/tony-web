@@ -7,8 +7,12 @@ import { lastValueFrom } from "rxjs";
 import { CompanyEntity } from "src/entities/company.entity";
 import { ContractEntity } from "src/entities/contract.entity";
 import { CustomerAddress, CustomerEntity } from "src/entities/customer.entity";
+import { DivisionEntity } from "src/entities/division.entity";
 import { DataSource, ILike } from "typeorm";
-import { GRANT } from "./api";
+import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity.js";
+import { FilesService } from "../files/files.service";
+import { API, GRANT } from "./api";
+import { machineLearning } from "firebase-admin";
 
 async function imageUrlToBase64(url: string): Promise<string> {
     if (!url) { return ''; }
@@ -58,11 +62,20 @@ type BlaudirektCustomerDto = {
     salutation: { text: string; gender: string; };
 }
 
+type SearchOptions = {
+    query: string;
+    limit: number;
+    offset: number;
+    sortField: string;
+    sortOrder: number;
+}
+
 @Injectable()
 export class BlaudirektService {
     private readonly logger = new Logger(BlaudirektService.name);
 
     constructor(
+        private readonly fileService: FilesService,
         private readonly dataSource: DataSource,
         private readonly httpService: HttpService
     ) {
@@ -216,20 +229,178 @@ export class BlaudirektService {
         }
     }
 
-    async getCompanies(offset: number = 0, limit: number = 100, query?: string) {
-        return this.dataSource.manager.find(CompanyEntity, { where: { name: ILike(`%${query}%`) }, skip: offset, take: limit })
+    async fetchCustomerState(token: string, customerId: string) {
+        try {
+            const response = await lastValueFrom(this.httpService.get(
+                `https://stocks.ameiseapis.com/api/customer/state/${customerId}`,
+                {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': `Bearer ${token}`
+                    },
+                }
+            ));
+
+            const dto: QueryDeepPartialEntity<CustomerEntity> = {
+                id: customerId,
+                terminatedAt: response.data.brokerMandateTerminationDate,
+                isAlive: response.data.isAlive,
+                blockReason: response.data.blockedReason?.text,
+                blocked: response.data.blocked
+            };
+
+            await this.dataSource.transaction(async manager => {
+                await manager.update(CustomerEntity, customerId, dto);
+            });
+
+            return response.data;
+        } catch (e) {
+            this.logger.error(e);
+        }
+    }
+
+    async getCompanies(options: Partial<SearchOptions>) {
+        const [items, total] = await this.dataSource.manager.findAndCount(CompanyEntity,
+            {
+                where: { name: ILike(`%${options?.query ?? ''}%`) },
+                order: { [options?.sortField ?? 'name']: options?.sortOrder === -1 ? 'DESC' : 'ASC' },
+                skip: options?.offset ?? 0,
+                take: options?.limit ?? 100
+            })
+        return { items, total };
+    }
+
+
+    async editCompany(companyId: string, companyDto: QueryDeepPartialEntity<CompanyEntity>) {
+        return this.dataSource.manager.transaction(async manager => {
+            return await manager.update(CompanyEntity, companyId, companyDto);
+        });
+    }
+
+
+    async editDivision(divisionId: string, divisionDto: QueryDeepPartialEntity<DivisionEntity>) {
+        return this.dataSource.manager.transaction(async manager => {
+            return await manager.update(DivisionEntity, divisionId, divisionDto);
+        });
     }
 
     async getContracts(customerId: string, offset: number = 0, limit: number = 100) {
-        return this.dataSource.manager.find(ContractEntity, { where: { customerId }, skip: offset, take: limit, relations: ['customer', 'company'] })
+        return this.dataSource.manager.find(ContractEntity, { where: { customerId }, skip: offset, take: limit, relations: { customer: true, company: true } });
     }
 
-    async getCustomers(offset: number = 0, limit: number = 100, query?: string) {
-        return this.dataSource.manager.find(CustomerEntity, { where: { displayName: ILike(`%${query}%`) }, skip: offset, take: limit })
+    async ask<Body extends BodyInit | null | undefined, T>(path: string, config?: Partial<{
+        method: string;
+        body: Body;
+        headers: Record<string, string>;
+        parseFn: (response: Response) => T
+    }>) {
+        const token = await this.getAccessToken();
+        const url = `${API}/bd/employee/1.0/rest/${path}`;
+        try {
+            const response = await fetch(url, {
+                method: config?.method ?? 'GET',
+                headers: {
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                    ...config?.headers,
+                    'Authorization': `Bearer ${token}`,
+                },
+                body: config?.body
+            });
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Request failed with status ${response.status}: ${errorText}`);
+            }
+
+            if (config?.parseFn) {
+                return config.parseFn(response);
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            this.logger.error(error);
+        }
+    }
+
+    async addDocument(customerId: string, html: string) {
+        const pdf = await this.fileService.createPdf(html);
+        const result = await this.ask(`${GRANT.sub}/archiveintraege`, {
+            method: 'POST',
+            body: pdf,
+            headers: {
+                'X-Dio-Zuordnungen': JSON.stringify([
+                    // { Typ: 'vertrag', Id: vertragId },
+                    // { Typ: 'sparte', Id: sparteId }
+                    { "Typ": "kunde", "Id": customerId },
+                ]),
+                'X-Dio-Tags': JSON.stringify(['Vorsorgevollmacht']),
+                'X-Dio-Metadaten': JSON.stringify([{ Value: '_kundensichtbar', Text: '1' }]),
+                'X-Dio-Typ': 'dokument',
+                'Content-Type': `application/pdf; name="${'Vorsorgevollmacht.pdf'}"`
+            }
+        });
+
+        await this.dataSource.manager.transaction(async manager => {
+            const customer = await manager.findOneOrFail(CustomerEntity, { where: { id: customerId } });
+
+            await manager.update(CustomerEntity, customerId, {
+                files: (customer.files ?? []).concat(result.Id)
+            });
+        });
+
+        return pdf;
+    }
+
+    async getDocument(id: string) {
+        const result = await this.ask(`${GRANT.sub}/archiveintraege/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': `application/pdf; name="${'Vorsorgevollmacht.pdf'}"`
+            },
+            parseFn: async (response) => Buffer.from(await response.arrayBuffer()),
+        });
+
+        return result;
+    }
+
+    async getDivisions(options: Partial<SearchOptions>) {
+        const order: 'ASC' | 'DESC' = options.sortOrder === -1 ? 'DESC' : 'ASC';
+        const qb = this.dataSource
+            .getRepository(DivisionEntity)
+            .createQueryBuilder('division')
+            .where('division.text ILIKE :query', {
+                query: `%${options?.query ?? ''}%`,
+            })
+            .orderBy(`division.${options.sortField ?? 'text'}`, order)
+            .skip(options?.offset ?? 0)
+            .take(options?.limit ?? 100)
+            // 👇 this counts related contracts for each customer
+            .loadRelationCountAndMap('disivion.contractsCount', 'division.contracts');
+
+        const [items, total] = await qb.getManyAndCount();
+        return { items, total };
+    }
+
+    async getCustomers(options: Partial<SearchOptions>) {
+        const order: 'ASC' | 'DESC' = options.sortOrder === -1 ? 'DESC' : 'ASC';
+        const qb = this.dataSource
+            .getRepository(CustomerEntity)
+            .createQueryBuilder('customer')
+            .leftJoinAndSelect('customer.links', 'link') // 👈 Load the relation
+            .where('customer.displayName ILIKE :query', {
+                query: `%${options?.query ?? ''}%`,
+            })
+            .orderBy(`customer.${options.sortField ?? 'lastname'}`, order)
+            .skip(options?.offset ?? 0)
+            .take(options?.limit ?? 100)
+            // 👇 this counts related contracts for each customer
+            .loadRelationCountAndMap('customer.contractsCount', 'customer.contracts');
+
+        const [items, total] = await qb.getManyAndCount();
+        return { items, total };
     }
 
     private createOrUpdateCustomers(customers: BlaudirektCustomerDto[]) {
-        const items: Partial<CustomerEntity>[] = customers?.filter(customer => !!customer.id).map(customer => {
+        const items: QueryDeepPartialEntity<CustomerEntity>[] = customers?.filter(customer => !!customer.id).map(customer => {
             return {
                 ...customer,
                 mainAddress: {
@@ -250,17 +421,19 @@ export class BlaudirektService {
     }
 
     private createOrUpdateContracts(contracts: Record<string, any>[]) {
-        const entities: Partial<ContractEntity>[] = contracts?.filter(contract => !!contract.id).map(contract => ({
-            id: contract.id,
-            line: contract.line,
-            payment: contract.payment,
-            policyNumber: contract.policyNumber,
-            start: contract.duration.begin,
-            end: contract.duration.end,
-            companyId: contract.company.id,
-            risk: contract.risk,
-            customerId: contract.customer.id,
-        }));
+        const entities: QueryDeepPartialEntity<ContractEntity>[] = contracts
+            ?.filter(contract => !!contract.id)
+            .map(contract => ({
+                id: contract.id,
+                divisionId: contract.line.id,
+                payment: contract.payment,
+                policyNumber: contract.policyNumber,
+                start: contract.duration.begin,
+                end: contract.duration.end,
+                companyId: contract.company.id,
+                risk: contract.risk,
+                customerId: contract.customer.id,
+            }));
 
         return this.dataSource.transaction(async manager => {
             await manager.getRepository(ContractEntity).upsert(entities, {
@@ -271,15 +444,39 @@ export class BlaudirektService {
     }
 
     private createOrUpdateCompanies(companies: Partial<CompanyEntity>[]) {
-        companies = companies?.filter(company => !!company.id).map(company => {
-            return company;
-        });
+        const mappedCompanies: QueryDeepPartialEntity<CompanyEntity> = companies?.filter(company => !!company.id).map(({ contracts, ...rest }) => rest) as QueryDeepPartialEntity<CompanyEntity>;
+
         return this.dataSource.transaction(async manager => {
-            await manager.getRepository(CompanyEntity).upsert(companies, {
+            await manager.getRepository(CompanyEntity).upsert(mappedCompanies, {
                 conflictPaths: ['id'],
                 skipUpdateIfNoValuesChanged: true,
             });
         });
+    }
+
+    async fetchDivisions(token: string, pageSize: number = 100, page: number = 1, order: 'ASC' | 'DESC' = 'ASC') {
+        try {
+            const response = await lastValueFrom(this.httpService.get(
+                `https://stocks.ameiseapis.com/api/contracts/lines`,
+                {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    params: {}
+                }
+            ));
+
+            const items = response.data;
+            return this.dataSource.transaction(async manager => {
+                await manager.getRepository(DivisionEntity).upsert(items, {
+                    conflictPaths: ['id'],
+                    skipUpdateIfNoValuesChanged: true,
+                });
+            });
+        } catch (e) {
+            this.logger.error(e);
+        }
     }
 
     @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
@@ -287,6 +484,9 @@ export class BlaudirektService {
         const token = await this.getAccessToken();
         const pageSize = 1000;
         let numberOfPages = 1;
+
+
+        await this.fetchDivisions(token, pageSize, 0, 'ASC');
 
         // fetch companies
         for (let i = 1; i <= numberOfPages; i++) {
@@ -302,7 +502,7 @@ export class BlaudirektService {
             numberOfPages = response?.numberOfPages ?? 1;
             for (const customer of (response?.items ?? [])) {
                 await this.fetchContracts(token, customer.id, 1000, 1, 'ASC');
-
+                await this.fetchCustomerState(token, customer.id);
             }
         }
 

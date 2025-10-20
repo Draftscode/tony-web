@@ -1,0 +1,8 @@
+{
+    "insurer": {
+        "label": "Versicherer",
+        "plural": "Versicherungen",
+        "logo": "logo",
+        "name": "Name"
+    }
+}

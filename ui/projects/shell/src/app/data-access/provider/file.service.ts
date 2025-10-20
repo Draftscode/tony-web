@@ -2,7 +2,7 @@ import { HttpClient, HttpEvent, httpResource } from "@angular/common/http";
 import { inject, Injectable, Signal } from "@angular/core";
 import { map, Observable } from "rxjs";
 import { environment } from "../../../environments/environment";
-import { ListResponse } from "../../utils/list.model";
+import { ListResponse } from "../../utils/types/lists/list.model";
 import { User } from "./auth.service";
 
 export type DataFile = {

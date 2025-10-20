@@ -1,0 +1,82 @@
+<div class="flex w-full h-full bg-surface-100 overflow-auto">
+    <p-card class="m-auto flex flex-col gap-4">
+        <span class="flex text-2xl">Notfallkontakt</span>
+        <p-stepper [value]="1" class="basis-[50rem] flex flex-col">
+            <p-step-list>
+                <p-step [value]="1">Mandant</p-step>
+                <p-step [value]="2">Notfallkontakt</p-step>
+            </p-step-list>
+            <p-step-panels>
+                <p-step-panel [value]="1">
+                    <ng-template #content let-activateCallback="activateCallback">
+                        <div class="flex flex-col max-h-[480px] overflow-auto">
+                            <div class="flex gap-2 flex-col">
+                                <div class="flex gap-2">
+                                    @let customer = linkStore.link.value()?.customer;
+                                    <div class="flex flex-col gap-1">
+                                        <label for="firstname">Vorname</label>
+                                        <input [disabled]="true" [value]="customer?.firstname" #firstname pInputText
+                                            id="contact" />
+                                    </div>
+                                    <div class="flex flex-col gap-1">
+                                        <label for="firstname">Nachname</label>
+                                        <input [disabled]="true" [value]="customer?.lastname" #lastname pInputText
+                                            id="lastname" />
+                                    </div>
+                                </div>
+                                <div class="w-[360px] h-[200px] flex flex-col gap-1">
+                                    <span>Unterschrift</span>
+                                    <app-signature-pad #sigPad
+                                        (onChange)="updateContact('client',{signature:$event??''})"
+                                        class="flex w-full h-full border-1 rounded-xl border-surface-200 dark:border-surface-900"
+                                        name="HAllo Ballo" />
+                                </div>
+                                <div class="flex gap-1 justify-end">
+                                    <p-button severity="secondary" label="clear" (onClick)="sigPad.clear()" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex pt-6 justify-end">
+                            <p-button label="Next" icon="pi pi-arrow-right" iconPos="right"
+                                (onClick)="activateCallback(2)" />
+                        </div>
+                    </ng-template>
+                </p-step-panel>
+                <p-step-panel [value]="2">
+                    <ng-template #content let-activateCallback="activateCallback">
+                        <div class="flex flex-col max-h-[480px] overflow-auto">
+                            <div class="flex gap-2 flex-col">
+                                <div class="flex gap-2">
+                                    <div class="flex flex-col gap-1">
+                                        <label for="firstname">Vorname</label>
+                                        <input (change)="updateContact('contact',{firstname: firstname.value})"
+                                            #firstname pInputText id="firstname" />
+                                    </div>
+                                    <div class="flex flex-col gap-1">
+                                        <label for="lastname">Nachname</label>
+                                        <input (change)="updateContact('contact',{lastname: lastname.value})" #lastname
+                                            pInputText id="lastname" />
+                                    </div>
+                                </div>
+                                <div class="w-[360px] h-[200px] flex flex-col">
+                                    <span>Unterschrift</span>
+                                    <app-signature-pad (onChange)="updateContact('contact',{signature:$event ??''})"
+                                        #sigPad
+                                        class="flex w-full h-full border-1 rounded-xl border-surface-200 dark:border-surface-900"
+                                        name="HAllo Ballo" />
+                                </div>
+                                <div class="flex gap-1 justify-end">
+                                    <p-button severity="secondary" label="clear" (onClick)="sigPad.clear()" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex pt-6 justify-end">
+                            <p-button label="Complete" icon="pi pi-arrow-right" iconPos="right"
+                                (onClick)="createPdf()" />
+                        </div>
+                    </ng-template>
+                </p-step-panel>
+            </p-step-panels>
+        </p-stepper>
+    </p-card>
+</div>

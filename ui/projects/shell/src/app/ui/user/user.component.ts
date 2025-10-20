@@ -1,6 +1,6 @@
 import { Component, input } from "@angular/core";
 import { TagModule } from "primeng/tag";
-import { StringToColorPipe } from "../../../data-access/pipes/string-to-color.pipe";
+import { StringToColorPipe } from "../../data-access/pipes/string-to-color.pipe";
 
 @Component({
     selector: 'app-user',

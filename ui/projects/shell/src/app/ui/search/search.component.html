@@ -1,0 +1,5 @@
+<p-iconfield>
+    <p-inputicon class="pi pi-search" />
+    <input [debounceTime]="450" [value]="query()" (debounce)="query.set($event)" type="text" pInputText
+        [placeholder]="'label.search'|translate" />
+</p-iconfield>

@@ -7,7 +7,7 @@ import { Observable, forkJoin, map } from "rxjs";
 export class JsonFileLoader implements TranslateLoader {
     private readonly http = inject(HttpClient);
     private readonly prefix = 'i18n';
-    private readonly files = ['common', 'person', 'blaudirekt', 'validation', 'auth','roles'];
+    private readonly files = ['common', 'person', 'blaudirekt', 'validation', 'auth', 'roles', 'customer', 'block', 'insurer'];
     private readonly suffix = '.json';
 
     getTranslation(lang: string): Observable<any> {

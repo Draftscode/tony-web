@@ -13,7 +13,7 @@ import { InputTextModule } from "primeng/inputtext";
 import { PopoverModule } from "primeng/popover";
 import { TooltipModule } from "primeng/tooltip";
 import { FileStore } from "../../../../data-access/store/file.store";
-import { UserComponent } from "../../../../shared/ui/user/user.component";
+import { UserComponent } from "../../../../ui/user/user.component";
 
 @Component({
     selector: 'app-file-list',

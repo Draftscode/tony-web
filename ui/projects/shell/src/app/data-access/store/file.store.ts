@@ -8,6 +8,7 @@ import { FileDialogComponent } from "../../dialogs/file.dialog";
 import { withResources } from "../../utils/signals";
 import { Content, toPdf } from "../../utils/to-pdf";
 import { DataFile, FileService } from "../provider/file.service";
+import { BlaudirektCustomer } from "../provider/blaudirekt.service";
 
 export const FileStore = signalStore(
     { providedIn: 'root' },
@@ -108,10 +109,10 @@ export const FileStore = signalStore(
             store.makeBusy();
             return lastValueFrom(store.fileService.readFile<T>(filename).pipe(finalize(() => store.makeNonBusy())));
         },
-        createFile: async () => {
+        createFile: async (customer?: BlaudirektCustomer) => {
             store.makeBusy();
             const ref = store.dialog.open(FileDialogComponent, {
-                data: null,
+                data: { customer },
                 closable: true,
                 header: store.translate.instant('utils.create.value',
                     { value: store.translate.instant('label.file.label') }

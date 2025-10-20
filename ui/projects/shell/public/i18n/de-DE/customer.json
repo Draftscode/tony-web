@@ -1,0 +1,14 @@
+{
+    "customer": {
+        "label": "Mandant",
+        "plural": "Mandanten",
+        "status": {
+            "terminated": "Beendet",
+            "new": "Neu",
+            "advanced": "Dokumente hochgeladen"
+        },
+        "contract": {
+            "count": "Anzahl Verträge"
+        }
+    }
+}

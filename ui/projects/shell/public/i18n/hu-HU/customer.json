@@ -1,0 +1,10 @@
+{
+    "customer": {
+        "label": "Mandanten",
+        "status": {
+            "terminated": "Beendet",
+            "new": "Neu",
+            "advanced": "Dokumente hochgeladen"
+        }
+    }
+}

@@ -1,0 +1,44 @@
+<div class="flex flex-col min-w-[320px] gap-2">
+    <div class="flex flex-col">
+        <p-select [filter]="true" (onFilter)="divisionStore.search({query:$event.filter})" filterBy="name"
+            [options]="divisionStore.divisions.value().items" appendTo="body" [ngModel]="selectedBlock()">
+            <ng-template #selectedItem let-item>
+                {{item.text}}
+            </ng-template>
+            <ng-template #item let-item>
+                {{item.text}}
+            </ng-template>
+        </p-select>
+    </div>
+
+    <div class="flex flex-col gap-2">
+        @for(block of blockForm.blocks; track block; let idx = $index) {
+        <div class="flex flex gap-2">
+            <div class="flex flex-col gap-1">
+                <label for="key">Key</label>
+                <input pInputText id="key" [control]="block.key" />
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label for="placeholder">Platzhalter</label>
+                <input pInputText id="placeholder" [control]="block.placeholder" />
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <label for="description">Bemerkung</label>
+                <input pInputText id="description" [control]="block.description" />
+            </div>
+
+            <div class="flex items-center">
+                <p-button [text]="true" size="small" icon="pi pi-trash" (onClick)="removeBlock(idx)" />
+            </div>
+        </div>
+        }
+        <p-button [disabled]="blockForm().invalid()" (onClick)="addBlock()" [label]="'block.new'|translate"
+            icon="pi pi-plus" [text]="true" size="small" />
+    </div>
+
+    <div class="flex justify-end">
+        <p-button [disabled]="blockForm().invalid()" (onClick)="close()" [label]="'label.save'|translate" />
+    </div>
+</div>

@@ -1,6 +1,7 @@
 import type { Relation } from 'typeorm';
 import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
 import { ContractEntity } from "./contract.entity";
+import { LinkEntity } from './link.entity';
 
 export type CustomerAddress = {
     city: string;
@@ -28,12 +29,30 @@ export class CustomerEntity {
     @Column({ type: "jsonb", nullable: true })
     mainAddress: CustomerAddress;
 
-    @OneToMany(() => ContractEntity, (contract) => contract.company)
+    @OneToMany(() => ContractEntity, (contract) => contract.customer)
     contracts: Relation<ContractEntity[]>;
+
+    @OneToMany(() => LinkEntity, (link) => link.customer)
+    links: Relation<LinkEntity[]>;
 
     @Column({ nullable: true })
     gender: string;
 
     @Column({ nullable: true })
     title: string;
+
+    @Column({ default: false })
+    blocked: boolean;
+
+    @Column({ nullable: true })
+    blockReason: string;
+
+    @Column({ nullable: true })
+    terminatedAt: string;
+
+    @Column({ default: true })
+    isAlive: boolean;
+
+    @Column({ type: 'jsonb', nullable: true, default: () => "'[]'" })
+    files: string[];
 }

@@ -2,7 +2,19 @@
 
     <div class="inline-flex flex-col">
         <label for="type">{{'label.product'|translate}}</label>
-        <input id="type" pInputText formControlName="type" />
+        <!-- <input id="type" pInputText formControlName="type" /> -->
+        <p-select formControlName="type" [editable]="true" [options]="divisionStore.divisions.value().items"
+            optionValue="text" optionLabel="text" />
+    </div>
+    <div class="inline-flex flex-col">
+        <label for="scope">{{'label.scope'|translate}}</label>
+        <p-inputgroup>
+            <input id="scope" pInputText formControlName="scope" />
+            <p-inputgroup-addon>
+                <p-button [disabled]="!_formGroup.controls.type.value" icon="pi pi-bolt" label="Assistant"
+                    (onClick)="onAssistant()" />
+            </p-inputgroup-addon>
+        </p-inputgroup>
     </div>
     <div class="inline-flex flex-col">
         <label for="nr">{{'label.insurer.no'|translate}}</label>
@@ -15,7 +27,7 @@
     <div class="inline-flex flex-col">
         <label for="insurer">{{'label.insurer.label'|translate}}</label>
         <p-auto-complete formControlName="insurer" [dropdown]="true" appendTo="body" optionLabel="name"
-            [suggestions]="insurers()" (completeMethod)="searchInsurers($event.query)">
+            [suggestions]="insurers()" (completeMethod)="insurerStore.search({ query: $event.query})">
             <ng-template #item let-item>
                 <div class="flex gap-2 items-center overflow-hidden text-ellipsis whitespace-nowrap max-w-[300px]">
                     <app-company [company]="item" />
@@ -23,10 +35,7 @@
             </ng-template>
         </p-auto-complete>
     </div>
-    <div class="inline-flex flex-col">
-        <label for="scope">{{'label.scope'|translate}}</label>
-        <input id="scope" pInputText formControlName="scope" />
-    </div>
+
     <div class="inline-flex flex-col">
         <label for="suggestion">{{'label.suggestion'|translate}}</label>
         <p-autocomplete [readonly]="true" appendTo="body" (completeMethod)="onSearch($event.query)"

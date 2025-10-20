@@ -1,0 +1,40 @@
+<p-table paginatorDropdownAppendTo="body" tableStyleClass="table-fixed" [sortField]="sortField()"
+    [sortOrder]="sortOrder()" class="flex flex-col w-full h-full" [scrollable]="true" [value]="items()"
+    [totalRecords]="totalRows()" [lazy]="lazy()" (onLazyLoad)="lazyLoad.emit($event)" [paginator]="paginator()"
+    [rowsPerPageOptions]="[10, 20,100,500]" [rows]="rowsPerPage()">
+    <ng-template #header>
+        <tr>
+            @for(column of config()?.columns; track column.key) {
+            <th [style.width.px]="column.width ?? 150" [id]="column.key" [pSortableColumn]="column.key"
+                [pSortableColumnDisabled]="column.sortable === false || disabled()">
+                <div class="flex items-center gap-1">
+
+                    @if(columnTemplate()) {
+                    <ng-container [ngTemplateOutlet]="columnTemplate()"
+                        [ngTemplateOutletContext]="{$implicit: column}" />
+                    }@else {
+                    {{column.label}}
+                    }
+                    @if(column.sortable!==false) {
+                    <p-sortIcon class="flex justify-self-end" [field]="column.key" />
+                    }
+                </div>
+            </th>
+            }
+        </tr>
+    </ng-template>
+    <ng-template #body let-row>
+        <tr>
+            @for(column of config()?.columns; track column.key) {
+            <td [id]="column.key">
+                @if(cellTemplate()) {
+                <ng-container [ngTemplateOutlet]="cellTemplate()"
+                    [ngTemplateOutletContext]="{$implicit: row, column}" />
+                }@else {
+                {{row[column.key]}}
+                }
+            </td>
+            }
+        </tr>
+    </ng-template>
+</p-table>

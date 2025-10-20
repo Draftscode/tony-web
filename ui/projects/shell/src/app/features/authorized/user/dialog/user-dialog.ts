@@ -9,7 +9,7 @@ import { PasswordModule } from "primeng/password";
 import { PickListModule } from 'primeng/picklist';
 import { Role } from "../../../../data-access/provider/auth.service";
 import { RoleStore } from "../../../../data-access/store/role.store";
-import { RoleComponent } from "../../../../shared/ui/role/role.component";
+import { RoleComponent } from "../../../../ui/role/role.component";
 
 @Component({
     selector: 'app-user-dialog',

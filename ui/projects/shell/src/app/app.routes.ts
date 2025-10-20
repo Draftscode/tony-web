@@ -34,9 +34,38 @@ export const routes: Routes = [{
             loadComponent: () => import('./features/authorized/form/form.component'),
         }],
     }, {
+        path: 'customer',
+        children: [{
+            path: '',
+            loadComponent: () => import('./features/authorized/customer/list/customer-list.component')
+        }],
+    }, {
+        path: 'insurer',
+        children: [{
+            path: '',
+            loadComponent: () => import('./features/authorized/insurer/list/insurer-list.component')
+        }],
+    },{
+        path: 'division',
+        children: [{
+            path: '',
+            loadComponent: () => import('./features/authorized/division/list/division-list.component')
+        }],
+    }, {
         path: 'users',
         loadComponent: () => import('./features/authorized/user/list/user-list')
     }],
+}, {
+    path: 'external/:hash',
+    loadComponent: () => import('./features/external/external.component'),
+    children: [{
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'signing'
+    }, {
+        path: 'signing',
+        loadComponent: () => import('./features/external/signing/signing.component'),
+    }]
 }, {
     path: '**',
     redirectTo: '/'

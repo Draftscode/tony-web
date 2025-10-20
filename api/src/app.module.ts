@@ -6,8 +6,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './features/auth/auth.module';
 import { BlaudirektModule } from './features/blaudirekt/blaudirekt.module';
-import { ClientsModule } from './features/client/clients.module';
 import { FilesModule } from './features/files/files.module';
+import { LinksModule } from './features/links/links.module';
 import { RolesModule } from './features/roles/roles.module';
 import { UserModule } from './features/users/users.module';
 
@@ -15,6 +15,7 @@ import { UserModule } from './features/users/users.module';
   imports: [
     RolesModule,
     AuthModule,
+    LinksModule,
     UserModule,
     ScheduleModule.forRoot(),
     ConfigModule.forRoot(),
@@ -37,7 +38,6 @@ import { UserModule } from './features/users/users.module';
       }),
       inject: [ConfigService],
     }),
-    ClientsModule,
     FilesModule,
     BlaudirektModule,
   ],

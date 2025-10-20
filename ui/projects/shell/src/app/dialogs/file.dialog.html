@@ -16,7 +16,7 @@
                 class="w-full" (onClear)="searchContracts()" [showClear]="true"
                 (onSelect)="searchContracts($event.value.id)" [inputId]="'name'" formControlName="customer"
                 [optionLabel]="'displayName'" [minQueryLength]="1" (completeMethod)="search($event.query)"
-                [suggestions]="blaudirektService.customers.value()" />
+                [suggestions]="customers()" />
         </div>
         }
         @if(contracts().length) {
@@ -34,7 +34,6 @@
             </div>
         </div>
         }
-        <p-divider />
         }
 
     </div>

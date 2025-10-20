@@ -1,7 +1,7 @@
 import { httpResource } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { environment } from "../../../environments/environment";
-import { ListResponse } from "../../utils/list.model";
+import { ListResponse } from "../../utils/types/lists/list.model";
 import { Role } from "./auth.service";
 
 @Injectable({ providedIn: 'root' })

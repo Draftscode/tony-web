@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from "@angular/core";
+import { Component, computed, inject, OnInit, signal } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { TranslatePipe } from "@ngx-translate/core";
@@ -11,6 +11,7 @@ import { InputTextModule } from "primeng/inputtext";
 import { MessageModule } from "primeng/message";
 import { SelectModule } from "primeng/select";
 import { BlaudirectContract, BlaudirektCustomer, BlaudirektService } from "../data-access/provider/blaudirekt.service";
+import { CustomerStore } from "../data-access/store/customer.store";
 import { CompanyComponent } from "./company";
 
 
@@ -21,11 +22,12 @@ import { CompanyComponent } from "./company";
         CheckboxModule, AutoCompleteModule, CompanyComponent, TranslatePipe,
         InputTextModule, ButtonModule, DividerModule]
 })
-export class FileDialogComponent {
+export class FileDialogComponent implements OnInit {
     private readonly pDialogRef = inject<DynamicDialogRef<FileDialogComponent>>(DynamicDialogRef);
     protected readonly pDialogConf = inject<DynamicDialogConfig<any>>(DynamicDialogConfig);
 
-    protected readonly blaudirektService = inject(BlaudirektService);
+    private readonly customerStore = inject(CustomerStore);
+    private readonly blaudirektService = inject(BlaudirektService);
 
     protected readonly formGroup = new FormGroup({
         name: new FormControl<string>('', [Validators.required]),
@@ -35,12 +37,20 @@ export class FileDialogComponent {
 
     protected readonly contracts = signal<BlaudirectContract[]>([]);
     protected readonly formValues = toSignal(this.formGroup.valueChanges);
-    protected readonly customers = this.blaudirektService.customers
+    protected readonly customers = computed(() => this.customerStore.customers.value()?.items);
     protected readonly isNew = signal<boolean>(true);
 
     constructor() {
         this.isNew.set(!this.pDialogConf.data?.name)
+    }
+
+    ngOnInit(): void {
         this.formGroup.controls.name.patchValue(this.pDialogConf.data?.name, { emitEvent: false });
+        if (this.pDialogConf.data?.customer) {
+            this.formGroup.controls.name.patchValue(`${this.pDialogConf.data.customer.displayName}`, { emitEvent: false });
+            this.formGroup.controls.customer.patchValue(this.pDialogConf.data.customer, { emitEvent: false });
+            this.searchContracts(this.pDialogConf.data.customer.id);
+        }
     }
 
     protected toggleSelection() {
@@ -65,7 +75,7 @@ export class FileDialogComponent {
 
 
     protected search(query: string) {
-        this.blaudirektService.search(query);
+        this.customerStore.search({ query });
     }
 
     protected async searchContracts(customerId?: string) {
@@ -96,7 +106,7 @@ export class FileDialogComponent {
                     party: raw.customer ? raw.customer.displayName : '-',
                     scope: contract.risk,
                     suggestion: { value: 'acquisition', label: 'Übernahme' },
-                    type: contract.line.text
+                    type: contract.division.text
                 };
             });
 

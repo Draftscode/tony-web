@@ -1,0 +1,9 @@
+{
+    "customer": {
+        "status": {
+            "terminated": "Beendet",
+            "new": "Neu",
+            "advanced": "Dokumente hochgeladen"
+        }
+    }
+}

@@ -1,0 +1,59 @@
+<p-card class="flex flex-col w-full h-full overflow-auto">
+    @let customers = customerStore.customers.value();
+    <span class="text-2xl">{{'customer.plural'|translate}} ({{customers?.total ?? 0}})</span>
+    <app-list-search [query]="customerStore.filter.query()" (queryChange)="customerStore.search({query: $event})" />
+    <app-table [sortField]="customerStore.filter.sortField()" [sortOrder]="customerStore.filter.sortOrder()"
+        class="w-full h-full overflow-auto" (lazyLoad)="onLazyLoad($event)" [rowsPerPage]="20"
+        [totalRows]="customers?.total ?? 0" [items]="customers?.items ?? []" [config]="customerTableConfig()"
+        [disabled]="customerStore.isLoading()">
+        <ng-template #column let-column>
+            {{column.label | translate | titlecase }}
+        </ng-template>
+        <ng-template #cell let-row let-column="column">
+            @switch(column.key) {
+            @case ('status') {
+            <app-customer-status [customer]="row" />
+            }
+            @case ('files') {
+            <div class="flex flex-col">
+                @for(file of row.files;track file) {
+                <a
+                    [href]="`https://www.maklerinfo.biz/service/bd/employee/1.0/rest/00GKFG_RZB6QA/archiveintraege/${file}.png`">{{file}}</a>
+                }
+            </div>
+            }
+            @case ('actions') {
+            <div class="flex w-full justify-end">
+                <p-button (onClick)="po.toggle($event)" icon="pi pi-ellipsis-v" [text]="true" />
+                <p-popover #po appendTo="body">
+                    <ng-template #content>
+                        <div class="flex flex-col">
+                            <p-button (onClick)="createFile(row)" icon="pi pi-file-plus" [text]="true"
+                                [label]="'utils.create.value'|translate:{value:'label.file.label'|translate}" />
+
+                            <p-divider />
+                            <span class="text-xl">Links</span>
+                            <div class="flex flex-col">
+                                @for(link of row.links; track link) {
+                                <div class="items-center flex w-full gap-1 justify-between">
+                                    <a [href]="`/external/${link.link}/signing`">{{link.link}}</a><p-button size="small"
+                                        (onClick)="linkStore.revoke(link.id)" icon="pi pi-trash" />
+                                </div>
+                                }
+                            </div>
+                            <p-button icon="pi pi-link" [text]="true" (onClick)="linkStore.createLink(row)"
+                                label="Create External Link" />
+
+                        </div>
+                    </ng-template>
+                </p-popover>
+            </div>
+            }
+            @default {
+            {{row[column.key]}}
+            }
+            }
+        </ng-template>
+    </app-table>
+
+</p-card>

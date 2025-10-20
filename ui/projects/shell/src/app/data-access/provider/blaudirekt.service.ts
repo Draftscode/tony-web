@@ -1,8 +1,9 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { inject, Injectable, resource, signal } from "@angular/core";
-import { toSignal } from "@angular/core/rxjs-interop";
-import { debounceTime, finalize, lastValueFrom, Subject } from "rxjs";
+import { HttpClient, HttpParams, httpResource } from "@angular/common/http";
+import { inject, Injectable, Signal, signal } from "@angular/core";
+import { finalize, lastValueFrom } from "rxjs";
 import { environment } from "../../../environments/environment";
+import { ListOptionsSignal, ListResponse } from "../../utils/types/lists/list.model";
+import { Link } from "./link.service";
 
 export type Contract = {
 
@@ -19,12 +20,18 @@ export type CustomerAddress = {
 
 export type BlaudirektCustomer = {
     id: string;
+    contractsCount: number;
     mainAddress?: CustomerAddress;
     firstname: string;
     displayName: string;
     lastname: string;
     gender: string;
     title: string;
+    blocked: boolean;
+    blockReason: string;
+    terminatedAt: string;
+    isAlive: boolean;
+    links: Link<unknown>[];
 }
 
 export enum PaymentCycle {
@@ -38,18 +45,21 @@ export type BlaudirektPayment = {
     grossAmount: number;
 }
 
-export type BlaudirekContractLine = {
+export type BlaudirektDivision = {
     id: string;
     text: string;
     group: string;
+    contractsCount: number;
+    blocks?: BuildingBlock[];
 }
+
 export type BlaudirectContract = {
     agency: BlaudirektCompany;
     agencyId: string;
     applicationId: string;
     company: BlaudirektCompany;
     id: string;
-    line: BlaudirekContractLine;
+    division: BlaudirektDivision;
     payment: BlaudirektPayment;
     policyNumber: string;
     publicId: string;
@@ -64,30 +74,94 @@ export type BlaudirektCompany = {
     logo: string;
 }
 
-export type BlaudirektDivision = {
-    Text: string;
-    Value: string;
+export type BuildingBlock = {
+    key: string;
+    placeholder: string;
+    description: string;
+    value?: string;
 }
 
 @Injectable({ providedIn: 'root' })
 export class BlaudirektService {
-    readonly isInitialized = signal<boolean>(false);
     private readonly http = inject(HttpClient);
-    private readonly query$ = new Subject<string>();
-    private readonly query = toSignal(this.query$.pipe(debounceTime(500)));
     isLoading = signal<boolean>(false);
 
-    private readonly _customers = resource({
-        params: () => {
-            return { query: this.query() }
-        },
-        loader: ({ params }) => this.searchCustomers(params.query),
-        defaultValue: [],
 
-    });
+    getAllCustomers(options: ListOptionsSignal) {
+        return httpResource<ListResponse<BlaudirektCustomer>>(() => ({
+            url: `${environment.origin}/blaudirekt/customers`,
+            method: 'GET',
+            params: {
+                q: options?.query(),
+                limit: options?.limit() ?? 100,
+                offset: options?.offset() ?? 0,
+                sortField: options?.sortField(),
+                sortOrder: options?.sortOrder()
+            }
+        }), {
+            defaultValue: {
+                items: [],
+                total: 0
+            },
+        })
+    }
 
-    search(query: string) {
-        this.query$.next(query);
+    getAllDivisions(options: ListOptionsSignal & { i: Signal<string> }) {
+        return httpResource<ListResponse<BlaudirektDivision>>(() => ({
+            url: `${environment.origin}/blaudirekt/divisions`,
+            method: 'GET',
+            params: {
+                i: options.i(),
+                q: options?.query(),
+                limit: options?.limit() ?? 100,
+                offset: options?.offset() ?? 0,
+                sortField: options?.sortField(),
+                sortOrder: options?.sortOrder()
+            }
+        }), {
+            defaultValue: {
+                items: [],
+                total: 0
+            },
+        })
+    }
+
+    getAllInsurer(options: ListOptionsSignal & { i: Signal<string> }) {
+        return httpResource<ListResponse<BlaudirektCompany>>(() => ({
+            url: `${environment.origin}/blaudirekt/companies`,
+            method: 'GET',
+            params: {
+                i: options.i(),
+                q: options?.query(),
+                limit: options?.limit() ?? 100,
+                offset: options?.offset() ?? 0,
+                sortField: options?.sortField(),
+                sortOrder: options?.sortOrder()
+            }
+        }), {
+            defaultValue: {
+                items: [],
+                total: 0
+            },
+        })
+    }
+
+    getDocument(id: string) {
+        return this.http.get(`${environment.origin}/blaudirekt/document/${id}`, { responseType: 'blob' });
+    }
+
+    addDocument(customerId: string, html: string) {
+        const params = new HttpParams().append('customer', customerId);
+        return this.http.post(`${environment.origin}/blaudirekt/document`, { contents: html }, { params, responseType: 'blob' });
+    }
+
+    editInsurer(insurerId: string, insurer: Partial<BlaudirektCompany>) {
+        return this.http.post<BuildingBlock[]>(`${environment.origin}/blaudirekt/companies/${insurerId}`, insurer);
+    }
+
+
+    editDivision(divisionId: string, division: Partial<BlaudirektDivision>) {
+        return this.http.post<BuildingBlock[]>(`${environment.origin}/blaudirekt/division/${divisionId}`, division);
     }
 
 
@@ -113,9 +187,5 @@ export class BlaudirektService {
 
         const params = new HttpParams().append('limit', 100);
         return lastValueFrom(this.http.get<BlaudirectContract[]>(`${environment.origin}/blaudirekt/contracts/${customerId}`, { params }));
-    }
-
-    get customers() {
-        return this._customers;
     }
 }

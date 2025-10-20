@@ -8,12 +8,19 @@ import { FallbackImageDirective } from "../utils/fallback-image.directive";
     template: `
     @if(company(); as company) {
     <div class="flex gap-2 items-center">
+        @if(showLogo()) {
         <img class="shrink-0 h-[32px] w-[100px] object-contain" fallback="images/empty.jpg" [src]="company.logo" alt="Company Logo" />
+
+        }
+        @if(showLabel()) {
         <span>{{company.name}}</span>
+        }
     </div>
     }
     `
 })
 export class CompanyComponent {
     company = input<BlaudirektCompany>();
+    showLabel = input<boolean>(true);
+    showLogo = input<boolean>(true);
 }
