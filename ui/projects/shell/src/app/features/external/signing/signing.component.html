@@ -12,7 +12,7 @@
                         <div class="flex flex-col max-h-[480px] overflow-auto">
                             <div class="flex gap-2 flex-col">
                                 <div class="flex gap-2">
-                                    @let customer = linkStore.link.value()?.customer;
+                                    @let customer = customerStore.link.value()?.customer;
                                     <div class="flex flex-col gap-1">
                                         <label for="firstname">Vorname</label>
                                         <input [disabled]="true" [value]="customer?.firstname" #firstname pInputText

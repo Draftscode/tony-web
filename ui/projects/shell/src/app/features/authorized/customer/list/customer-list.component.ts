@@ -10,7 +10,6 @@ import { TableLazyLoadEvent } from "primeng/table";
 import { BlaudirektCustomer } from "../../../../data-access/provider/blaudirekt.service";
 import { CustomerStore } from "../../../../data-access/store/customer.store";
 import { FileStore } from "../../../../data-access/store/file.store";
-import { LinkStore } from "../../../../data-access/store/link.store";
 import { CustomerStatusComponent } from "../../../../ui/customer-status/customer-status.component";
 import { SearchComponent } from "../../../../ui/search/search.component";
 import { TableComponent, TableConfig } from "../../../../ui/table/table.component";
@@ -36,7 +35,6 @@ import { TableComponent, TableConfig } from "../../../../ui/table/table.componen
 })
 export default class CustomerListComponent {
     protected readonly customerStore = inject(CustomerStore);
-    protected readonly linkStore = inject(LinkStore);
     protected readonly fileStore = inject(FileStore);
     private readonly router = inject(Router);
     protected readonly customerTableConfig = signal<TableConfig<BlaudirektCustomer>>({

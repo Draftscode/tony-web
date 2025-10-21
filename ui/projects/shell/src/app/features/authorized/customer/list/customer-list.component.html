@@ -36,12 +36,13 @@
                             <div class="flex flex-col">
                                 @for(link of row.links; track link) {
                                 <div class="items-center flex w-full gap-1 justify-between">
-                                    <a [href]="`/external/${link.link}/signing`">{{link.link}}</a><p-button size="small"
-                                        (onClick)="linkStore.revoke(link.id)" icon="pi pi-trash" />
+                                    <a [href]="`/external/${link.link}/signing`">{{link.link}}</a>
+                                    <p-button size="small" [text]="true" (onClick)="customerStore.revokeLink(link.id)"
+                                        icon="pi pi-trash" />
                                 </div>
                                 }
                             </div>
-                            <p-button icon="pi pi-link" [text]="true" (onClick)="linkStore.createLink(row)"
+                            <p-button icon="pi pi-link" [text]="true" (onClick)="customerStore.createLink(row)"
                                 label="Create External Link" />
 
                         </div>

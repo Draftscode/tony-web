@@ -87,7 +87,7 @@ export class BlaudirektService {
     isLoading = signal<boolean>(false);
 
 
-    getAllCustomers(options: ListOptionsSignal) {
+    getAllCustomers(options: ListOptionsSignal & { i: Signal<string> }) {
         return httpResource<ListResponse<BlaudirektCustomer>>(() => ({
             url: `${environment.origin}/blaudirekt/customers`,
             method: 'GET',
@@ -96,7 +96,8 @@ export class BlaudirektService {
                 limit: options?.limit() ?? 100,
                 offset: options?.offset() ?? 0,
                 sortField: options?.sortField(),
-                sortOrder: options?.sortOrder()
+                sortOrder: options?.sortOrder(),
+                i: options?.i(),
             }
         }), {
             defaultValue: {
