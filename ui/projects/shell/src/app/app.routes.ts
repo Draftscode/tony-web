@@ -34,26 +34,34 @@ export const routes: Routes = [{
             loadComponent: () => import('./features/authorized/form/form.component'),
         }],
     }, {
-        path: 'customer',
+        path: 'administration',
+        loadComponent: () => import('./features/authorized/master-data/master-data.component'),
         children: [{
             path: '',
-            loadComponent: () => import('./features/authorized/customer/list/customer-list.component')
-        }],
-    }, {
-        path: 'insurer',
-        children: [{
-            path: '',
-            loadComponent: () => import('./features/authorized/insurer/list/insurer-list.component')
-        }],
-    },{
-        path: 'division',
-        children: [{
-            path: '',
-            loadComponent: () => import('./features/authorized/division/list/division-list.component')
-        }],
-    }, {
-        path: 'users',
-        loadComponent: () => import('./features/authorized/user/list/user-list')
+            pathMatch: 'full',
+            redirectTo: 'customer'
+        }, {
+            path: 'customer',
+            children: [{
+                path: '',
+                loadComponent: () => import('./features/authorized/customer/list/customer-list.component')
+            }],
+        }, {
+            path: 'insurer',
+            children: [{
+                path: '',
+                loadComponent: () => import('./features/authorized/insurer/list/insurer-list.component')
+            }],
+        }, {
+            path: 'division',
+            children: [{
+                path: '',
+                loadComponent: () => import('./features/authorized/division/list/division-list.component')
+            }],
+        }, {
+            path: 'users',
+            loadComponent: () => import('./features/authorized/user/list/user-list')
+        }]
     }],
 }, {
     path: 'external/:hash',

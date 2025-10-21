@@ -54,40 +54,21 @@ export default class App {
     }];
 
     if (this.accountStore.me.value()?.roles.find(role => role.name === 'admin')) {
-      items.push({
-        id: 'users',
-        routerLink: ['users'],
-        label: 'label.users',
-        icon: 'pi pi-sitemap'
-      });
+      // items.push({
+      //   id: 'users',
+      //   routerLink: ['users'],
+      //   label: 'label.users',
+      //   icon: 'pi pi-sitemap'
+      // });
     }
-    items.push({
-      id: 'customer',
-      routerLink: ['customer'],
-      label: 'customer.label',
-      icon: 'pi pi-users'
-    });
 
     items.push({
-      id: 'blocks',
-      routerLink: 'blocks',
-      label: 'block.label',
-      icon: 'pi pi-code'
-    });
+      id: 'administration',
+      routerLink: ['administration'],
+      label: 'administration.label',
+      icon: 'pi pi-database'
+    })
 
-    items.push({
-      id: 'insurer',
-      routerLink: 'insurer',
-      label: 'insurer.label',
-      icon: 'pi pi-crown'
-    });
-
-    items.push({
-      id: 'division',
-      routerLink: 'division',
-      label: 'disivion.label',
-      icon: 'pi pi-home'
-    });
     return items;
   });
 

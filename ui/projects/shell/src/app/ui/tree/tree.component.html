@@ -1,0 +1,26 @@
+<div class="flex flex-col gap-2">
+    @for(item of items(); track item.key) {
+    <div class="flex items-center">
+        <ng-container [ngTemplateOutlet]="myNode" [ngTemplateOutletContext]="{$implicit: item}" />
+    </div>
+    }
+</div>
+
+<ng-template #myNode let-node>
+    <div class="flex flex-col">
+        <div class="flex items-center">
+            @if(nodeRef()) {
+            <ng-container [ngTemplateOutlet]="nodeRef()" [ngTemplateOutletContext]="{$implicit: node}" />
+            }
+            @else {
+            <i [class]="node.icon"></i>
+            <span>{{node.label}}</span>
+            }
+        </div>
+        @if(node.children?.length) {
+        @for(child of node.children; track child) {
+        <ng-container [ngTemplateOutlet]="myNode" [ngTemplateOutletContext]="{$implicit: child}" />
+        }
+        }
+    </div>
+</ng-template>

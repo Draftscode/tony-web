@@ -13,7 +13,7 @@ import { DivisionStore } from "../../data-access/store/division.store";
 @Component({
     selector: 'app-blocks-assistant-dialog',
     templateUrl: 'blocks-assistant.dialog.html',
-    imports: [InputTextModule, TooltipModule, Control, InputGroupAddonModule, InputGroupModule, DividerModule, TranslatePipe, ButtonModule],
+    imports: [InputTextModule, TooltipModule, Control, InputGroupAddonModule, InputGroupModule, DividerModule, ButtonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BlocksAssistantDialog {
