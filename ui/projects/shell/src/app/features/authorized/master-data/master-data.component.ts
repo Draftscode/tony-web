@@ -33,7 +33,7 @@ export default class MasterDataComponent {
             data: {
                 routerLink: ['division'],
             },
-            label: 'disivion.label',
+            label: 'administration.division.label',
             icon: 'pi pi-home'
         }, {
             key: 'users',

@@ -18,6 +18,8 @@ export type CustomerAddress = {
     zip: string;
 }
 
+export const BlaudirektCustomerStatus = ['new', 'advanced', 'terminated'];
+
 export type BlaudirektCustomer = {
     id: string;
     contractsCount: number;
@@ -32,6 +34,7 @@ export type BlaudirektCustomer = {
     terminatedAt: string;
     isAlive: boolean;
     links: Link<unknown>[];
+    status: string;
 }
 
 export enum PaymentCycle {
@@ -94,6 +97,7 @@ export class BlaudirektService {
             params: {
                 q: options?.query(),
                 limit: options?.limit() ?? 100,
+                filters: JSON.stringify(options?.filters() ?? {}),
                 offset: options?.offset() ?? 0,
                 sortField: options?.sortField(),
                 sortOrder: options?.sortOrder(),
@@ -104,6 +108,18 @@ export class BlaudirektService {
                 items: [],
                 total: 0
             },
+        })
+    }
+
+    getCustomer(id: Signal<string>, i: Signal<string>) {
+        return httpResource<BlaudirektCustomer | null>(() => id() ? ({
+            url: `${environment.origin}/blaudirekt/customers/${id()}`,
+            method: 'GET',
+            params: {
+                i: i()
+            }
+        }) : undefined, {
+            defaultValue: null,
         })
     }
 

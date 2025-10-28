@@ -1,0 +1,12 @@
+{
+    "administration": {
+        "label": "Administration",
+        "division": {
+            "label": "Bereich"
+        },
+        "block": {
+            "label":"Baustein",
+            "plural":"Bausteine"
+        }
+    }
+}

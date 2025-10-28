@@ -18,6 +18,20 @@
                     @if(column.sortable!==false) {
                     <p-sortIcon class="flex justify-self-end" [field]="column.key" />
                     }
+
+                    @if(column.filterable === true ) {
+                    <p-columnFilter #ref matchMode="in" display="menu" [showMatchModes]="false" [showOperator]="false"
+                        [showAddButton]="false" [field]="column.key">
+                        <ng-template #filter let-value let-filter="filterCallback">
+                            <div [style.width.px]="230">
+                                <ng-container [ngTemplateOutlet]="filterTemplate()" [ngTemplateOutletContext]="{
+                                         filterCallback:_onFilter.bind(this,filter,ref),
+                                        $implicit: column,
+                                        }" />
+                            </div>
+                        </ng-template>
+                    </p-columnFilter>
+                    }
                 </div>
             </th>
             }
@@ -26,7 +40,7 @@
     <ng-template #body let-row>
         <tr>
             @for(column of config()?.columns; track column.key) {
-            <td [id]="column.key">
+            <td [id]="column.key" (click)="rowClick.emit({row,column})">
                 @if(cellTemplate()) {
                 <ng-container [ngTemplateOutlet]="cellTemplate()"
                     [ngTemplateOutletContext]="{$implicit: row, column}" />

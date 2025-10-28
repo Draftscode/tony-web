@@ -68,16 +68,27 @@ export class BlaudirektController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('customers/:id')
+  getCustomer(
+    @Param('id') id: string,
+  ) {
+    return this.blaudirektService.getCustomer(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Get('customers')
   getCustomers(
     @Query('limit', ParseIntPipe) limit: number,
     @Query('offset', ParseIntPipe) offset: number,
     @Query('q') query: string,
     @Query('sortField') sortField: string,
+    @Query('filters') filters: string,
     @Query('sortOrder', ParseIntPipe) sortOrder: number,
   ) {
-    return this.blaudirektService.getCustomers({ offset, limit, query, sortField, sortOrder });
+    const parsedFilters = JSON.parse(filters ?? {});
+    return this.blaudirektService.getCustomers({ offset, limit, query, sortField, sortOrder, filters: parsedFilters });
   }
+
 
 
   @Get('document/:id')

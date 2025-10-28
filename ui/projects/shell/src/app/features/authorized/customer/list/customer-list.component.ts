@@ -1,6 +1,6 @@
 import { TitleCasePipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, signal } from "@angular/core";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { TranslatePipe } from "@ngx-translate/core";
 import { ButtonModule } from "primeng/button";
 import { CardModule } from "primeng/card";
@@ -13,13 +13,14 @@ import { FileStore } from "../../../../data-access/store/file.store";
 import { CustomerStatusComponent } from "../../../../ui/customer-status/customer-status.component";
 import { SearchComponent } from "../../../../ui/search/search.component";
 import { TableComponent, TableConfig } from "../../../../ui/table/table.component";
+import { CustomerStatusFilterComponent } from "./customer-status-filter.component";
 
 @Component({
     selector: 'app-customer-list',
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         TableComponent, CardModule, SearchComponent,
-        ButtonModule, PopoverModule, DividerModule,
+        ButtonModule, PopoverModule, DividerModule, CustomerStatusFilterComponent,
         TranslatePipe, CustomerStatusComponent, TitleCasePipe
     ],
     templateUrl: 'customer-list.component.html',
@@ -37,13 +38,14 @@ export default class CustomerListComponent {
     protected readonly customerStore = inject(CustomerStore);
     protected readonly fileStore = inject(FileStore);
     private readonly router = inject(Router);
+    private readonly activatedRoute = inject(ActivatedRoute);
     protected readonly customerTableConfig = signal<TableConfig<BlaudirektCustomer>>({
         columns: [
             { key: 'firstname', label: 'person.firstname', width: 200 },
             { key: 'lastname', label: 'person.lastname', width: 200 },
             { key: 'contractsCount', label: 'customer.contract.count', sortable: false },
             { key: 'files', label: 'label.files' },
-            { key: 'status', label: '', sortable: false, width: 80 },
+            { key: 'status', label: 'customer.status.label', filterable: true, width: 80 },
             { key: 'actions', label: '', sortable: false, width: 60 }
         ]
     });
@@ -53,6 +55,7 @@ export default class CustomerListComponent {
             query: '',
             limit: event.rows ?? 0,
             offset: event.first,
+            filters: event.filters,
             sortField: (event.sortField ?? 'lastname') as string,
             sortOrder: event.sortOrder ?? -1
         });
@@ -63,5 +66,10 @@ export default class CustomerListComponent {
         if (file) {
             this.router.navigate(['/', 'app', 'files', file.filename])
         }
+    }
+
+
+    protected onRowClick(e: { row: BlaudirektCustomer }) {
+        this.router.navigate([e.row.id], { relativeTo: this.activatedRoute });
     }
 }

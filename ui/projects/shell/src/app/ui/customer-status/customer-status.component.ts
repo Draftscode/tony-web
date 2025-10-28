@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from "@angular/core";
-import { TagModule } from "primeng/tag";
-import { BlaudirektCustomer } from "../../data-access/provider/blaudirekt.service";
 import { TranslatePipe } from "@ngx-translate/core";
+import { TagModule } from "primeng/tag";
 
 @Component({
     selector: 'app-customer-status',
@@ -10,23 +9,11 @@ import { TranslatePipe } from "@ngx-translate/core";
     imports: [TagModule, TranslatePipe]
 })
 export class CustomerStatusComponent {
-    customer = input<BlaudirektCustomer>();
+    status = input<string>();
 
-    protected readonly value = computed(() => {
-        const customer = this.customer();
+    protected readonly value = computed(() => this.status() ?? 'new');
 
-        if (customer?.isAlive === false || customer?.blocked === true || customer?.terminatedAt) {
-            return customer.blockReason ?? 'terminated';
-        }
-
-        if (customer?.contractsCount === 0) {
-            return 'new'
-        }
-
-        return 'advanced';
-    });
     protected readonly severity = computed(() => {
-
         switch (this.value()) {
             case 'new':
                 return 'success';

@@ -1,0 +1,33 @@
+<p-card class="flex min-w-[320px]">
+    @let customer = customerStore.customer.value();
+    @if(customer) {
+    <div class="flex flex-col gap-4">
+
+        <div class="flex w-full gap-2 items-center">
+            <p-button [text]="true" size="small" [routerLink]="['..']" icon="pi pi-arrow-left" />
+            <span class="text-2xl">
+                {{customer.firstname}} {{customer.lastname}}
+            </span>
+        </div>
+
+        <div class="flex flex-col">
+            <span class="text-xl">Links</span>
+            <div class="flex flex-col">
+
+                @for(link of customer.links; track link.id) {
+                <div class="items-center flex w-full gap-1 justify-between">
+                    <a [href]="`/external/${link.link}/signing`">{{link.link}}</a>
+                    <p-button size="small" [text]="true" (onClick)="customerStore.revokeLink(link.id)"
+                        icon="pi pi-trash" />
+                </div>
+                }
+            </div>
+            <div class="flex justify-end">
+                <p-button label="link" icon="pi pi-plus" (onClick)="customerStore.createLink(customer)" />
+            </div>
+        </div>
+    </div>
+
+
+    }
+</p-card>

@@ -2,6 +2,7 @@ import type { Relation } from 'typeorm';
 import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
 import { ContractEntity } from "./contract.entity";
 import { LinkEntity } from './link.entity';
+import { Expose } from 'class-transformer';
 
 export type CustomerAddress = {
     city: string;
@@ -55,4 +56,16 @@ export class CustomerEntity {
 
     @Column({ type: 'jsonb', nullable: true, default: () => "'[]'" })
     files: string[];
+
+    @Column({
+        name: 'status',
+        asExpression: `
+      CASE
+        WHEN "isAlive" = false OR "blocked" = true OR "terminatedAt" IS NOT NULL THEN 'terminated'
+        ELSE 'advanced'
+      END
+    `,
+        generatedType: 'STORED', // or 'VIRTUAL' depending on DB
+    })
+    status: string;
 }

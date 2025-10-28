@@ -3,12 +3,15 @@
         "label": "Mandant",
         "plural": "Mandanten",
         "status": {
+            "label": "Kundenstatus",
             "terminated": "Beendet",
             "new": "Neu",
             "advanced": "Dokumente hochgeladen"
         },
         "contract": {
-            "count": "Anzahl Verträge"
+            "count": "Anzahl Verträge",
+            "label": "Vertrag",
+            "plural": "Verträge"
         }
     }
 }

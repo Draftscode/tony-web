@@ -34,9 +34,9 @@ export default class InsurerListComponent {
     protected readonly divisionStore = inject(DivisionStore);
     protected readonly divisionTableConfig = signal<TableConfig<BlaudirektDivision>>({
         columns: [
-            { key: 'text', label: 'division.name', width: 200 },
-            { key: 'contractsCount', label: 'contract.plural', sortable: false, width: 75 },
-            { key: 'blocks', label: 'division.block', sortable: false, width: 75 },
+            { key: 'text', label: 'administration.division.label', width: 200 },
+            { key: 'contractsCount', label: 'customer.contract.plural', sortable: false, width: 75 },
+            { key: 'blocks', label: 'administration.block.plural', sortable: false, width: 75 },
             { key: 'actions', label: '', sortable: false, width: 60 }
         ]
     });

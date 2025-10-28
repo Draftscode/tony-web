@@ -44,7 +44,12 @@ export const routes: Routes = [{
             path: 'customer',
             children: [{
                 path: '',
-                loadComponent: () => import('./features/authorized/customer/list/customer-list.component')
+                loadComponent: () => import('./features/authorized/customer/list/customer-list.component'),
+
+            }, {
+                path: ':customerId',
+                loadComponent: () => import('./features/authorized/customer/detail/customer-detail.component'),
+
             }],
         }, {
             path: 'insurer',

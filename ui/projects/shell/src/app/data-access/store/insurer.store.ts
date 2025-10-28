@@ -1,5 +1,6 @@
 import { computed, inject } from "@angular/core";
 import { patchState, signalStore, withComputed, withMethods, withProps, withState } from "@ngrx/signals";
+import { FilterMetadata } from "primeng/api";
 import { DialogService } from "primeng/dynamicdialog";
 import { withResources } from "../../utils/signals";
 import { BlaudirektService } from "../provider/blaudirekt.service";
@@ -13,6 +14,9 @@ export const InsurerStore = signalStore(
             offset: 0,
             sortField: 'name',
             sortOrder: -1,
+            filters: {} as {
+                [s: string]: FilterMetadata | FilterMetadata[] | undefined;
+            },
             timestamp: new Date().toISOString(),
         },
     }),
@@ -24,6 +28,7 @@ export const InsurerStore = signalStore(
         insurers: store.blaudirectService.getAllInsurer({
             query: store.filter.query,
             limit: store.filter.limit,
+            filters: store.filter.filters,
             offset: store.filter.offset,
             sortField: store.filter.sortField,
             sortOrder: store.filter.sortOrder,

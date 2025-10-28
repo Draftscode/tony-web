@@ -7,12 +7,12 @@ import { lastValueFrom } from "rxjs";
 import { CompanyEntity } from "src/entities/company.entity";
 import { ContractEntity } from "src/entities/contract.entity";
 import { CustomerAddress, CustomerEntity } from "src/entities/customer.entity";
+import { CustomerWithStatusView } from "src/entities/customer.view.entity";
 import { DivisionEntity } from "src/entities/division.entity";
 import { DataSource, ILike } from "typeorm";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity.js";
 import { FilesService } from "../files/files.service";
 import { API, GRANT } from "./api";
-import { machineLearning } from "firebase-admin";
 
 async function imageUrlToBase64(url: string): Promise<string> {
     if (!url) { return ''; }
@@ -66,8 +66,17 @@ type SearchOptions = {
     query: string;
     limit: number;
     offset: number;
+    filters: BlauFilter;
     sortField: string;
     sortOrder: number;
+}
+
+export type BlauFilter = Record<string, Filter | Filter[]>;
+
+export type Filter = {
+    value: string[];
+    matchMode: "in";
+    operator: "and";
 }
 
 @Injectable()
@@ -380,24 +389,74 @@ export class BlaudirektService {
         return { items, total };
     }
 
-    async getCustomers(options: Partial<SearchOptions>) {
+    async getCustomer(id: string) {
+        console.log(id)
+        return this.dataSource.manager.findOneOrFail(CustomerEntity, {
+            where: { id },
+            relations: {
+                links: true
+            }
+        },)
+    }
+
+    async getCustomers(options: Partial<SearchOptions & { status?: string }>) {
+        const repo = this.dataSource.getRepository(CustomerWithStatusView);
+
+        const qb = repo.createQueryBuilder('customer');
+
+        if (options?.query) {
+            qb.where('customer.displayName ILIKE :query', { query: `%${options.query}%` });
+        }
+
+        // if (options?.status) {
+        //     qb.andWhere('customer.status = :status', { status: options.status });
+        // }
+
+        // sorting
         const order: 'ASC' | 'DESC' = options.sortOrder === -1 ? 'DESC' : 'ASC';
-        const qb = this.dataSource
-            .getRepository(CustomerEntity)
-            .createQueryBuilder('customer')
-            .leftJoinAndSelect('customer.links', 'link') // 👈 Load the relation
-            .where('customer.displayName ILIKE :query', {
-                query: `%${options?.query ?? ''}%`,
-            })
-            .orderBy(`customer.${options.sortField ?? 'lastname'}`, order)
-            .skip(options?.offset ?? 0)
-            .take(options?.limit ?? 100)
-            // 👇 this counts related contracts for each customer
-            .loadRelationCountAndMap('customer.contractsCount', 'customer.contracts');
+        qb.orderBy(`customer.${options.sortField ?? 'lastname'}`, order);
+
+        // handle filters
+        if (Array.isArray(options.filters?.status)) {
+            // collect all status values (support multiple)
+            const statusValues = options.filters.status.flatMap(status => status.value);
+            console.log(statusValues)
+            if (statusValues.length) {
+                qb.andWhere('customer.status IN (:...statusValues)', { statusValues });
+            }
+        }
+
+        qb.skip(options?.offset ?? 0)
+            .take(options?.limit ?? 100);
 
         const [items, total] = await qb.getManyAndCount();
-        return { items, total };
+
+        const result = items.map(item => ({
+            ...item,
+            linkCount: parseInt(item.linkCount),
+            contractsCount: parseInt(item.contractsCount),
+        }))
+
+        return { items: result, total };
     }
+    // async getCustomers(options: Partial<SearchOptions>) {
+    //     const order: 'ASC' | 'DESC' = options.sortOrder === -1 ? 'DESC' : 'ASC';
+    //     const qb = this.dataSource
+    //         .getRepository(CustomerEntity)
+    //         .createQueryBuilder('customer')
+    //         .leftJoinAndSelect('customer.links', 'link') // 👈 Load the relation
+    //         .where('customer.displayName ILIKE :query', {
+    //             query: `%${options?.query ?? ''}%`,
+    //         })
+    //         .orderBy(`customer.${options.sortField ?? 'lastname'}`, order)
+    //         .skip(options?.offset ?? 0)
+    //         .take(options?.limit ?? 100)
+    //         // 👇 this counts related contracts for each customer
+    //         .loadRelationCountAndMap('customer.contractsCount', 'customer.contracts');
+
+    //     const [items, total] = await qb.getManyAndCount();
+    //     return { items, total };
+    // }
 
     private createOrUpdateCustomers(customers: BlaudirektCustomerDto[]) {
         const items: QueryDeepPartialEntity<CustomerEntity>[] = customers?.filter(customer => !!customer.id).map(customer => {

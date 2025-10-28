@@ -1,6 +1,7 @@
 import { computed, inject } from "@angular/core";
 import { patchState, signalStore, withComputed, withMethods, withProps, withState } from "@ngrx/signals";
 import { rxMethod } from "@ngrx/signals/rxjs-interop";
+import { FilterMetadata } from "primeng/api";
 import { DialogService } from "primeng/dynamicdialog";
 import { lastValueFrom, map, pipe, take } from "rxjs";
 import { BlocksDialog } from "../../features/authorized/blocks/dialog/blocks.dialog";
@@ -16,6 +17,9 @@ export const DivisionStore = signalStore(
             offset: 0,
             sortField: 'text',
             sortOrder: -1,
+            filters: {} as {
+                [s: string]: FilterMetadata | FilterMetadata[] | undefined;
+            },
             timestamp: new Date().toISOString(),
         },
         text: undefined as string | undefined,
@@ -29,6 +33,7 @@ export const DivisionStore = signalStore(
             query: store.filter.query,
             limit: store.filter.limit,
             offset: store.filter.offset,
+            filters: store.filter.filters,
             sortField: store.filter.sortField,
             sortOrder: store.filter.sortOrder,
             i: store.filter.timestamp,
