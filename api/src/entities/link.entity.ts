@@ -3,7 +3,7 @@ import { BaseEntity, BeforeInsert, Column, Entity, JoinColumn, ManyToOne, Primar
 import { CustomerEntity } from './customer.entity';
 
 
-@Entity()
+@Entity('link_entity')
 export class LinkEntity<T = unknown> extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
