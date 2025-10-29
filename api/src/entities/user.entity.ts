@@ -3,12 +3,13 @@ import type { Relation } from 'typeorm';
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { FileEntity } from "./file.entity";
 import { RoleEntity } from './roles.entity';
+import { BrokerEntity } from './broker.entity';
 @Entity()
 export class UserEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ type: 'varchar', length: 50 })
+    @Column({ type: 'varchar', length: 50, unique: true })
     username: string;
 
     @Column({ nullable: true })
@@ -27,4 +28,11 @@ export class UserEntity {
 
     @OneToMany(() => FileEntity, (file) => file.user)
     files: Relation<FileEntity[]>
+
+    @Column({ default: false })
+    archived: boolean;
+
+    @ManyToMany(() => BrokerEntity, broker => broker.users, { eager: true, nullable: true })
+    @JoinTable()
+    brokers: Relation<BrokerEntity[]>;
 }

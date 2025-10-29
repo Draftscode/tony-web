@@ -60,7 +60,8 @@ export const CustomerStore = signalStore(
         }>) => {
             patchState(store, {
                 filter: {
-                    ...store.filter(), ...filter, filters: {
+                    ...store.filter(),
+                    filters: {
                         ...filter.filters,
                     }
                 }

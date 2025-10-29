@@ -10,6 +10,12 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
                 info,
             });
         }
+        // Check if the user is archived
+        if (user.archived) {
+            throw new UnauthorizedException({
+                message: 'This account has been archived.',
+            });
+        }
 
         return user;
     }

@@ -1,5 +1,5 @@
 import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Post, Put, Query, UseGuards, UseInterceptors } from "@nestjs/common";
-import { Roles } from "../../common/decorators/roles.decorator";
+import { Roles, SystemRole } from "../../common/decorators/roles.decorator";
 import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
 import { RolesGuard } from "../../common/guards/roles.guard";
 import { UserEntity } from "../../entities/user.entity";
@@ -11,7 +11,7 @@ export class UsersController {
 
     @UseInterceptors(ClassSerializerInterceptor)
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles('admin')
+    @Roles(SystemRole.admin, SystemRole.users)
     @Get()
     getAll(
         @Query('q') query: string,
@@ -21,7 +21,7 @@ export class UsersController {
 
     @UseInterceptors(ClassSerializerInterceptor)
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles('admin')
+    @Roles(SystemRole.admin, SystemRole.users)
     @Put(':id')
     editUser(
         @Param('id') id: string,
@@ -31,7 +31,7 @@ export class UsersController {
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles('admin')
+    @Roles(SystemRole.admin, SystemRole.users)
     @Delete(':id')
     deleteUser(
         @Param('id') id: string
@@ -41,7 +41,7 @@ export class UsersController {
 
     @UseInterceptors(ClassSerializerInterceptor)
     @UseGuards(JwtAuthGuard, RolesGuard)
-    @Roles('admin')
+    @Roles(SystemRole.admin, SystemRole.users)
     @Post()
     createUser(
         @Body() user: Partial<UserEntity>,

@@ -10,28 +10,38 @@ export class InsertDefaultAdmin1759588024891 implements MigrationInterface {
         const userRepository = queryRunner.manager.getRepository(UserEntity);
         const roleRepository = queryRunner.manager.getRepository(RoleEntity);
 
+        await roleRepository.upsert(
+            [
+                { name: 'admin' },
+                { name: 'divisions' },
+                { name: 'customers' },
+                { name: 'insurers' },
+                { name: 'users' }
+            ],
+            ['name'] // conflict target
+        );
+
         // Check if admin already exists
         const adminExists = await userRepository.findOne({
             where: { username: 'admin' },
         });
 
         if (adminExists) return; // admin already exists, skip
-
         // Check if roles exist, otherwise create them
-        let adminRole = await roleRepository.findOne({ where: { name: 'admin' } });
-        if (!adminRole) {
-            adminRole = roleRepository.create({ name: 'admin' });
-            await roleRepository.save(adminRole);
-        }
+
+
+        const adminRole = await roleRepository.findOne({ where: { name: 'admin' } });
 
         // Create default admin
-        const adminUser = userRepository.create({
-            username: 'admin',
-            password: encodePassword('tonym'),
-            roles: [adminRole],
-        });
+        if (adminRole) {
+            const adminUser = userRepository.create({
+                username: 'admin',
+                password: encodePassword('tonym'),
+                roles: [adminRole],
+            });
 
-        await userRepository.save(adminUser);
+            await userRepository.save(adminUser);
+        }
     }
 
 

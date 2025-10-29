@@ -21,13 +21,26 @@
     </div>
 
     <div class="flex flex-col min-w-[300px]">
-        <span>{{'roles.plural'|translate}}</span>
-        <p-picklist [showSourceControls]="false" [showTargetControls]="false" [disabled]="isAdmin()" [source]="roles()"
-            [target]="assignedRoles()" [dragdrop]="true" [responsive]="false">
+        <label for="roles">{{'roles.plural'|translate}}</label>
+        <p-multiselect [filter]="false" appendTo="body" inputId="roles" [options]="roleStore.roles.value().items"
+            formControlName="roles" optionLabel="name" placeholder="Select Roles" class="w-full">
+            <ng-template let-items #selecteditems>
+                <div class="flex gap-1">
+                    @for(item of items; track item) {
+                    <app-role [role]="item.name" />
+                    }
+                </div>
+            </ng-template>
             <ng-template let-item #item>
                 <app-role [role]="item.name" />
             </ng-template>
-        </p-picklist>
+        </p-multiselect>
+    </div>
+
+    <div class="flex flex-col min-w-[300px]">
+        <label for="brokers">{{'brokers.plural'|translate}}</label>
+        <p-multiselect [filter]="false" appendTo="body" inputId="brokers" [options]="brokerStore.brokers.value().items"
+            formControlName="brokers" optionLabel="name" placeholder="Select Brokers" class="w-full" />
     </div>
 </form>
 <p-divider />

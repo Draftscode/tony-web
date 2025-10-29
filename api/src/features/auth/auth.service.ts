@@ -21,6 +21,7 @@ export class AuthService {
         private readonly jwtService: JwtService,
         private readonly datasource: DataSource
     ) {
+        
     }
 
     async getMe() {
@@ -34,7 +35,6 @@ export class AuthService {
                 password: true,
             }
         });
-
         if (!user) { return null; }
 
         const { password, ...result } = user;

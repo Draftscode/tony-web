@@ -3,9 +3,18 @@ import { inject, Injectable, Signal } from "@angular/core";
 import { map } from "rxjs";
 import { environment } from "../../../environments/environment";
 import { SKIP_AUTH_INTERCEPTION } from "../../interceptors/auth.interceptor";
+import { Broker } from "./broker.service";
+
+export enum SystemRole {
+    admin = 'admin',
+    customers = 'customers',
+    insurers = 'insurers',
+    divisions = 'divisions',
+    users = 'users',
+}
 
 export type Role = {
-    name: string;
+    name: SystemRole;
     id: number;
 }
 
@@ -15,6 +24,7 @@ export type User = {
     firstnames: string;
     lastname: string;
     username: string;
+    brokers: Broker[];
 };
 
 export type Credentials = {

@@ -15,9 +15,11 @@
                 <td>{{ user.firstname }}</td>
                 <td>{{ user.lastname }}</td>
                 <td>
-                    @for(role of user.roles; track role.id) {
-                    <app-role [role]="role.name" />
-                    }
+                    <div class="flex gap-1 flex-wrap">
+                        @for(role of user.roles; track role.id) {
+                        <app-role [role]="role.name" />
+                        }
+                    </div>
                 </td>
                 <td>
                     <div class="w-full flex justify-end">

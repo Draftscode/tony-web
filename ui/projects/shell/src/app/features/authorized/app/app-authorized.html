@@ -6,16 +6,24 @@
             class="w-full flex items-center justify-between bg-surface-0 dark:bg-surface-900 border-b-1 border-surface-200 dark:border-surface-600">
             <p-menubar class="w-full" class="w-full bg-transparent! border-none! rounded-none" [model]="_menuItems()">
                 <ng-template #start>
-                    <div class="flex items-center space-x-1">
+                    <div class="flex items-center space-x-1 gap-2">
                         <img [src]="'./images/logo-raw-no-text'+(_themeService.isDark()?'-dark':'')+'.png'"
                             [style.height]="'28px'" alt="Logo">
+
+                        @let brokers = accountStore.me.value()?.brokers ?? [];
+                        @if(brokers.length) {
+                        <span class="text-xl">
+                            Hallo <span class="font-bold"> {{brokers[0].name}} </span>
+                        </span>
+                        }
                     </div>
                 </ng-template>
                 <ng-template #end>
                     <div class="flex items-center space-x-1">
                         <p-button [rounded]="true" icon="pi pi-cog" [text]="true" size="large" tooltipPosition="bottom"
                             [pTooltip]="'settings.menu.open'|translate" (onClick)="settingsStore.toggle()" />
-                        <p-button [rounded]="true" [text]="true" size="large" (onClick)="onLogout()" icon="pi pi-sign-out" />
+                        <p-button [rounded]="true" [text]="true" size="large" (onClick)="onLogout()"
+                            icon="pi pi-sign-out" />
                     </div>
                 </ng-template>
             </p-menubar>

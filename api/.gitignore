@@ -2,6 +2,7 @@
 /dist
 /node_modules
 /build
+/src/tonym-web-firebase-adminsdk-fbsvc-91736100ff.json
 
 # Logs
 logs

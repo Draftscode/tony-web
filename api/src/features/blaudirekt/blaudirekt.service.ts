@@ -4,13 +4,15 @@ import { Cron, CronExpression } from "@nestjs/schedule";
 import { AxiosResponse } from "axios";
 import { importJWK, SignJWT } from 'jose';
 import { lastValueFrom } from "rxjs";
+import { BrokerEntity } from "src/entities/broker.entity";
 import { CompanyEntity } from "src/entities/company.entity";
 import { ContractEntity } from "src/entities/contract.entity";
 import { CustomerAddress, CustomerEntity } from "src/entities/customer.entity";
 import { CustomerWithStatusView } from "src/entities/customer.view.entity";
 import { DivisionEntity } from "src/entities/division.entity";
-import { DataSource, ILike } from "typeorm";
+import { DataSource, ILike, In } from "typeorm";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity.js";
+import { FcmService } from "../fcm/fcm.service";
 import { FilesService } from "../files/files.service";
 import { API, GRANT } from "./api";
 
@@ -84,6 +86,7 @@ export class BlaudirektService {
     private readonly logger = new Logger(BlaudirektService.name);
 
     constructor(
+        private readonly fcm: FcmService,
         private readonly fileService: FilesService,
         private readonly dataSource: DataSource,
         private readonly httpService: HttpService
@@ -188,10 +191,32 @@ export class BlaudirektService {
         }
     }
 
-    async fetchCustomers(token: string, pageSize: number = 100, page: number = 1, order: 'ASC' | 'DESC' = 'ASC') {
+    async fetchBrokers(token: string, pageSize: number = 100, page: number = 1, order: 'ASC' | 'DESC' = 'ASC') {
+        try {
+            const response: AxiosResponse<BlaudirektResponse<BrokerEntity>> = await lastValueFrom(this.httpService.get(
+                `https://stocks.ameiseapis.com/api/brokers`,
+                {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    params: {
+                        pageSize,
+                        page,
+                    }
+                }
+            ));
+            await this.createOrUpdateBrokers(response.data.items as QueryDeepPartialEntity<BrokerEntity>[]);
+            return response.data;
+        } catch (e) {
+            this.logger.error(e);
+        }
+    }
+
+    async fetchCustomers(broker: BrokerEntity, token: string, pageSize: number = 100, page: number = 1, order: 'ASC' | 'DESC' = 'ASC') {
         try {
             const response: AxiosResponse<BlaudirektResponse<BlaudirektCustomerDto>> = await lastValueFrom(this.httpService.get(
-                `https://stocks.ameiseapis.com/api/customers/${GRANT.broker.id}`,
+                `https://stocks.ameiseapis.com/api/customers/${broker.id}`,
                 {
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
@@ -204,7 +229,7 @@ export class BlaudirektService {
                     }
                 }
             ));
-            await this.createOrUpdateCustomers(response.data.items);
+            await this.createOrUpdateCustomers(broker, response.data.items);
             return response.data;
         } catch (e) {
             this.logger.error(e);
@@ -390,7 +415,6 @@ export class BlaudirektService {
     }
 
     async getCustomer(id: string) {
-        console.log(id)
         return this.dataSource.manager.findOneOrFail(CustomerEntity, {
             where: { id },
             relations: {
@@ -399,7 +423,7 @@ export class BlaudirektService {
         },)
     }
 
-    async getCustomers(options: Partial<SearchOptions & { status?: string }>) {
+    async getCustomers(options: Partial<SearchOptions & { status?: string, brokers: string[] }>) {
         const repo = this.dataSource.getRepository(CustomerWithStatusView);
 
         const qb = repo.createQueryBuilder('customer');
@@ -407,10 +431,6 @@ export class BlaudirektService {
         if (options?.query) {
             qb.where('customer.displayName ILIKE :query', { query: `%${options.query}%` });
         }
-
-        // if (options?.status) {
-        //     qb.andWhere('customer.status = :status', { status: options.status });
-        // }
 
         // sorting
         const order: 'ASC' | 'DESC' = options.sortOrder === -1 ? 'DESC' : 'ASC';
@@ -420,10 +440,16 @@ export class BlaudirektService {
         if (Array.isArray(options.filters?.status)) {
             // collect all status values (support multiple)
             const statusValues = options.filters.status.flatMap(status => status.value);
-            console.log(statusValues)
+
             if (statusValues.length) {
                 qb.andWhere('customer.status IN (:...statusValues)', { statusValues });
             }
+        }
+
+        // filter by broker
+        console.log(options?.brokers)
+        if (options?.brokers?.length) {
+            qb.andWhere('customer."brokerId" IN (:...brokerIds)', { brokerIds: options.brokers });
         }
 
         qb.skip(options?.offset ?? 0)
@@ -458,18 +484,20 @@ export class BlaudirektService {
     //     return { items, total };
     // }
 
-    private createOrUpdateCustomers(customers: BlaudirektCustomerDto[]) {
-        const items: QueryDeepPartialEntity<CustomerEntity>[] = customers?.filter(customer => !!customer.id).map(customer => {
-            return {
-                ...customer,
-                mainAddress: {
-                    ...customer.mainAddress,
-                    street: splitStreetAndNumber(customer.mainAddress.street)?.street,
-                    streetNo: splitStreetAndNumber(customer.mainAddress.street)?.streetNo,
-                },
-                gender: customer.salutation.gender,
-            }
-        });
+    private createOrUpdateCustomers(broker: BrokerEntity, customers: BlaudirektCustomerDto[]) {
+        const items: QueryDeepPartialEntity<CustomerEntity>[] = customers?.filter(customer => !!customer.id)
+            .map(customer => {
+                return {
+                    ...customer,
+                    broker,
+                    mainAddress: {
+                        ...customer.mainAddress,
+                        street: splitStreetAndNumber(customer.mainAddress.street)?.street,
+                        streetNo: splitStreetAndNumber(customer.mainAddress.street)?.streetNo,
+                    },
+                    gender: customer.salutation.gender,
+                } as QueryDeepPartialEntity<CustomerEntity>;
+            });
 
         return this.dataSource.transaction(async manager => {
             await manager.getRepository(CustomerEntity).upsert(items, {
@@ -496,6 +524,15 @@ export class BlaudirektService {
 
         return this.dataSource.transaction(async manager => {
             await manager.getRepository(ContractEntity).upsert(entities, {
+                conflictPaths: ['id'],
+                skipUpdateIfNoValuesChanged: true,
+            });
+        });
+    }
+
+    private createOrUpdateBrokers(brokers: QueryDeepPartialEntity<BrokerEntity>[]) {
+        return this.dataSource.transaction(async manager => {
+            await manager.getRepository(BrokerEntity).upsert(brokers, {
                 conflictPaths: ['id'],
                 skipUpdateIfNoValuesChanged: true,
             });
@@ -544,10 +581,17 @@ export class BlaudirektService {
         const pageSize = 1000;
         let numberOfPages = 1;
 
+        let brokers: BrokerEntity[] = [];
+        for (let i = 1; i <= numberOfPages; i++) {
+            const response = await this.fetchBrokers(token, pageSize, i, 'ASC');
+            brokers = response?.items ?? [];
+            numberOfPages = response?.numberOfPages ?? 1;
+        }
 
         await this.fetchDivisions(token, pageSize, 0, 'ASC');
 
         // fetch companies
+        numberOfPages = 1;
         for (let i = 1; i <= numberOfPages; i++) {
             const response = await this.fetchCompanies(token, pageSize, i, 'ASC');
             numberOfPages = response.numberOfPages;
@@ -556,15 +600,21 @@ export class BlaudirektService {
 
         // fetch customers
         numberOfPages = 1;
-        for (let i = 1; i <= numberOfPages; i++) {
-            const response = await this.fetchCustomers(token, pageSize, i, 'ASC');
-            numberOfPages = response?.numberOfPages ?? 1;
-            for (const customer of (response?.items ?? [])) {
-                await this.fetchContracts(token, customer.id, 1000, 1, 'ASC');
-                await this.fetchCustomerState(token, customer.id);
+        for (const broker of brokers) {
+            for (let i = 1; i <= numberOfPages; i++) {
+                const response = await this.fetchCustomers(broker, token, pageSize, i, 'ASC');
+                numberOfPages = response?.numberOfPages ?? 1;
+                for (const customer of (response?.items ?? [])) {
+                    await this.fetchContracts(token, customer.id, 1000, 1, 'ASC');
+                    await this.fetchCustomerState(token, customer.id);
+                }
             }
         }
 
+        await this.fcm.broadcastToTopic('all', 'all', JSON.stringify({
+            message: 'system.synchronization.done',
+            data: {}
+        }));
         this.logger.log('Synchronized data from blaudirekt!');
     }
 }

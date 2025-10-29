@@ -21,6 +21,12 @@ export class UserService {
     }
 
     editUser(id: number, user: User) {
+        (Object.keys(user) as (keyof User)[]).forEach(key => {
+            if (!user[key]) {
+                delete user[key];
+            }
+        });
+
         return this.http.put<User>(`${environment.origin}/users/${id}`, user);
     }
 }

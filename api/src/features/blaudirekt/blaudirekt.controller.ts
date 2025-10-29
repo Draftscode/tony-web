@@ -5,6 +5,10 @@ import { DivisionEntity } from "src/entities/division.entity";
 import { type QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity.js";
 import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
 import { BlaudirektService } from "./blaudirekt.service";
+import { RolesGuard } from "src/common/guards/roles.guard";
+import { Roles, SystemRole } from "src/common/decorators/roles.decorator";
+import { User } from "../auth/data-access/authorized-request";
+import { UserEntity } from "src/entities/user.entity";
 @Controller('blaudirekt')
 export class BlaudirektController {
   constructor(private readonly blaudirektService: BlaudirektService) { }
@@ -67,7 +71,8 @@ export class BlaudirektController {
     return this.blaudirektService.editDivision(divisionId, divisionDto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(SystemRole.admin, SystemRole.customers)
   @Get('customers/:id')
   getCustomer(
     @Param('id') id: string,
@@ -75,9 +80,11 @@ export class BlaudirektController {
     return this.blaudirektService.getCustomer(id);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(SystemRole.admin, SystemRole.customers)
   @Get('customers')
   getCustomers(
+    @User() user: UserEntity,
     @Query('limit', ParseIntPipe) limit: number,
     @Query('offset', ParseIntPipe) offset: number,
     @Query('q') query: string,
@@ -86,7 +93,15 @@ export class BlaudirektController {
     @Query('sortOrder', ParseIntPipe) sortOrder: number,
   ) {
     const parsedFilters = JSON.parse(filters ?? {});
-    return this.blaudirektService.getCustomers({ offset, limit, query, sortField, sortOrder, filters: parsedFilters });
+    return this.blaudirektService.getCustomers({
+      offset,
+      limit,
+      query,
+      sortField,
+      sortOrder,
+      filters: parsedFilters,
+      brokers: user.brokers.map(broker => broker.id)
+    });
   }
 
 

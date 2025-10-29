@@ -10,12 +10,14 @@ import { FilesModule } from './features/files/files.module';
 import { LinksModule } from './features/links/links.module';
 import { RolesModule } from './features/roles/roles.module';
 import { UserModule } from './features/users/users.module';
+import { BrokerModule } from './features/broker/broker.module';
 
 @Module({
   imports: [
     RolesModule,
     AuthModule,
     LinksModule,
+    BrokerModule,
     UserModule,
     ScheduleModule.forRoot(),
     ConfigModule.forRoot(),

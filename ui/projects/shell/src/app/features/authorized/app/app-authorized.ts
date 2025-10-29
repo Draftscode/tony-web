@@ -86,8 +86,4 @@ export default class App {
     Breakpoints.Small,
     Breakpoints.XSmall,
   ]).pipe(map(result => result.matches)));
-
-  protected async enableNotification() {
-    const token = await this.fcm.requestPermission();
-  }
 }
