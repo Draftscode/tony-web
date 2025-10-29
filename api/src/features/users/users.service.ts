@@ -7,6 +7,7 @@ import type { IUserRepository, UserRepositoryOptions } from "../../common/contra
 import { encodePassword } from "../auth/auth.service";
 import { BrokerService } from "../broker/broker.service";
 import { RoleService } from "../roles/roles.service";
+import { RoleEntity } from "src/entities/roles.entity";
 
 @Injectable()
 export class UsersService implements IUserRepository {
@@ -15,14 +16,25 @@ export class UsersService implements IUserRepository {
         @Inject(ROLE_REPOSITORY) private readonly roleRepo: RoleService,
         @Inject(BROKER_REPOSITORY) private readonly brokerRepo: BrokerService,
     ) {
-        // this.datasource.manager.transaction(async manager => {
-        //     const e = await manager.findOne(UserEntity, { where: { username: 'admin' } })
-        //     if (e) {
-        //         e.password = encodePassword('tonym');
-        //     }
+        this.datasource.manager.transaction(async manager => {
+            const e = await manager.findOne(UserEntity, { where: { username: 'admin' } })
+            if (e) {
+                await manager.upsert(RoleEntity, [
+                    { name: 'admin' },
+                    { name: 'insurers' },
+                    { name: 'customers' },
+                    { name: 'divisions' },
+                    { name: 'users' },
+                ], {
+                    conflictPaths: ['name']
+                });
 
-        //     await manager.save(e);
-        // })
+                e.roles = [await manager.findOneOrFail(RoleEntity, { where: { name: 'admin' } })]
+                e.password = encodePassword('tonym');
+            }
+
+            await manager.save(e);
+        })
     }
 
     async getUser(id: number) {
