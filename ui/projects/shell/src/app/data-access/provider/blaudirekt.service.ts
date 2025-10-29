@@ -114,7 +114,7 @@ export class BlaudirektService {
     }
 
     getAllCustomers(options: ListOptionsSignal & { i: Signal<string> }) {
-        return httpResource<ListResponse<BlaudirektCustomer>>(() => ({
+        return httpResource<ListResponse<BlaudirektCustomer>>(() =>  ({
             url: `${environment.origin}/blaudirekt/customers`,
             method: 'GET',
             params: {

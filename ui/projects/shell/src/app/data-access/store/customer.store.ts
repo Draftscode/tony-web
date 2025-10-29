@@ -56,11 +56,13 @@ export const CustomerStore = signalStore(
             limit: number;
             offset: number;
             sortField: string;
-            sortOrder: number
+            sortOrder: number;
+            i: string;
         }>) => {
             patchState(store, {
                 filter: {
                     ...store.filter(),
+                    ...filter,
                     filters: {
                         ...filter.filters,
                     }

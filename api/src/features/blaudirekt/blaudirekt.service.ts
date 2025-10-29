@@ -447,7 +447,6 @@ export class BlaudirektService {
         }
 
         // filter by broker
-        console.log(options?.brokers)
         if (options?.brokers?.length) {
             qb.andWhere('customer."brokerId" IN (:...brokerIds)', { brokerIds: options.brokers });
         }

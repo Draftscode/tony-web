@@ -75,7 +75,7 @@ export class FileDialogComponent implements OnInit {
 
 
     protected search(query: string) {
-        this.customerStore.search({ query });
+        this.customerStore.search({ query, i: new Date().toISOString() });
     }
 
     protected async searchContracts(customerId?: string) {
