@@ -575,46 +575,61 @@ export class BlaudirektService {
         }
     }
 
+
+    private isSynching = false;
+    
+    getStatus() {
+        return {
+            isSynching: this.isSynching,
+        }
+    }
+
     @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
     async fetchDataFromBlaudirekt() {
-        const token = await this.getAccessToken();
-        const pageSize = 1000;
-        let numberOfPages = 1;
+        this.isSynching = true;
+        if (this.isSynching) { return; }
+        try {
+            const token = await this.getAccessToken();
+            const pageSize = 1000;
+            let numberOfPages = 1;
 
-        let brokers: BrokerEntity[] = [];
-        for (let i = 1; i <= numberOfPages; i++) {
-            const response = await this.fetchBrokers(token, pageSize, i, 'ASC');
-            brokers = response?.items ?? [];
-            numberOfPages = response?.numberOfPages ?? 1;
-        }
-
-        await this.fetchDivisions(token, pageSize, 0, 'ASC');
-
-        // fetch companies
-        numberOfPages = 1;
-        for (let i = 1; i <= numberOfPages; i++) {
-            const response = await this.fetchCompanies(token, pageSize, i, 'ASC');
-            numberOfPages = response.numberOfPages;
-        }
-
-
-        // fetch customers
-        numberOfPages = 1;
-        for (const broker of brokers) {
+            let brokers: BrokerEntity[] = [];
             for (let i = 1; i <= numberOfPages; i++) {
-                const response = await this.fetchCustomers(broker, token, pageSize, i, 'ASC');
+                const response = await this.fetchBrokers(token, pageSize, i, 'ASC');
+                brokers = response?.items ?? [];
                 numberOfPages = response?.numberOfPages ?? 1;
-                for (const customer of (response?.items ?? [])) {
-                    await this.fetchContracts(token, customer.id, 1000, 1, 'ASC');
-                    await this.fetchCustomerState(token, customer.id);
+            }
+
+            await this.fetchDivisions(token, pageSize, 0, 'ASC');
+
+            // fetch companies
+            numberOfPages = 1;
+            for (let i = 1; i <= numberOfPages; i++) {
+                const response = await this.fetchCompanies(token, pageSize, i, 'ASC');
+                numberOfPages = response.numberOfPages;
+            }
+
+
+            // fetch customers
+            numberOfPages = 1;
+            for (const broker of brokers) {
+                for (let i = 1; i <= numberOfPages; i++) {
+                    const response = await this.fetchCustomers(broker, token, pageSize, i, 'ASC');
+                    numberOfPages = response?.numberOfPages ?? 1;
+                    for (const customer of (response?.items ?? [])) {
+                        await this.fetchContracts(token, customer.id, 1000, 1, 'ASC');
+                        await this.fetchCustomerState(token, customer.id);
+                    }
                 }
             }
-        }
 
-        await this.fcm.broadcastToTopic('all', 'all', JSON.stringify({
-            message: 'system.synchronization.done',
-            data: {}
-        }));
-        this.logger.log('Synchronized data from blaudirekt!');
+            await this.fcm.broadcastToTopic('all', 'all', JSON.stringify({
+                message: 'system.synchronization.done',
+                data: {}
+            }));
+            this.logger.log('Synchronized data from blaudirekt!');
+        } finally {
+            this.isSynching = false;
+        }
     }
 }

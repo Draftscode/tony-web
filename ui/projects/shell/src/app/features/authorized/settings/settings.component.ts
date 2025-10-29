@@ -10,12 +10,14 @@ import { TooltipModule } from "primeng/tooltip";
 import { DividerModule } from "primeng/divider";
 import { FcmService } from "../../../data-access/provider/fcm.service";
 import { MessageService } from "primeng/api";
+import { SettingsStore } from "../../../data-access/store/settings.store";
+import { ButtonModule } from "primeng/button";
 
 @Component({
     selector: 'app-settings',
     imports: [
         ToggleSwitchModule, TranslatePipe,
-        TooltipModule, DividerModule,
+        TooltipModule, DividerModule, ButtonModule,
         NgTemplateOutlet, FormsModule, SelectModule
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,6 +29,7 @@ export class SettingsComponent {
     protected readonly fcm = inject(FcmService);
     protected readonly pMessage = inject(MessageService);
     private readonly translate = inject(TranslateService);
+    protected readonly settingsStore = inject(SettingsStore);
 
     protected async requestPermission(event: ToggleSwitchChangeEvent) {
         await this.fcm.requestPermission();

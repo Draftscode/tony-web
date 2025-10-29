@@ -33,6 +33,12 @@
             </ng-template>
         </p-select>
     </div>
+    <p-divider />
+    <div class="flex flex-col gap-1 w-full">
+        @let isDisabled = settingsStore.status.value().isSynching;
+        <p-button label="Synchronize" [icon]="`pi pi-refresh ${isDisabled ? 'pi-spin':''}`" class="w-full flex"
+            [disabled]="isDisabled" (onClick)="settingsStore.synchronize()" />
+    </div>
 </div>
 
 <ng-template #language let-item>

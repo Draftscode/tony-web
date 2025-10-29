@@ -84,11 +84,34 @@ export type BuildingBlock = {
     value?: string;
 }
 
+const BASE_URL = `${environment.origin}/blaudirekt`
+
+
+export type BlaudirektStatus = {
+    isSynching: boolean;
+}
 @Injectable({ providedIn: 'root' })
 export class BlaudirektService {
     private readonly http = inject(HttpClient);
     isLoading = signal<boolean>(false);
 
+    synchronize() {
+        return this.http.get(`${BASE_URL}/synchronize`);
+    }
+
+    getStatus(i: Signal<string>) {
+        return httpResource<BlaudirektStatus>(() => ({
+            url: `${BASE_URL}/status`,
+            method: 'GET',
+            params: {
+                i: i(),
+            }
+        }), {
+            defaultValue: {
+                isSynching: true
+            },
+        })
+    }
 
     getAllCustomers(options: ListOptionsSignal & { i: Signal<string> }) {
         return httpResource<ListResponse<BlaudirektCustomer>>(() => ({

@@ -16,7 +16,11 @@ export class UsersService implements IUserRepository {
         @Inject(ROLE_REPOSITORY) private readonly roleRepo: RoleService,
         @Inject(BROKER_REPOSITORY) private readonly brokerRepo: BrokerService,
     ) {
-        this.datasource.manager.transaction(async manager => {
+        this.initializeApp();
+    }
+
+    async initializeApp() {
+        await this.datasource.manager.transaction(async manager => {
             const e = await manager.findOne(UserEntity, { where: { username: 'admin' } })
             if (e) {
                 await manager.upsert(RoleEntity, [

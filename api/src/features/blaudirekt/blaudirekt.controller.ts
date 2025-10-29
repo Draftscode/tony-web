@@ -104,7 +104,15 @@ export class BlaudirektController {
     });
   }
 
+  @Get('status')
+  getStatus() {
+    return this.blaudirektService.getStatus();
+  }
 
+  @Get('synchronize')
+  synchronize() {
+    return this.blaudirektService.fetchDataFromBlaudirekt();
+  }
 
   @Get('document/:id')
   async getDocument(@Param('id') id: string) {
