@@ -12,7 +12,7 @@ COPY package*.json ./
 # install dev dependencies only
 RUN npm i --legacy-peer-deps && \
     npm i -g @angular/cli \
-    npm install lightningcss-linux-arm64-musl lightningcss-linux-x64-gnu lightningcss-linux-x64-musl --save-optional --force
+    npm install lightningcss-linux-arm64-musl lightningcss-linux-x64-gnu lightningcss-linux-x64-musl --save-optional --legacy-peer-deps
 
 COPY . .
 
