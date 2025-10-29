@@ -1,10 +1,7 @@
-######################
-# DEVELOPMENT STAGE  #
-######################
-FROM node:22-alpine AS development
+FROM node:22-alpine  AS development
 
-# Install all needed system dependencies in one layer
-# Includes Chromium deps + build tools for native npm modules
+
+# Install dependencies for Puppeteer + Chromium
 RUN apk add --no-cache \
       chromium \
       nss \
@@ -18,41 +15,35 @@ RUN apk add --no-cache \
       udev \
       lcms2 \
       git \
-      chromium-chromedriver \
-      python3 \
-      make \
-      g++ \
-      build-base
+      chromium-chromedriver
 
-# Set working directory
+# Specify our working directory, this is in our container/in our image
 WORKDIR /usr/src/app
 
-# Copy dependency files
+# Copy the package.jsons from host to container
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install --include=optional && \
+# Here we install all the deps
+RUN npm install --include=optional  && \
     npm i -g @nestjs/cli && \
-    npm rebuild sharp && \
-    npm rebuild lightningcss --build-from-source
+    npm rebuild sharp
 
-# Copy the rest of the application
+# Bundle app source / copy all other files
 COPY . .
 
-# Build the app
+# Build the app to the /dist folder
 RUN npm run build
 
-# Expose application port
 EXPOSE 3000
 
-
-
-######################
-# PRODUCTION STAGE   #
-######################
+################
+## PRODUCTION ##
+################
+# Build another image named production
 FROM node:22-alpine AS production
 
-# Install only what's needed to run the app + Chromium deps
+# Install Chromium dependencies in production image
 RUN apk add --no-cache \
       chromium \
       nss \
@@ -64,21 +55,18 @@ RUN apk add --no-cache \
       lcms2 \
       chromium-chromedriver
 
-# Set working directory
+# Set node env to prod
+ARG NODE_ENV=production
+
+# Set Working Directory
 WORKDIR /usr/src/app
 
-# Set node environment
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
+# Copy all from development stage
+COPY --from=development /usr/src/app/ .
 
-# Copy from build stage
-COPY --from=development /usr/src/app/ ./
-
-# Optional: sanity check build output
-RUN ls -l dist/
-
-# Expose application port
 EXPOSE 3000
 
-# Start app
+RUN ls -l dist/
+
+# run commands
 CMD ["node", "dist/main"]

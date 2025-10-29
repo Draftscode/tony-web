@@ -1,34 +1,46 @@
 #######################
 ## DEVELOPMENT STAGE ##
 #######################
-# specify node verson and image
-# also choose a unique name to target later
 FROM node:22-alpine AS development
-# specify working directory inside container
+
+# Set working directory
 WORKDIR /usr/src/app
 
+# Install system dependencies required for building native modules
+RUN apk add --no-cache python3 make g++
+
+# Copy package files first for better build caching
 COPY package*.json ./
 
-# install dev dependencies only
-RUN npm i --legacy-peer-deps && \
-    npm i -g @angular/cli
+# Install dependencies (with legacy peer deps to avoid version conflicts)
+RUN npm ci --legacy-peer-deps && \
+    npm install -g @angular/cli
 
+# Copy the full app source
 COPY . .
 
+# Rebuild lightningcss from source (fixes musl build issue)
+RUN npm rebuild lightningcss
+
+# Build the Angular app
 RUN ng build shell --configuration=production
 
 #######################
-## PRODDUCTION STAGE ##dir
+## PRODUCTION STAGE ##
 #######################
 FROM nginx:1.27.5-alpine AS production
 
-# set variable to environment
+# Set environment variable
 ENV NODE_ENV=production
 
-# copy from previous stage
+# Copy build output from development stage
 COPY --from=development /usr/src/app/dist/shell/browser /usr/share/nginx/html
+
+# Copy custom nginx configuration (optional)
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
-# run commands
+# Expose port 80 for web traffic
 EXPOSE 80
-ENTRYPOINT ["nginx","-g","daemon off;"]
+
+# Start nginx
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
