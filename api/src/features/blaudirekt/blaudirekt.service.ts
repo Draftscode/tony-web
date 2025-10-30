@@ -10,7 +10,6 @@ import { ContractEntity } from "src/entities/contract.entity";
 import { CustomerAddress, CustomerEntity } from "src/entities/customer.entity";
 import { CustomerWithStatusView } from "src/entities/customer.view.entity";
 import { DivisionEntity } from "src/entities/division.entity";
-import { NoteEntity } from "src/entities/note.entity";
 import { DataSource, ILike } from "typeorm";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity.js";
 import { FcmService } from "../fcm/fcm.service";
@@ -96,77 +95,6 @@ export class BlaudirektService {
         setTimeout(() => {
             this.fetchDataFromBlaudirekt();
         })
-    }
-
-    async addNote(customerId: string, note: Partial<NoteEntity>) {
-        const token = await this.getAccessToken();
-
-        const response = await lastValueFrom(this.httpService.post(
-            `https://stocks.ameiseapis.com/api/customer/notes/${customerId}`,
-            note,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-            }
-        ));
-
-        const items = response.data;
-        return this.dataSource.transaction(async manager => {
-            const repo = manager.getRepository(NoteEntity);
-            const entities = items.map(e => ({
-                ...e,
-                type: e.type.id,
-                author: e.author.displayName,
-                customerId,
-            }) as QueryDeepPartialEntity<NoteEntity>);
-
-            await repo.upsert(entities, {
-                conflictPaths: ['id'],
-                skipUpdateIfNoValuesChanged: true,
-            });
-        });
-    }
-
-    async removeNote(noteId: string) {
-        const token = await this.getAccessToken();
-        const response = await lastValueFrom(this.httpService.delete(
-            `https://stocks.ameiseapis.com/api/customer/notes/${noteId}`,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-            }
-        ));
-        return this.dataSource.transaction(async manager => {
-            const repo = manager.getRepository(NoteEntity);
-            await repo.delete({ id: noteId });
-        });
-    }
-
-    async editNote(customerId: string, noteId: string, note: Partial<NoteEntity>) {
-        const token = await this.getAccessToken();
-        const response = await lastValueFrom(this.httpService.put(
-            `https://stocks.ameiseapis.com/api/customers/${customerId}/notes/${noteId}`,
-            note,
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-            }
-        ));
-
-
-        return this.dataSource.transaction(async manager => {
-            const repo = manager.getRepository(NoteEntity);
-            const entity = {
-                text: note.text,
-            } as QueryDeepPartialEntity<NoteEntity>;
-            await repo.update(noteId, entity);
-        });
     }
 
     private async getAccessToken() {
@@ -335,39 +263,6 @@ export class BlaudirektService {
         }
     }
 
-    async fetchNotes(token: string, customerId: string) {
-        try {
-            const response = await lastValueFrom(this.httpService.get(
-                `https://stocks.ameiseapis.com/api/customer/notes/${customerId}`,
-                {
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    params: {
-                    }
-                }
-            ));
-
-            return this.dataSource.transaction(async manager => {
-                const repo = manager.getRepository(NoteEntity);
-                const entities = response.data.map(e => ({
-                    ...e,
-                    type: e.type.id,
-                    author: e.author.displayName,
-                    customerId,
-                })) as QueryDeepPartialEntity<NoteEntity>;
-
-                await repo.upsert(entities, {
-                    conflictPaths: ['id'],
-                    skipUpdateIfNoValuesChanged: true,
-                });
-            });
-        } catch (e) {
-            this.logger.error(e);
-        }
-    }
-
     async fetchCustomerState(token: string, customerId: string) {
         try {
             const response = await lastValueFrom(this.httpService.get(
@@ -524,7 +419,6 @@ export class BlaudirektService {
             where: { id },
             relations: {
                 links: true,
-                notes: true,
             }
         },)
     }
@@ -722,7 +616,6 @@ export class BlaudirektService {
                     const response = await this.fetchCustomers(broker, token, pageSize, i, 'ASC');
                     numberOfPages = response?.numberOfPages ?? 1;
                     for (const customer of (response?.items ?? [])) {
-                        await this.fetchNotes(token, customer.id);
                         await this.fetchContracts(token, customer.id, 1000, 1, 'ASC');
                         await this.fetchCustomerState(token, customer.id);
                     }
