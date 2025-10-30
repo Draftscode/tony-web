@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Query, Res, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, Res, UseGuards } from "@nestjs/common";
 import { type Response } from "express";
 import { CompanyEntity } from "src/entities/company.entity";
 import { DivisionEntity } from "src/entities/division.entity";
@@ -9,6 +9,7 @@ import { RolesGuard } from "src/common/guards/roles.guard";
 import { Roles, SystemRole } from "src/common/decorators/roles.decorator";
 import { User } from "../auth/data-access/authorized-request";
 import { UserEntity } from "src/entities/user.entity";
+import { NoteEntity } from "src/entities/note.entity";
 @Controller('blaudirekt')
 export class BlaudirektController {
   constructor(private readonly blaudirektService: BlaudirektService) { }
@@ -17,6 +18,34 @@ export class BlaudirektController {
   @Get('refresh')
   refresh() {
     return this.blaudirektService.fetchDataFromBlaudirekt();
+  }
+
+
+  @UseGuards(JwtAuthGuard)
+  @Put('notes/:noteId')
+  editNote(
+    @Param('noteId') noteId: string,
+    @Body() note: Partial<NoteEntity>,
+    @Query('customer') customerId: string,
+  ) {
+    return this.blaudirektService.editNote(customerId, noteId, note);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('notes/:noteId')
+  removeNote(
+    @Param('noteId') noteId: string,
+  ) {
+    return this.blaudirektService.removeNote(noteId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('notes')
+  addNote(
+    @Query('customer') customerId: string,
+    @Body() note: Partial<NoteEntity>,
+  ) {
+    return this.blaudirektService.addNote(customerId, note);
   }
 
   @UseGuards(JwtAuthGuard)

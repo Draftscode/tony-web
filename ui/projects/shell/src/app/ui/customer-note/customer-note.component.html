@@ -1,0 +1,24 @@
+@if(note(); as note) {
+{{severity()}}
+<p-message [severity]="severity()" class="w-full">
+    <div class="flex flex-col w-full">
+        <div class="flex justify-end w-full gap-1">
+            <p-button size="small" [text]="true" icon="pi pi-pencil" (onClick)="edit.emit()" />
+            <p-button size="small" severity="danger" [text]="true" icon="pi pi-trash" (onClick)="remove.emit()" />
+        </div>
+        <div class="flex w-full">
+            {{note.text}}
+        </div>
+        <p-divider />
+        <div class="flex justify-between w-full">
+            <span>
+                {{note.date}}
+            </span>
+            <span>
+                {{note.author}}
+            </span>
+        </div>
+    </div>
+
+</p-message>
+}

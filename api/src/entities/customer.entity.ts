@@ -3,6 +3,7 @@ import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
 import { ContractEntity } from "./contract.entity";
 import { LinkEntity } from './link.entity';
 import { BrokerEntity } from './broker.entity';
+import { NoteEntity } from './note.entity';
 
 export type CustomerAddress = {
   city: string;
@@ -72,4 +73,7 @@ export class CustomerEntity {
 
   @ManyToOne(() => BrokerEntity, (broker) => broker.customers)
   broker: Relation<BrokerEntity>;
+
+  @OneToMany(() => NoteEntity, note => note.customer)
+  notes: Relation<NoteEntity[]>;
 }

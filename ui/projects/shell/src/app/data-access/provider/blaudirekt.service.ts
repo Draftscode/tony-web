@@ -22,6 +22,7 @@ export const BlaudirektCustomerStatus = ['new', 'advanced', 'terminated'];
 
 export type BlaudirektCustomer = {
     id: string;
+    notes?: BlaudirektNote[];
     contractsCount: number;
     mainAddress?: CustomerAddress;
     firstname: string;
@@ -77,6 +78,14 @@ export type BlaudirektCompany = {
     logo: string;
 }
 
+export type BlaudirektNote = {
+    id: string;
+    text: string;
+    date: string;
+    author: string;
+    type: string;
+}
+
 export type BuildingBlock = {
     key: string;
     placeholder: string;
@@ -113,8 +122,22 @@ export class BlaudirektService {
         })
     }
 
+    editNote(customerId: string, noteId: string, note: Partial<BlaudirektNote>) {
+        const params = new HttpParams().set('customer', customerId);
+        return this.http.put<BlaudirektNote>(`${environment.origin}/blaudirekt/notes/${noteId}`, note, { params });
+    }
+
+    removeNote(noteId: string) {
+        return this.http.delete<void>(`${environment.origin}/blaudirekt/notes/${noteId}`);
+    }
+
+    addNote(customerId: string, note: Partial<BlaudirektNote>) {
+        const params = new HttpParams().set('customer', customerId);
+        return this.http.post<BlaudirektNote>(`${environment.origin}/blaudirekt/notes`, note, { params });
+    }
+
     getAllCustomers(options: ListOptionsSignal & { i: Signal<string> }) {
-        return httpResource<ListResponse<BlaudirektCustomer>>(() =>  ({
+        return httpResource<ListResponse<BlaudirektCustomer>>(() => ({
             url: `${environment.origin}/blaudirekt/customers`,
             method: 'GET',
             params: {

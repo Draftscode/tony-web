@@ -2,10 +2,11 @@ import { computed, inject } from "@angular/core";
 import { patchState, signalMethod, signalStore, withComputed, withMethods, withProps, withState } from "@ngrx/signals";
 import { FilterMetadata } from "primeng/api";
 import { DialogService } from "primeng/dynamicdialog";
-import { lastValueFrom } from "rxjs";
+import { lastValueFrom, take } from "rxjs";
 import { LinkDialog } from "../../dialogs/link/link.dialog";
+import { NoteDialog } from "../../dialogs/note-dialog/note.dialog";
 import { withResources } from "../../utils/signals";
-import { BlaudirektCustomer, BlaudirektService } from "../provider/blaudirekt.service";
+import { BlaudirektCustomer, BlaudirektNote, BlaudirektService } from "../provider/blaudirekt.service";
 import { LinkService } from "../provider/link.service";
 
 export const CustomerStore = signalStore(
@@ -48,6 +49,39 @@ export const CustomerStore = signalStore(
         isLoading: computed(() => store.customers.isLoading()),
     })),
     withMethods(store => ({
+        editNote: async (customerId: string, note: BlaudirektNote) => {
+            const ref = store.dialogService.open(NoteDialog, {
+                modal: true,
+                header: 'Notizen',
+                data: note,
+                closable: true,
+                width: '420px'
+            });
+
+            const response = await lastValueFrom(ref.onClose.pipe(take(1)));
+            if (response?.type === 'manually') {
+                await lastValueFrom(store.blaudirectService.editNote(customerId, note.id, response.data));
+                patchState(store, { i: new Date().toISOString() });
+            }
+        },
+        addNote: async (customerId: string) => {
+            const ref = store.dialogService.open(NoteDialog, {
+                modal: true,
+                header: 'Notizen',
+                closable: true,
+                width: '420px'
+            });
+
+            const response = await lastValueFrom(ref.onClose.pipe(take(1)));
+            if (response?.type === 'manually') {
+                await lastValueFrom(store.blaudirectService.addNote(customerId, response.data));
+                patchState(store, { i: new Date().toISOString() });
+            }
+        },
+        removeNote: async (noteId: string) => {
+            await lastValueFrom(store.blaudirectService.removeNote(noteId));
+            patchState(store, { i: new Date().toISOString() });
+        },
         search: (filter: Partial<{
             filters?: {
                 [s: string]: FilterMetadata | FilterMetadata[] | undefined;

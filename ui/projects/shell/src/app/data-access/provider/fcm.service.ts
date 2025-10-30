@@ -18,14 +18,14 @@ export class FcmService {
         this.isGranted.set(Notification.permission === 'granted');
     }
 
-    requestPermission(): Promise<string> {
+    requestPermission(): Promise<string | null> {
         return Notification.requestPermission().then((permission) => {
             this.isGranted.set(Notification.permission === 'granted');
             if (permission === 'granted') {
                 return getToken(this.messaging, { vapidKey: environment.vapid });
-            } else {
-                throw new Error('Permission denied');
             }
+
+            return null;
         });
     }
 
@@ -39,6 +39,7 @@ export class FcmService {
             console.warn('Messaging is disabled');
             return;
         }
+
         await lastValueFrom(this.sub(token));
         onMessage(this.messaging, (payload) => {
             console.log('Message received: ', payload);
