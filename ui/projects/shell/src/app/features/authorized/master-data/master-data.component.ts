@@ -2,16 +2,17 @@ import { ChangeDetectionStrategy, Component, computed, inject, model } from "@an
 import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
 import { TranslatePipe } from "@ngx-translate/core";
 import { TreeNode } from "primeng/api";
+import { CardModule } from "primeng/card";
+import { TabsModule } from 'primeng/tabs';
 import { SystemRole } from "../../../data-access/provider/auth.service";
 import { AccountStore } from "../../../data-access/store/account.store";
-import { TreeComponent } from "../../../ui/tree/tree.component";
 
 @Component({
     selector: 'app-master-data',
     templateUrl: 'master-data.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslatePipe, RouterOutlet, RouterLinkActive, TreeComponent, RouterLink],
-    host: { class: 'flex w-full h-full justify-center' },
+    imports: [TranslatePipe, RouterOutlet, RouterLinkActive, CardModule, RouterLink, TabsModule],
+    host: { class: 'flex w-full max-h-full justify-center p-4 pt-0' },
 })
 export default class MasterDataComponent {
     protected readonly me = inject(AccountStore).me.value;

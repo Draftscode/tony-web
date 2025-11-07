@@ -21,7 +21,7 @@ import { TableComponent, TableConfig } from "../../../../ui/table/table.componen
         TranslatePipe, TitleCasePipe
     ],
     templateUrl: 'insurer-list.component.html',
-    host: { class: 'flex w-full h-full justify-center p-4' },
+    host: { class: 'flex w-full h-full justify-center flex-col overflow-auto' },
     styles: `
     :host ::ng-deep {
         .p-card-body,

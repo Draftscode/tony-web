@@ -146,7 +146,7 @@ export function toPdf(content: Content, translate: TranslateService) {
             <div>${row['nr'] ?? '-'}</div></td>`;
             cells += `<td>
             <div style="display: flex; align-items: center; gap: .25rem">${row['insurer'] ?
-                    `<img style="height: 32px; width: 100px; padding: 4px; min-width: 100px; object-fit: contain" src="${img}" /><span>${row['insurer'].name}</span>` : '-'}</div></td>`;
+                    `<img style="height: 32px; width: 100px; padding: 4px; min-width: 100px; object-fit: contain" src="${img}" />` : '-'}</div></td>`;
             cells += `<td>
             <div>${row['party'] ?? '-'}</div></td>`;
             cells += `<td>

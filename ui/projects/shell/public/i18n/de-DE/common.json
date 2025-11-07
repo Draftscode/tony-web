@@ -1,8 +1,13 @@
 {
     "label": {
+        "sync": {
+            "label": "Aktualisiere Daten"
+        },
         "frequency": {
             "monthly": "monatl."
         },
+        "links": "Verknüpfungen",
+        "link": "Verknüpfung",
         "finances": {
             "old": "Alt",
             "new": "Neu",
@@ -39,6 +44,7 @@
         "files": "Dateien",
         "password": "Passwort",
         "login": "Anmelden",
+        "logout": "Abmelden",
         "user": "Benutzer",
         "pdf": "PDF",
         "type": "Was?",
@@ -79,6 +85,9 @@
         },
         "edit": {
             "value": "{{value}} bearbeiten"
+        },
+        "select": {
+            "value": "{{value}} auswählen"
         },
         "pagination": "{{value}} von {{total}} {{entity}}"
     },

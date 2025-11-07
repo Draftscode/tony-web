@@ -12,6 +12,7 @@ import { FcmService } from "../../../data-access/provider/fcm.service";
 import { MessageService } from "primeng/api";
 import { SettingsStore } from "../../../data-access/store/settings.store";
 import { ButtonModule } from "primeng/button";
+import { AccountStore } from "../../../data-access/store/account.store";
 
 @Component({
     selector: 'app-settings',
@@ -20,10 +21,12 @@ import { ButtonModule } from "primeng/button";
         TooltipModule, DividerModule, ButtonModule,
         NgTemplateOutlet, FormsModule, SelectModule
     ],
+    host: { class: 'flex flex-col h-full w-full' },
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './settings.component.html'
 })
 export class SettingsComponent {
+    protected readonly accountStore = inject(AccountStore);
     protected readonly languageStore = inject(LanguageStore);
     protected readonly themeStore = inject(ThemeService);
     protected readonly fcm = inject(FcmService);

@@ -1,25 +1,23 @@
-<p-card class="flex flex-col w-full h-full overflow-auto">
-    @let insurers = insurerStore.insurers.value();
-    <span class="text-2xl">{{'insurer.plural'|translate}} ({{insurers?.total ?? 0}})</span>
-    <app-list-search [query]="insurerStore.filter.query()" (queryChange)="insurerStore.search({query: $event})" />
-    <app-table [sortField]="insurerStore.filter.sortField()" [sortOrder]="insurerStore.filter.sortOrder()"
-        class="w-full h-full overflow-auto" (lazyLoad)="onLazyLoad($event)" [rowsPerPage]="100"
-        [totalRows]="insurers?.total ?? 0" [items]="insurers?.items ?? []" [config]="insurerTableConfig()"
-        [disabled]="insurerStore.isLoading()">
-        <ng-template #column let-column>
-            {{column.label | translate | titlecase }}
-        </ng-template>
-        <ng-template #cell let-row let-column="column">
-            @switch(column.key) {
-            @case('blocks') {
-            <div class="flex gap-1">
-                {{row.blocks?.length ?? 0}}
-            </div>
-            }
-            @case ('logo') {
-            <app-company [company]="row" [showLabel]="false" />
-            }
-            <!-- @case ('actions') {
+@let insurers = insurerStore.insurers.value();
+<app-list-search [query]="insurerStore.filter.query()" (queryChange)="insurerStore.search({query: $event})" />
+<app-table [sortField]="insurerStore.filter.sortField()" [sortOrder]="insurerStore.filter.sortOrder()"
+    class="w-full h-full overflow-auto" (lazyLoad)="onLazyLoad($event)" [rowsPerPage]="100"
+    [totalRows]="insurers?.total ?? 0" [items]="insurers?.items ?? []" [config]="insurerTableConfig()"
+    [disabled]="insurerStore.isLoading()">
+    <ng-template #column let-column>
+        {{column.label | translate | titlecase }}
+    </ng-template>
+    <ng-template #cell let-row let-column="column">
+        @switch(column.key) {
+        @case('blocks') {
+        <div class="flex gap-1">
+            {{row.blocks?.length ?? 0}}
+        </div>
+        }
+        @case ('logo') {
+        <app-company [company]="row" [showLabel]="false" />
+        }
+        <!-- @case ('actions') {
             <div class="flex w-full justify-end">
                 <p-button (onClick)="po.toggle($event)" icon="pi pi-ellipsis-v" [text]="true" />
                 <p-popover #po appendTo="body">
@@ -32,11 +30,9 @@
                 </p-popover>
             </div>
             } -->
-            @default {
-            {{row[column.key]}}
-            }
-            }
-        </ng-template>
-    </app-table>
-
-</p-card>
+        @default {
+        {{row[column.key]}}
+        }
+        }
+    </ng-template>
+</app-table>

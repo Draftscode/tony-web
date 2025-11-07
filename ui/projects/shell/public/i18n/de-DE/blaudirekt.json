@@ -2,6 +2,9 @@
     "blaudirekt": {
         "search": {
             "customer": "Blaudirekt Kunden-Suche"
+        },
+        "broker": {
+            "plural": "Versicherer"
         }
     }
 }

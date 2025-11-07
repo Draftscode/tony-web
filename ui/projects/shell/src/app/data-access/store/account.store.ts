@@ -61,7 +61,11 @@ export const AccountStore = signalStore(
             }
         }
     })),
-
+    withComputed(store => ({
+        abbrev: computed(() => {
+            return `${store.me.value()?.firstname?.slice(0, 1)?.toUpperCase() ?? ''}${store.me.value()?.lastname?.slice(0, 1)?.toUpperCase() ?? ''}`;
+        }),
+    })),
     withHooks(store => ({
         onInit: () => {
             store.getCredentials();

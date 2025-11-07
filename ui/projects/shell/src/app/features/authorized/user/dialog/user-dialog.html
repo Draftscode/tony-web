@@ -38,9 +38,11 @@
     </div>
 
     <div class="flex flex-col min-w-[300px]">
-        <label for="brokers">{{'brokers.plural'|translate}}</label>
+        <label for="brokers">{{'blaudirekt.broker.plural'|translate}}</label>
         <p-multiselect [filter]="false" appendTo="body" inputId="brokers" [options]="brokerStore.brokers.value().items"
-            formControlName="brokers" optionLabel="name" placeholder="Select Brokers" class="w-full" />
+            formControlName="brokers" optionLabel="name"
+            [placeholder]="'utils.select.value'|translate:{value:'blaudirekt.broker.plural'|translate}"
+            class="w-full" />
     </div>
 </form>
 <p-divider />

@@ -11,7 +11,7 @@
         </div>
 
         <div class="flex flex-col">
-            <span class="text-xl">Links</span>
+            <span class="text-xl">{{'label.links'|translate}}</span>
             <div class="flex flex-col">
 
                 @for(link of customer.links; track link.id) {
@@ -23,7 +23,8 @@
                 }
             </div>
             <div class="flex justify-end">
-                <p-button label="add link" icon="pi pi-plus" (onClick)="customerStore.createLink(customer)" />
+                <p-button [label]="'utils.create.value' | translate: {value: 'label.link'|translate}" icon="pi pi-plus"
+                    (onClick)="customerStore.createLink(customer)" />
             </div>
         </div>
     </div>

@@ -1,39 +1,35 @@
-<p-card class="flex flex-col w-full h-full overflow-auto">
-    @let divisions = divisionStore.divisions.value();
-    <span class="text-2xl">{{'insurer.plural'|translate}} ({{divisions?.total ?? 0}})</span>
-    <app-list-search [query]="divisionStore.filter.query()" (queryChange)="divisionStore.search({query: $event})" />
-    <app-table [sortField]="divisionStore.filter.sortField()" [sortOrder]="divisionStore.filter.sortOrder()"
-        class="w-full h-full overflow-auto" (lazyLoad)="onLazyLoad($event)" [rowsPerPage]="100"
-        [totalRows]="divisions?.total ?? 0" [items]="divisions?.items ?? []" [config]="divisionTableConfig()"
-        [disabled]="divisionStore.isLoading()">
-        <ng-template #column let-column>
-            {{column.label | translate | titlecase }}
-        </ng-template>
-        <ng-template #cell let-row let-column="column">
-            @switch(column.key) {
-            @case('blocks') {
-            <div class="flex gap-1">
-                {{row.blocks?.length ?? 0}}
-            </div>
-            }
-            @case ('actions') {
-            <div class="flex w-full justify-end">
-                <p-button (onClick)="po.toggle($event)" icon="pi pi-ellipsis-v" [text]="true" />
-                <p-popover #po appendTo="body">
-                    <ng-template #content>
-                        <div class="flex flex-col">
-                            <p-button (onClick)="createBlock(row)" label="Baustein hinzufügen" icon="pi pi-plus"
-                                [text]="true" />
-                        </div>
-                    </ng-template>
-                </p-popover>
-            </div>
-            }
-            @default {
-            {{row[column.key]}}
-            }
-            }
-        </ng-template>
-    </app-table>
-
-</p-card>
+@let divisions = divisionStore.divisions.value();
+<app-list-search [query]="divisionStore.filter.query()" (queryChange)="divisionStore.search({query: $event})" />
+<app-table [sortField]="divisionStore.filter.sortField()" [sortOrder]="divisionStore.filter.sortOrder()"
+    class="w-full h-full overflow-auto" (lazyLoad)="onLazyLoad($event)" [rowsPerPage]="100"
+    [totalRows]="divisions?.total ?? 0" [items]="divisions?.items ?? []" [config]="divisionTableConfig()"
+    [disabled]="divisionStore.isLoading()">
+    <ng-template #column let-column>
+        {{column.label | translate | titlecase }}
+    </ng-template>
+    <ng-template #cell let-row let-column="column">
+        @switch(column.key) {
+        @case('blocks') {
+        <div class="flex gap-1">
+            {{row.blocks?.length ?? 0}}
+        </div>
+        }
+        @case ('actions') {
+        <div class="flex w-full justify-end">
+            <p-button (onClick)="po.toggle($event)" icon="pi pi-ellipsis-v" [text]="true" />
+            <p-popover #po appendTo="body">
+                <ng-template #content>
+                    <div class="flex flex-col">
+                        <p-button (onClick)="createBlock(row)" label="Baustein hinzufügen" icon="pi pi-plus"
+                            [text]="true" />
+                    </div>
+                </ng-template>
+            </p-popover>
+        </div>
+        }
+        @default {
+        {{row[column.key]}}
+        }
+        }
+    </ng-template>
+</app-table>

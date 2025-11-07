@@ -3,6 +3,7 @@
         "label": "Versicherer",
         "plural": "Versicherungen",
         "logo": "logo",
-        "name": "Name"
+        "name": "Name",
+        "blocks": "Bausteine"
     }
 }
