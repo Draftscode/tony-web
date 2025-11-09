@@ -3,6 +3,7 @@ import { patchState, signalStore, withComputed, withHooks, withMethods, withProp
 import { lastValueFrom } from "rxjs";
 import { withResources } from "../../utils/signals";
 import { AuthService, Credentials } from "../provider/auth.service";
+import {Router} from "@angular/router";
 
 export const AccountStore = signalStore(
     { providedIn: 'root' },
@@ -17,6 +18,7 @@ export const AccountStore = signalStore(
         canRefresh: computed(() => !!store.credentials()?.refreshToken)
     })),
     withProps(store => ({
+        router: inject(Router),
         authService: inject(AuthService),
         setCredentials: (credentials: Credentials | null) => {
             if (credentials) {
@@ -41,6 +43,7 @@ export const AccountStore = signalStore(
     withMethods(store => ({
         logout: () => {
             store.setCredentials(null);
+            store.router.navigate(['/auth']);
         },
         login: async (username: string, password: string) => {
             const credentials = await lastValueFrom(store.authService.login(username, password));

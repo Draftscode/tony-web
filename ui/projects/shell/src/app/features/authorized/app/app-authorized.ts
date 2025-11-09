@@ -86,12 +86,6 @@ export default class App {
     });
   }
 
-
-  protected onLogout() {
-    this.accountStore.logout();
-    this.router.navigate(['/auth']);
-  }
-
   protected _toggleSidebar() {
     this._isSidebarOpen.update(s => !s);
   }
