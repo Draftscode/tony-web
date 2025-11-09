@@ -152,6 +152,10 @@ export default class FormComponent {
             }
         });
 
+        if (!ref) {
+            return;
+        }
+
         const result = await lastValueFrom(ref.onClose.pipe(take(1)));
 
         if (result?.type === 'manually') {
@@ -295,6 +299,10 @@ export default class FormComponent {
             }
         );
 
+        if (!ref) {
+            return;
+        }
+
         const result = await lastValueFrom(ref.onClose.pipe(take(1)));
         if (result?.type === 'manually') {
             const control = this._formGroup.controls.groups.at(groupIndex).controls.items.at(rowIndex);
@@ -364,16 +372,17 @@ export default class FormComponent {
             }
         );
 
-        ref.onClose.pipe(take(1)).subscribe(result => {
-            if (result?.type === 'manually') {
+        if (!ref) {
+            return;
+        }
 
-                const control = this._formGroup.controls.groups.at(groupIndex).controls.items;
+        const result = await lastValueFrom(ref.onClose.pipe(take(1)));
+        if (result?.type === 'manually') {
 
-                this.addRow(control, result.data);
-            }
-        });
+            const control = this._formGroup.controls.groups.at(groupIndex).controls.items;
 
-
+            this.addRow(control, result.data);
+        }
     }
 
 }

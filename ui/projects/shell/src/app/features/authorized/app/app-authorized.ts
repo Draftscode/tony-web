@@ -3,7 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Router, RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, TreeNode } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
@@ -21,14 +21,14 @@ import { BlaudirektService } from '../../../data-access/provider/blaudirekt.serv
 import { ThemeService } from '../../../data-access/provider/theme.service';
 import { AccountStore } from '../../../data-access/store/account.store';
 import { SettingsStore } from '../../../data-access/store/settings.store';
+import { AppMenuComponent } from '../../../ui/app-menu/app-menu.component';
 import { getMasterDataItems } from '../master-data/master-data.items';
 import { SettingsComponent } from '../settings/settings.component';
-import { MenuItemComponent } from './item/menu-item.component';
 
 @Component({
   selector: 'app',
   imports: [
-    RouterOutlet, MessageModule, DrawerModule, MenuItemComponent,
+    RouterOutlet, MessageModule, DrawerModule, AppMenuComponent,
     DividerModule, TooltipModule, SettingsComponent, AvatarModule, RippleModule,
     ToastModule, MenubarModule, TranslatePipe, ScrollerModule,
     ButtonModule, ProgressSpinnerModule],
@@ -51,29 +51,27 @@ export default class App {
   protected readonly menuState = signal<'minimal' | 'expanded'>('minimal');
 
   protected readonly menuItems = computed<MenuItem[]>(() => {
-    const items: MenuItem[] = [{
-      id: 'files',
-      routerLink: ['files'],
+    const items: TreeNode[] = [{
+      key: 'files',
+      data: {
+        routerLink: ['files'],
+      },
       label: 'label.files',
       icon: 'pi pi-folder-open'
     }];
 
     if (this.accountStore.me.value()?.roles.find(role => role.name === 'admin')) {
-      // items.push({
-      //   id: 'users',
-      //   routerLink: ['users'],
-      //   label: 'label.users',
-      //   icon: 'pi pi-sitemap'
-      // });
-    }
 
-    items.push({
-      id: 'administration',
-      routerLink: ['administration'],
-      label: 'administration.label',
-      icon: 'pi pi-database',
-      items: getMasterDataItems(this.accountStore.me.value()),
-    })
+      items.push({
+        key: 'administration',
+        data: {
+          routerLink: ['administration'],
+        },
+        label: 'administration.label',
+        icon: 'pi pi-database',
+        children: getMasterDataItems(this.accountStore.me.value()),
+      });
+    }
 
     return items;
   });

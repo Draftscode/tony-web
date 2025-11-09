@@ -104,6 +104,10 @@ export class FormDialogComponent {
             closable: true,
         });
 
+        if (!ref) {
+            return;
+        }
+
         const result = await lastValueFrom(ref.onClose.pipe(take(1)));
         if (result?.type === 'manually') {
             this._formGroup.controls.scope.patchValue(result.data);

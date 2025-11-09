@@ -8,7 +8,7 @@ export function getMasterDataItems(me: User | null): TreeNode[] {
         items.push({
             key: 'users',
             data: {
-                routerLink: ['users'],
+                routerLink: ['administration', 'users'],
             },
             label: 'label.users',
             icon: 'pi pi-sitemap'
@@ -18,7 +18,7 @@ export function getMasterDataItems(me: User | null): TreeNode[] {
         items.push({
             key: 'customer',
             data: {
-                routerLink: ['customer'],
+                routerLink: ['administration', 'customer'],
             },
             label: 'customer.label',
             icon: 'pi pi-users',
@@ -29,7 +29,7 @@ export function getMasterDataItems(me: User | null): TreeNode[] {
         items.push({
             key: 'insurer',
             data: {
-                routerLink: ['insurer'],
+                routerLink: ['administration', 'insurer'],
             },
             label: 'insurer.label',
             icon: 'pi pi-crown'
@@ -39,7 +39,7 @@ export function getMasterDataItems(me: User | null): TreeNode[] {
         items.push({
             key: 'division',
             data: {
-                routerLink: ['division'],
+                routerLink: ['administration', 'division'],
             },
             label: 'administration.division.label',
             icon: 'pi pi-home'

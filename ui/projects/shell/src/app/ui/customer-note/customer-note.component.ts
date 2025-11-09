@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, computed, input, output, Signal } from "@angular/core";
 import { ButtonModule } from "primeng/button";
 import { DividerModule } from "primeng/divider";
 import { MessageModule } from "primeng/message";
@@ -20,12 +20,7 @@ export class CustomerNoteComponent {
     remove = output<void>();
     note = input<BlaudirektNote>();
 
-    protected readonly severity = computed(() => {
-        switch (this.note()?.type) {
-            case '':
-                return '';
-            default:
-                return 'secondary';
-        }
+    protected readonly severity: Signal<'secondary'> = computed(() => {
+        return 'secondary';
     });
 }

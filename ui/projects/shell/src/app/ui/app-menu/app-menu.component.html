@@ -1,0 +1,31 @@
+@for(item of items(); track item.key) {
+<ng-container [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: item }" />
+}
+
+
+<ng-template #itemTemplate let-item>
+    @let isExpanded = ref.classList.contains('expanded');
+    <a #ref [pTooltip]="item.label|translate" (click)="isSmall() && menuState()==='expanded'?null:null"
+        [class]="`flex w-full justify-between items-center p-4 gap-2 dark:text-gray-300`"
+        [routerLink]="item.data.routerLink" [queryParams]="item.data.queryParams" routerLinkActive="bg-highlight"
+        [routerLinkActiveOptions]="{ exact: false }">
+        <div class="flex gap-2 w-full items-center">
+
+            <i [class]="`${item.icon} ${menuState() === 'expanded'?'':'text-3xl'}`"></i>
+            @if(menuState() === 'expanded') {
+            <span>{{item.label|translate}}</span>
+            }
+        </div>
+        @if(item.children?.length && menuState() === 'expanded') {
+        <p-button (onClick)="toggle(ref)" size="small" [icon]="`pi pi-chevron-${isExpanded ? 'down':'up'}`"
+            [text]="true" />
+        }
+    </a>
+    @if(item.children?.length && menuState()==='expanded' && isExpanded) {
+    <div class=" flex w-full flex-col pl-2">
+        @for(child of item.children; track child.key) {
+        <ng-container [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: child }" />
+        }
+    </div>
+    }
+</ng-template>

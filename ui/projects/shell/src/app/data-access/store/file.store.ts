@@ -53,6 +53,10 @@ export const FileStore = signalStore(
                 modal: true,
             });
 
+            if (!ref) {
+                return null;
+            }
+
             return lastValueFrom(ref.onClose.pipe(
                 take(1),
                 switchMap(async result => {
@@ -120,6 +124,10 @@ export const FileStore = signalStore(
                 modal: true,
                 width: '420px'
             });
+
+            if(!ref) {
+                return null;
+            }
 
             return lastValueFrom(ref.onClose.pipe(
                 take(1),

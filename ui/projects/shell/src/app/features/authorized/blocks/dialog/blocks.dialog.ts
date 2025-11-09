@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, linkedSignal, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { applyEach, Control, form, required, schema, submit } from "@angular/forms/signals";
+import { applyEach, form, required, schema, submit, Field } from "@angular/forms/signals";
 import { TranslatePipe } from "@ngx-translate/core";
 import { ButtonModule } from "primeng/button";
 import { DynamicDialogConfig, DynamicDialogRef } from "primeng/dynamicdialog";
@@ -21,7 +21,7 @@ export const blockSchema = schema<BuildingBlock>((path) => {
     selector: 'app-blocks-dialog',
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: 'blocks.dialog.html',
-    imports: [SelectModule, Control, TranslatePipe, ButtonModule, InputTextModule, FormsModule],
+    imports: [SelectModule, TranslatePipe, Field, ButtonModule, InputTextModule, FormsModule],
 })
 export class BlocksDialog {
     protected readonly divisionStore = inject(DivisionStore);

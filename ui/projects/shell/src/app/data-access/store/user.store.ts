@@ -32,6 +32,10 @@ export const UserStore = signalStore(
                 header: store.translate.instant('utils.create.value', { value: store.translate.instant('label.user') })
             });
 
+            if (!ref) {
+                return null;
+            }
+
             return lastValueFrom(ref.onClose.pipe(take(1), switchMap(async result => {
                 if (result?.type === 'manually') {
                     const newUser = await lastValueFrom(store.userService.createUser(result.data));
@@ -73,6 +77,10 @@ export const UserStore = signalStore(
                 modal: true,
                 header: store.translate.instant('utils.edit.value', { value: store.translate.instant('label.user') })
             });
+
+            if (!ref) {
+                return null;
+            }
 
             return lastValueFrom(ref.onClose.pipe(take(1), switchMap(async result => {
                 if (result?.type === 'manually') {

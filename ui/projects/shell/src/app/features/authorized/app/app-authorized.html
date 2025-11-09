@@ -38,9 +38,7 @@
                     </div>
                     <p-divider />
                 </div>
-                @for(item of menuItems(); track item.routerLink) {
-                <app-menu-item [item]="item" [isSmall]="isSmall()" [menuState]="menuState()" />
-                }
+                <app-menu [items]="menuItems()" [isSmall]="isSmall()" [menuState]="menuState()" />
             </div>
             }
 

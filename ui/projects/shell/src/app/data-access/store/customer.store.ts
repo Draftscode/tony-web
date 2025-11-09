@@ -58,6 +58,10 @@ export const CustomerStore = signalStore(
                 width: '420px'
             });
 
+            if (!ref) {
+                return;
+            }
+
             const response = await lastValueFrom(ref.onClose.pipe(take(1)));
             if (response?.type === 'manually') {
                 await lastValueFrom(store.blaudirectService.editNote(customerId, note.id, response.data));
@@ -71,6 +75,10 @@ export const CustomerStore = signalStore(
                 closable: true,
                 width: '420px'
             });
+
+            if (!ref) {
+                return;
+            }
 
             const response = await lastValueFrom(ref.onClose.pipe(take(1)));
             if (response?.type === 'manually') {

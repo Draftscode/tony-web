@@ -51,6 +51,10 @@ export const DivisionStore = signalStore(
                 closable: true,
             });
 
+            if (!ref) {
+                return;
+            }
+
             const result = await lastValueFrom(ref.onClose.pipe(take(1)));
             if (result?.type === 'manually') {
                 await lastValueFrom(store.blaudirectService.editDivision(division.id, { blocks: result.data }));

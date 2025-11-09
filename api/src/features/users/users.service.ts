@@ -21,21 +21,26 @@ export class UsersService implements IUserRepository {
 
     async initializeApp() {
         await this.datasource.manager.transaction(async manager => {
-            const e = await manager.findOne(UserEntity, { where: { username: 'admin' } })
-            if (e) {
-                await manager.upsert(RoleEntity, [
-                    { name: 'admin' },
-                    { name: 'insurers' },
-                    { name: 'customers' },
-                    { name: 'divisions' },
-                    { name: 'users' },
-                ], {
-                    conflictPaths: ['name']
-                });
+            let e = await manager.findOne(UserEntity, { where: { username: 'admin' } });
 
-                e.roles = [await manager.findOneOrFail(RoleEntity, { where: { name: 'admin' } })]
-                e.password = encodePassword('tonym');
+            if (!e) {
+                e = manager.create(UserEntity, { username: 'admin' });
             }
+
+            await manager.upsert(RoleEntity, [
+                { name: 'admin' },
+                { name: 'insurers' },
+                { name: 'customers' },
+                { name: 'divisions' },
+                { name: 'users' },
+            ], {
+                conflictPaths: ['name']
+            });
+            e.firstname = 'admin';
+            e.lastname = '';
+            e.roles = [await manager.findOneOrFail(RoleEntity, { where: { name: 'admin' } })]
+            e.password = encodePassword('tonym');
+
 
             await manager.save(e);
         })
