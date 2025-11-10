@@ -1,13 +1,8 @@
-@for(item of items(); track item.key) {
-<ng-container [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: item }" />
-}
-
-
-<ng-template #itemTemplate let-item let-expanded="expanded">
+<ng-template #itemTemplate let-item let-expanded="expanded" let-parent="parent">
     @let isExpanded = item.data.class?.includes('expanded');
     <a #ref
-        [class]="`flex w-full justify-between items-center p-4 gap-2 dark:text-gray-300 relative ${item.styleClass ?? ''}`"
-        (click)="item.children?.length && menuState() ==='minimal'? toggle($event,item) : null"
+        [class]="`cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-800 flex w-full justify-between items-center p-4 gap-2 dark:text-gray-300 relative ${item.styleClass ?? ''}`"
+        (click)="item.children?.length && menuState() ==='minimal' ? toggle($event,item) : null"
         [routerLink]="!item.children?.length ? item.data.routerLink:undefined" [queryParams]="item.data.queryParams"
         routerLinkActive="bg-highlight" [routerLinkActiveOptions]="{ exact: false }">
         <div class="flex gap-2 w-full items-center">
@@ -24,24 +19,68 @@
         }
 
 
-        <div class="absolute right-0 w-[150px] top-0 left-[90%]" [class.hidden]="!isExpanded"
-            (click)="$event.stopPropagation()">
-            <div class=" flex w-full flex-col p-2 bg-white dark:bg-gray-900 shadow-lg rounded-xl">
-                @for(child of item.children; track child.key) {
-                <ng-container [ngTemplateOutlet]="itemTemplate"
-                    [ngTemplateOutletContext]="{ $implicit: child, expanded: true }" />
-                }
-            </div>
+        @if(isExpanded && menuState() ==='minimal') {
+        <div class="absolute right-0 w-[150px] top-0 left-[90%]" (click)="$event.stopPropagation()">
+            <p-card class="p-0 overflow-hidden" [pt]="{ body:'p-0' }">
+                <div class="flex flex-col">
+                    @for(child of item.children; track child.key) {
+                    <ng-container [ngTemplateOutlet]="itemTemplate"
+                        [ngTemplateOutletContext]="{ $implicit: child, expanded: true, parent: item }" />
+                    }
+                </div>
 
+            </p-card>
         </div>
+        }
     </a>
     @if(item.children?.length) {
     @if((menuState()==='expanded' || expanded) && isExpanded) {
     <div class=" flex w-full flex-col pl-2">
         @for(child of item.children; track child.key) {
-        <ng-container [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: child }" />
+        <ng-container [ngTemplateOutlet]="itemTemplate"
+            [ngTemplateOutletContext]="{ $implicit: child , parent: item}" />
         }
     </div>
     }
     }
 </ng-template>
+
+
+
+<div class="h-full w-full flex overflow-hidden">
+    @if(!isSmall() || menuState() === 'expanded') {
+    <div
+        [class]="`z-2 h-full ${menuState() === 'expanded'?'w-[220px]':'w-[48px]'} bg-surface-0 dark:bg-surface-900! 
+                border-r-1 border-surface-200 gap-2 dark:border-surface-600 flex flex-col ${isSmall() && menuState() === 'expanded' ? 'absolute left-0 top-0':''}`">
+
+        <div class="flex justify-center mt-2 gap-2 p-1">
+            @if(startRef()) {
+            <ng-container [ngTemplateOutlet]="startRef()"
+                [ngTemplateOutletContext]="{ $implicit: menuState() === 'expanded' }" />
+            }
+        </div>
+        <div class="w-full relative">
+            <div class="absolute -right-2 top-1 z-1">
+                <i (click)="toggleMenuState()"
+                    [class]="`pi ${menuState() === 'expanded'?'pi-chevron-left':'pi-chevron-right'} rounded-full border-1 border-surface-200 p-1 bg-white hover:bg-surface-200 cursor-pointer text-xs`"
+                    pRipple></i>
+            </div>
+            <p-divider />
+        </div>
+        @for(item of items(); track item.key) {
+        <ng-container [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: item }" />
+        }
+
+    </div>
+    }
+    <div class="w-full h-full flex overflow-auto flex-col relative z-1">
+        @if(isSmall() && menuState() === 'expanded') {
+        <div (click)="toggleMenuState()"
+            class="backdrop absolute top-0 left-0 w-full h-full z-1 bg-gray-950 opacity-50">
+        </div>
+        }
+        @if(contentRef()) {
+        <ng-container [ngTemplateOutlet]="contentRef()" />
+        }
+    </div>
+</div>

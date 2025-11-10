@@ -76,15 +76,7 @@ export default class App {
     return items;
   });
 
-  protected toggleMenuState() {
-    this.menuState.update(state => {
-      if (state === 'minimal') {
-        return 'expanded';
-      }
 
-      return 'minimal';
-    });
-  }
 
   protected _toggleSidebar() {
     this._isSidebarOpen.update(s => !s);

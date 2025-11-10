@@ -622,10 +622,10 @@ export class BlaudirektService {
                 }
             }
 
-            await this.fcm.broadcastToTopic('all', 'all', JSON.stringify({
-                message: 'system.synchronization.done',
-                data: {}
-            }));
+            // await this.fcm.broadcastToTopic('all', 'all', JSON.stringify({
+            //     message: 'system.synchronization.done',
+            //     data: {}
+            // }));
             this.logger.log('Synchronized data from blaudirekt!');
         } finally {
             this.isSynching = false;

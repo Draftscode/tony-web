@@ -2,52 +2,28 @@
 <div class="flex w-full relative h-full overflow-hidden">
     <div class="grow w-full h-full flex flex-col overflow-hidden main-content bg-surface-100 dark:bg-surface-950!"
         [class.is-shifted]="_isSidebarOpen()">
+        <app-menu class="flex w-full h-full" #menu [items]="menuItems()">
+            <ng-template #start let-isExpanded>
+                <p-button (onClick)="settingsStore.toggle()" [text]="true" [rounded]="true" size="small"
+                    styleClass="p-0">
+                    <p-avatar [label]="accountStore.abbrev()" shape="circle" size="large" />
+                </p-button>
+                @if(isExpanded) {
+                <div class="flex items-center space-x-1 gap-2 flex-col">
+                    <img [src]="'./images/logo-raw-no-text'+(_themeService.isDark()?'-dark':'')+'.png'"
+                        [style.height]="'28px'" alt="Logo">
 
-
-        <div class="h-full w-full flex overflow-hidden">
-
-            @if(!isSmall() || menuState() === 'expanded') {
-            <div
-                [class]="`z-2 h-full ${menuState() === 'expanded'?'w-[220px]':'w-[48px]'} bg-surface-0 dark:bg-surface-900! 
-                border-r-1 border-surface-200 gap-2 dark:border-surface-600 flex flex-col ${isSmall() && menuState() === 'expanded' ? 'absolute left-0 top-0':''}`">
-
-                <div class="flex justify-center mt-2 gap-2 p-1">
-                    <p-button (onClick)="settingsStore.toggle()" [text]="true" [rounded]="true" size="small"
-                        styleClass="p-0">
-                        <p-avatar [label]="accountStore.abbrev()" shape="circle" size="large" />
-                    </p-button>
-                    @if(menuState() === 'expanded') {
-                    <div class="flex items-center space-x-1 gap-2 flex-col">
-                        <img [src]="'./images/logo-raw-no-text'+(_themeService.isDark()?'-dark':'')+'.png'"
-                            [style.height]="'28px'" alt="Logo">
-
-                        @let brokers = accountStore.me.value()?.brokers ?? [];
-                        @if(brokers.length) {
-                        <span class="text dark:text-gray-300">
-                            Hallo <span class="font-bold"> {{brokers[0].name}} </span>
-                        </span>
-                        }
-                    </div>
+                    @let brokers = accountStore.me.value()?.brokers ?? [];
+                    @if(brokers.length) {
+                    <span class="text dark:text-gray-300">
+                        Hallo <span class="font-bold"> {{brokers[0].name}} </span>
+                    </span>
                     }
                 </div>
-                <div class="w-full relative">
-                    <div class="absolute -right-2 top-1 z-1">
-                        <i (click)="toggleMenuState()"
-                            [class]="`pi ${menuState() === 'expanded'?'pi-chevron-left':'pi-chevron-right'} rounded-full border-1 border-surface-200 p-1 bg-white hover:bg-surface-200 cursor-pointer text-xs`"
-                            pRipple></i>
-                    </div>
-                    <p-divider />
-                </div>
-                <app-menu [items]="menuItems()" [isSmall]="isSmall()" [menuState]="menuState()" />
-            </div>
-            }
-
-            <div class="w-full h-full flex overflow-auto flex-col relative z-1">
-                @if(isSmall() && menuState() === 'expanded') {
-                <div (click)="toggleMenuState()"
-                    class="backdrop absolute top-0 left-0 w-full h-full z-1 bg-gray-950 opacity-50">
-                </div>
                 }
+            </ng-template>
+
+            <ng-template #content>
                 <p-drawer (visibleChange)="settingsStore.toggle($event)" [visible]="settingsStore.isVisible()"
                     [header]="'settings.menu.label'|translate" position="right">
                     <app-settings />
@@ -62,7 +38,7 @@
                                 <div class="flex items-center space-x-1 gap-2">
                                     @if(menuState() === 'minimal' && isSmall()) {
                                     <p-button icon="pi pi-bars" [text]="true" tooltipPosition="bottom" pTooltip="Menu"
-                                        (onClick)="toggleMenuState()" />
+                                        (onClick)="menu.toggleMenuState()" />
                                     }
                                 </div>
                             </ng-template>
@@ -79,25 +55,8 @@
                         <router-outlet />
                     </div>
                 </div>
-                <!-- @if(isSmall()) {
-                <div class="flex w-full justify-center gap-2
-                 bg-surface-0 dark:bg-surface-900 border-t-1 border-surface-200 dark:border-surface-600">
-                    @for(item of menuItems(); track item.routerLink) {
-
-                    <p-button [text]="true" [routerLink]="item.routerLink" [queryParams]="item.queryParams"
-                        routerLinkActive="bg-highlight" [routerLinkActiveOptions]="{ exact: false }"
-                        [pTooltip]="item.label|translate">
-                        <div class="flex flex-col gap-1 justify-center items-center">
-                            <i [class]="`text-3xl ${item.icon}`"></i>
-                            <span class="text-xs">{{item.label|translate}}</span>
-                        </div>
-                    </p-button>
-
-                    }
-                </div>
-                } -->
-            </div>
-        </div>
+            </ng-template>
+        </app-menu>
     </div>
 </div>
 
