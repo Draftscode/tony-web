@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, effect, inject, signal, untracked } from "@angular/core";
+import { DatePipe } from "@angular/common";
+import { ChangeDetectorRef, Component, computed, effect, inject, signal, untracked } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -20,7 +21,9 @@ import { TextareaModule } from 'primeng/textarea';
 import { TooltipModule } from "primeng/tooltip";
 import { distinctUntilChanged, lastValueFrom, map, take } from "rxjs";
 import { BlaudirektCompany } from "../../../data-access/provider/blaudirekt.service";
+import { AccountStore } from "../../../data-access/store/account.store";
 import { FileStore } from "../../../data-access/store/file.store";
+import { MessageStore } from "../../../data-access/store/message.store";
 import { FallbackImageDirective } from "../../../utils/fallback-image.directive";
 import { normalizeSuggestion } from "../../../utils/normalize-suggestion";
 import { Content, TableRow } from "../../../utils/to-pdf";
@@ -90,13 +93,13 @@ export type FormType = {
 @Component({
     host: { class: 'w-full h-full p-4 m-auto' },
     selector: 'app-form',
-    imports: [AutoCompleteModule, TranslatePipe, DatePickerModule,
+    imports: [AutoCompleteModule, TranslatePipe, DatePickerModule, DatePipe,
         InputTextModule, TableModule, ProgressBarModule, DialogModule, SelectModule,
         TextareaModule, ReactiveFormsModule, CardModule, TotalPipe, FallbackImageDirective,
         AutoCompleteModule, ButtonModule, DividerModule, CDatePipe, TooltipModule,
         SavingsPipe, ExistedPipe, NewPipe, MonthlyPipe, PopoverModule
     ],
-    providers: [CDatePipe],
+    providers: [CDatePipe, MessageStore],
     templateUrl: 'form.component.html',
     styleUrl: 'form.component.scss',
 })
@@ -113,6 +116,11 @@ export default class FormComponent {
     private readonly router = inject(Router);
     private readonly ngxTranslate = inject(TranslateService);
     protected readonly genders = signal(['male', 'female', 'other']);
+
+    protected readonly messageStore = inject(MessageStore);
+    protected readonly messages = computed(() => this.messageStore.messages.hasValue() ? this.messageStore.messages.value() : { items: [], total: 0 });
+    private readonly accountStore = inject(AccountStore);
+    protected readonly userId = computed(() => this.accountStore.me.hasValue() ? this.accountStore.me.value()?.id : null);
 
     protected readonly _formGroup = new FormGroup<FormType>({
         persons: new FormArray<FormGroup<PersonType>>([]),
@@ -180,6 +188,9 @@ export default class FormComponent {
     }
 
     constructor() {
+        this.messageStore.connectFile(this._filename);
+        this.messageStore.connectUser(this.userId);
+
         effect(() => {
             const isLoading = this.fileStore.isLoading();
             if (isLoading) {

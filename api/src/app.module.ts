@@ -11,6 +11,7 @@ import { LinksModule } from './features/links/links.module';
 import { RolesModule } from './features/roles/roles.module';
 import { UserModule } from './features/users/users.module';
 import { BrokerModule } from './features/broker/broker.module';
+import { NotesModule } from './features/notes/notes.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { BrokerModule } from './features/broker/broker.module';
     AuthModule,
     LinksModule,
     BrokerModule,
+    NotesModule,
     UserModule,
     ScheduleModule.forRoot(),
     ConfigModule.forRoot(),

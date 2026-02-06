@@ -41,8 +41,27 @@
         <label for="brokers">{{'blaudirekt.broker.plural'|translate}}</label>
         <p-multiselect [filter]="false" appendTo="body" inputId="brokers" [options]="brokerStore.brokers.value().items"
             formControlName="brokers" optionLabel="name"
-            [placeholder]="'utils.select.value'|translate:{value:'blaudirekt.broker.plural'|translate}"
-            class="w-full" />
+            [placeholder]="'utils.select.value'|translate:{value:'blaudirekt.broker.plural'|translate}" class="w-full">
+
+        </p-multiselect>
+    </div>
+
+    <div class="flex flex-col min-w-[300px]">
+        <label for="users">{{'auth.user.label'|translate}}</label>
+        <p-multiselect [filter]="false" appendTo="body" inputId="users" [options]="userStore.users()"
+            formControlName="users" optionLabel="username"
+            [placeholder]="'utils.select.value'|translate:{value:'auth.user.label'|translate}" class="w-full">
+            <ng-template #selecteditems let-item>
+                <div class="flex flex-wrap gap-1">
+                    @for(name of item; track name; let last = $last) {
+                    <span>{{name.username}}</span>
+                    @if(!last) {
+                    ,
+                    }
+                    }
+                </div>
+            </ng-template>
+        </p-multiselect>
     </div>
 </form>
 <p-divider />

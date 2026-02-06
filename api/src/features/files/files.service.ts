@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import puppeteer from "puppeteer";
 import { FileEntity } from "src/entities/file.entity";
 import { UserEntity } from "src/entities/user.entity";
-import { DataSource, ILike } from "typeorm";
+import { DataSource, ILike, In } from "typeorm";
 import { FileDataGroup, FileDataPerson } from "./files.model";
 import { usePdfPreset } from "./pdf.preset";
 
@@ -21,10 +21,11 @@ export type ImportedFileWrapper = {
 export class FilesService {
     constructor(private readonly dataSource: DataSource) { }
 
-    async getAll(query: string) {
+    async getAll(query: string, user: UserEntity) {
         const [items, total] = await this.dataSource.manager.findAndCount(FileEntity, {
             where: {
                 filename: ILike(`%${query}%`),
+                userId: user?.users?.length ? In(user.users.map(u => u.id)) : undefined
             },
             order: {
                 filename: 'ASC',

@@ -8,11 +8,12 @@ import { InputTextModule } from "primeng/inputtext";
 import { MultiSelectModule } from 'primeng/multiselect';
 import { PasswordModule } from "primeng/password";
 import { PickListModule } from 'primeng/picklist';
-import { Role } from "../../../../data-access/provider/auth.service";
+import { Role, User } from "../../../../data-access/provider/auth.service";
 import { Broker } from "../../../../data-access/provider/broker.service";
 import { BrokerStore } from "../../../../data-access/store/broker.store";
 import { RoleStore } from "../../../../data-access/store/role.store";
 import { RoleComponent } from "../../../../ui/role/role.component";
+import { UserStore } from "../../../../data-access/store/user.store";
 @Component({
     selector: 'app-user-dialog',
     templateUrl: 'user-dialog.html',
@@ -26,7 +27,7 @@ export class UserDialog {
     protected readonly pDialogConf = inject<DynamicDialogConfig<any>>(DynamicDialogConfig);
     protected readonly roleStore = inject(RoleStore);
     protected readonly brokerStore = inject(BrokerStore);
-
+    protected readonly userStore = inject(UserStore);
     protected readonly isNew = signal<boolean>(false);
     protected readonly isAdmin = signal<boolean>(true);
 
@@ -37,10 +38,12 @@ export class UserDialog {
         password: new FormControl<string | null>(null, []),
         brokers: new FormControl<Broker[]>([]),
         roles: new FormControl<Role[]>([]),
+        users: new FormControl<User[]>([]),
     });
 
     protected readonly assignedRoles = model<Role[]>([]);
     protected readonly assignedBrokers = model<Broker[]>([]);
+    protected readonly assignedUsers = model<User[]>([]);
 
     constructor() {
         this.formGroup.patchValue(this.pDialogConf.data ?? {});
@@ -50,6 +53,7 @@ export class UserDialog {
 
         this.assignedRoles.set(this.pDialogConf.data?.roles ?? []);
         this.assignedBrokers.set(this.pDialogConf.data?.brokers ?? []);
+        this.assignedUsers.set(this.pDialogConf.data?.users ?? []);
 
         if (!isNew) {
             this.formGroup.controls.username.disable();

@@ -1,6 +1,7 @@
 import type { FileData } from "src/features/files/files.model";
 import type { Relation } from 'typeorm';
-import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { NoteEntity } from "./note.entity";
 import { UserEntity } from "./user.entity";
 @Entity()
 export class FileEntity {
@@ -32,4 +33,7 @@ export class FileEntity {
     updateTimestamp() {
         this.lastModified = new Date().toISOString();
     }
+
+    @OneToMany(() => NoteEntity, note => note.user)
+    notes: Relation<NoteEntity[]>;
 }

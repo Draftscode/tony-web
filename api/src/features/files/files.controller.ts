@@ -14,8 +14,10 @@ export class FilesController {
 
     @UseGuards(JwtAuthGuard)
     @Get()
-    getFiles(@Query('q') query: string) {
-        return this.filesService.getAll(query);
+    getFiles(
+        @User() user:UserEntity,
+        @Query('q') query: string) {
+        return this.filesService.getAll(query,user);
     }
 
     @UseGuards(JwtAuthGuard)

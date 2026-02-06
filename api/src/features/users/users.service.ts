@@ -1,7 +1,7 @@
 import { BadRequestException, Inject, Injectable } from "@nestjs/common";
 import { BROKER_REPOSITORY } from "src/common/contracts/broker-repository.interface";
 import { UserEntity } from "src/entities/user.entity";
-import { DataSource, ILike } from "typeorm";
+import { DataSource, ILike, In } from "typeorm";
 import { ROLE_REPOSITORY } from "../../common/contracts/roles-repository.interface";
 import type { IUserRepository, UserRepositoryOptions } from "../../common/contracts/user-repository.interface";
 import { encodePassword } from "../auth/auth.service";
@@ -47,7 +47,7 @@ export class UsersService implements IUserRepository {
     }
 
     async getUser(id: number) {
-        return this.datasource.manager.findOneOrFail(UserEntity, { where: { id } });
+        return this.datasource.manager.findOneOrFail(UserEntity, { where: { id }, relations: { users: true } });
     }
 
     async createUser(user: Partial<UserEntity>) {
@@ -68,7 +68,7 @@ export class UsersService implements IUserRepository {
     }
 
     async getAll(query: string = '') {
-        const [items, total] = await this.datasource.manager.findAndCount(UserEntity, { where: { username: ILike(`%${query}%`) } });
+        const [items, total] = await this.datasource.manager.findAndCount(UserEntity, { where: { username: ILike(`%${query}%`) }, relations: { users: true } });
         return { items, total };
     }
 
@@ -90,6 +90,10 @@ export class UsersService implements IUserRepository {
         }
     }
 
+    async findByIds(ids: number[]) {
+        return this.datasource.manager.find(UserEntity, { where: { id: In(ids) } });
+    }
+
     async editUser(id: number, user: Partial<UserEntity>) {
         return this.datasource.manager.transaction(async manager => {
             if (user.roles !== undefined) {
@@ -98,6 +102,10 @@ export class UsersService implements IUserRepository {
 
             if (user.brokers !== undefined) {
                 user.brokers = await this.brokerRepo.findByIds(user.brokers?.map(r => r.id) ?? []);
+            }
+
+            if (user.users !== undefined) {
+                user.users = await this.findByIds(user.users.map(u => u.id));
             }
 
             delete user.password;

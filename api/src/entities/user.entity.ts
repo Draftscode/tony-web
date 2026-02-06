@@ -1,9 +1,10 @@
 import { Exclude } from 'class-transformer';
 import type { Relation } from 'typeorm';
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { FileEntity } from "./file.entity";
-import { RoleEntity } from './roles.entity';
 import { BrokerEntity } from './broker.entity';
+import { FileEntity } from "./file.entity";
+import { NoteEntity } from './note.entity';
+import { RoleEntity } from './roles.entity';
 @Entity()
 export class UserEntity {
     @PrimaryGeneratedColumn()
@@ -35,4 +36,11 @@ export class UserEntity {
     @ManyToMany(() => BrokerEntity, broker => broker.users, { eager: true, nullable: true })
     @JoinTable()
     brokers: Relation<BrokerEntity[]>;
+
+    @OneToMany(() => NoteEntity, note => note.user)
+    notes: Relation<NoteEntity[]>;
+
+    @ManyToMany(_ => UserEntity, user => user.users)
+    @JoinTable()
+    users: Relation<UserEntity[]>;
 }
