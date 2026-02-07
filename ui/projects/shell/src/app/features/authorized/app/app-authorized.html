@@ -8,7 +8,7 @@
     class="flex w-full h-full w-full bg-surface-50 dark:bg-surface-950" [mode]="menuMode">
     <ng-template #start>
         <div class="p-1 flex justify-between items-center w-full">
-            @let firstImage = !mainMenu.isMouseOver() && menuMode === 'slim';
+            <!-- @let firstImage = !mainMenu.isMouseOver() && menuMode === 'slim'; -->
             <!-- <img [src]="`${firstImage ?'images/logo/logo-plain.png':'images/logo/logo.png'}`"
                 class="h-[40px] w-auto flex-none overflow-visible object-contain" /> -->
             <div class="h-[28px] items-center flex p-1 mt-2">
@@ -47,7 +47,7 @@
                         (onClick)="mainMenu.toggle()" />
                     }
                     @if(!isVerySmall() && !isSmall()) {
-                    <!-- <p-card class="p-0 rounded-full overflow-hidden shrink-0 items-center gap-1" [pt]="{body:'p-0'}">
+                    <p-card class="p-0 rounded-full overflow-hidden shrink-0 items-center gap-1" [pt]="{body:'p-0'}">
                         <p-breadcrumb styleClass="px-3 py-2 text-sm" [model]="breadcrumbStore.pruned()"
                             [home]="breadcrumbStore.home()">
                             <ng-template #separator>|</ng-template>
@@ -58,7 +58,7 @@
                                 </a>
                             </ng-template>
                         </p-breadcrumb>
-                    </p-card> -->
+                    </p-card>
                     }
                     @if(!isVerySmall()) {
                     <!-- <ng-container [ngTemplateOutlet]="searchTemplate" /> -->

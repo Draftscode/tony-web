@@ -10,9 +10,10 @@
             }
         </div>
 
-        <div [cdkDropListDisabled]="isDragAndDropDisabled()" [class]="`flex shrink-0 min-h-[40px] flex-col w-full border-1 px-[0.2rem] flex flex-col w-full relative ${dragging() ?' border-dashed rounded border-primary bg-surface-100 dark:bg-surface-800' :'border-transparent'}`"
+        <div [cdkDropListDisabled]="isDragAndDropDisabled()"
+            [class]="`flex shrink-0 min-h-[40px] flex-col w-full border-1 px-[0.2rem] flex flex-col w-full relative ${dragging() ?' border-dashed rounded border-primary bg-surface-100 dark:bg-surface-800' :'border-transparent'}`"
             (cdkDropListDropped)="drop($event)" cdkDropList id="favoritesList" [cdkDropListData]="favorites()">
-            @for(item of favorites(); track item.id) {
+            @for(item of favorites(); track item) {
             <app-menu-item [favorites]="favorites()" [showLabel]="showLabel()" (dragStart)="dragStart()"
                 (dragEnd)="dragEnd()"
                 [class]="`max-w-full transition-all duration-500 ease-in-out flex ${mode() === 'slim' && item.items?.length ? '':''} ${mode() === 'slim'?'':'w-full'}`"
@@ -20,10 +21,10 @@
             }
         </div>
 
-        <div cdkDropList [cdkDropListDisabled]="isDragAndDropDisabled()" cdkDropListHasAnchor id="menuList" [cdkDropListConnectedTo]="['favoritesList']"
-            cdkDropListSortingDisabled [cdkDropListData]="items()"
+        <div cdkDropList [cdkDropListDisabled]="isDragAndDropDisabled()" cdkDropListHasAnchor id="menuList"
+            [cdkDropListConnectedTo]="['favoritesList']" cdkDropListSortingDisabled [cdkDropListData]="items()"
             [class]="`flex px-[0.2rem] flex-col h-full min-h-0 items-start gap-2 ${mode() === 'slim' && !isMouseOver()?'overflow-hidden':'overflow-x-hidden overflow-y-hidden hover:overflow-y-auto'}`">
-            @for(item of items(); track item.id) {
+            @for(item of items(); track item) {
             <app-menu-item [favorites]="favorites()" [showLabel]="showLabel()" (dragStart)="dragStart()"
                 (dragEnd)="dragEnd()"
                 [class]="`max-w-full transition-all duration-500 ease-in-out flex w-full ${mode() === 'slim'?'':'w-full'}`"

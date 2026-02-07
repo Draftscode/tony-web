@@ -1,8 +1,7 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { NgTemplateOutlet } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
+import { RouterModule, RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
@@ -20,11 +19,10 @@ import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { map } from 'rxjs';
 import * as packageJson from '../../../../../../../package.json';
-import { BlaudirektService } from '../../../data-access/provider/blaudirekt.service';
 import { ThemeService } from '../../../data-access/provider/theme.service';
 import { AccountStore } from '../../../data-access/store/account.store';
+import { BreadcrumbStore } from '../../../data-access/store/breadcrumb.store';
 import { SettingsStore } from '../../../data-access/store/settings.store';
-import { AppMenuComponent } from '../../../ui/app-menu/app-menu.component';
 import { getMasterDataItems } from '../master-data/master-data.items';
 import { SettingsComponent } from '../settings/settings.component';
 import { MainMenuComponent } from './main-menu/main-menu.component';
@@ -33,27 +31,20 @@ import { MainMenuComponent } from './main-menu/main-menu.component';
   selector: 'app',
   host: { class: 'w-full h-full contents' },
   imports: [
-    RouterOutlet, MessageModule, DrawerModule, AppMenuComponent, MainMenuComponent,
+    RouterOutlet, MessageModule, DrawerModule, MainMenuComponent,
     DividerModule, TooltipModule, SettingsComponent, AvatarModule, RippleModule, RouterModule,
-    ToastModule, MenubarModule, TranslatePipe, ScrollerModule, NgTemplateOutlet, Card, Breadcrumb,
+    ToastModule, MenubarModule, TranslatePipe, ScrollerModule, Card, Breadcrumb,
     ButtonModule, ProgressSpinnerModule],
   templateUrl: 'app-authorized.html',
   styleUrl: 'app-authorized.scss',
 })
 export default class App {
   protected readonly version = packageJson.version;
-  protected readonly _isSidebarOpen = signal<boolean>(false);
-  protected readonly _menuItems = signal<MenuItem[]>([]);
   protected readonly _themeService = inject(ThemeService);
-  private readonly router = inject(Router);
-  protected readonly blaudirectService = inject(BlaudirektService);
   protected readonly accountStore = inject(AccountStore);
   private readonly breakpointObserver = inject(BreakpointObserver);
-  protected readonly _isLogVisible = signal<boolean>(false);
-  protected readonly _logs = signal<string | null>(null);
   protected readonly settingsStore = inject(SettingsStore);
-
-  protected readonly menuState = signal<'minimal' | 'expanded'>('minimal');
+  protected readonly breadcrumbStore = inject(BreadcrumbStore);
 
   protected readonly isVerySmall = toSignal(this.breakpointObserver.observe([Breakpoints.XSmall]).pipe(map(s => s.matches)));
   protected readonly isSmall = toSignal(this.breakpointObserver.observe([Breakpoints.Small]).pipe(map(s => s.matches)));
@@ -85,9 +76,4 @@ export default class App {
 
     return items;
   });
-
-  protected _toggleSidebar() {
-    this._isSidebarOpen.update(s => !s);
-  }
-
 }

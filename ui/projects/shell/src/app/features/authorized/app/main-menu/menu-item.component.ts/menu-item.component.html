@@ -45,7 +45,7 @@
     @if(expanded()) {
     <div animate.enter="enter-animation" animate.leave="leave-animation"
         class="overflow-hidden flex flex-col gap-1 items-start transition-all duration-200 ease-in-out">
-        @for(child of _item.items; track child.id) {
+        @for(child of _item.items; track child) {
         <app-menu-item [favorites]="favorites()" [class]="''" [item]="child" [showLabel]="showLabel()"
             (dragStart)="onDragStarted()" (dragEnd)="onDragEnded()">
             @if(itemRef()) {
