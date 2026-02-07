@@ -1,64 +1,80 @@
-@if(true) {
-<div class="flex w-full relative h-full overflow-hidden">
-    <div class="grow w-full h-full flex flex-col overflow-hidden main-content bg-surface-100 dark:bg-surface-950!"
-        [class.is-shifted]="_isSidebarOpen()">
-        <app-menu class="flex w-full h-full" #menu [items]="menuItems()">
-            <ng-template #start let-isExpanded>
-                <p-button (onClick)="settingsStore.toggle()" [text]="true" [rounded]="true" size="small"
-                    styleClass="p-0">
-                    <p-avatar [label]="accountStore.abbrev()" shape="circle" size="large" />
-                </p-button>
-                @if(isExpanded) {
-                <div class="flex items-center space-x-1 gap-2 flex-col">
-                    <img [src]="'./images/logo-raw-no-text'+(_themeService.isDark()?'-dark':'')+'.png'"
-                        [style.height]="'28px'" alt="Logo">
+<p-drawer (visibleChange)="settingsStore.toggle($event)" [visible]="settingsStore.isVisible()"
+    [header]="'settings.menu.label'|translate" position="right">
+    <app-settings />
+</p-drawer>
 
-                    @let brokers = accountStore.me.value()?.brokers ?? [];
-                    @if(brokers.length) {
-                    <span class="text dark:text-gray-300">
-                        Hallo <span class="font-bold"> {{brokers[0].name}} </span>
-                    </span>
+@let menuMode = settingsStore.menuMode();
+<app-main-menu [items]="menuItems()" [expandOnHover]="true" [isDragAndDropDisabled]="true" #mainMenu
+    class="flex w-full h-full w-full bg-surface-50 dark:bg-surface-950" [mode]="menuMode">
+    <ng-template #start>
+        <div class="p-1 flex justify-between items-center w-full">
+            @let firstImage = !mainMenu.isMouseOver() && menuMode === 'slim';
+            <!-- <img [src]="`${firstImage ?'images/logo/logo-plain.png':'images/logo/logo.png'}`"
+                class="h-[40px] w-auto flex-none overflow-visible object-contain" /> -->
+            <div class="h-[28px] items-center flex p-1 mt-2">
+                <img [src]="'./images/logo-raw-no-text'+(_themeService.isDark()?'-dark':'')+'.png'"
+                    class="w-full max-w-[100px]" alt="Logo">
+            </div>
+            @if(mainMenu.isMouseOver() || menuMode === 'static') {
+            <p-button (onClick)="settingsStore.toggleMenuMode()" size="small" [text]="true" [rounded]="true"
+                [icon]="`pi pi-circle-${menuMode === 'slim'?'off':'on'}`" />
+            }
+        </div>
+    </ng-template>
+    <ng-template #end>
+        <p-divider />
+        <div class="w-full flex-col items-center justify-center flex mb-2 gap-2">
+            <div
+                [class]="`w-full px-2 flex gap-1 items-center ${ mainMenu.isMouseOver() || menuMode !== 'slim' ? '':'justify-center'}`">
+                <p-avatar [label]="avatarLabel()" shape="circle" />
+                @if(mainMenu.isMouseOver() || menuMode !== 'slim') {
+                <span>Hi</span>
+                <span class="text-muted font-semibold">{{accountStore.me.value()?.username}}</span>
+                }
+            </div>
+            @if(mainMenu.isMouseOver() || menuMode !== 'slim') {
+            <p-button icon="pi pi-sign-out" styleClass="w-full" class="w-full" [label]="'label.logout'|translate"
+                [text]="true" (onClick)="accountStore.logout()" />
+            }
+        </div>
+    </ng-template>
+    <ng-template #content>
+        <div class="flex w-full h-full flex-col">
+            <div class="flex w-full gap-1 justify-between p-2 items-center">
+                <div class="flex gap-2 items-center">
+                    @if(mainMenu.state() === 'collapsed') {
+                    <p-button icon="pi pi-bars" severity="secondary" [outlined]="true" [rounded]="true"
+                        (onClick)="mainMenu.toggle()" />
+                    }
+                    @if(!isVerySmall() && !isSmall()) {
+                    <!-- <p-card class="p-0 rounded-full overflow-hidden shrink-0 items-center gap-1" [pt]="{body:'p-0'}">
+                        <p-breadcrumb styleClass="px-3 py-2 text-sm" [model]="breadcrumbStore.pruned()"
+                            [home]="breadcrumbStore.home()">
+                            <ng-template #separator>|</ng-template>
+                            <ng-template #item let-item>
+                                <a class="cursor-pointer" [queryParams]="item.queryParams" [routerLink]="item.url">
+                                    <i [class]="item.icon"></i>
+                                    <span>{{item.label | translate}}</span>
+                                </a>
+                            </ng-template>
+                        </p-breadcrumb>
+                    </p-card> -->
+                    }
+                    @if(!isVerySmall()) {
+                    <!-- <ng-container [ngTemplateOutlet]="searchTemplate" /> -->
                     }
                 </div>
-                }
-            </ng-template>
-
-            <ng-template #content>
-                <p-drawer (visibleChange)="settingsStore.toggle($event)" [visible]="settingsStore.isVisible()"
-                    [header]="'settings.menu.label'|translate" position="right">
-                    <app-settings />
-                </p-drawer>
-
-                <div class="flex flex-col w-full h-full min-h-0 overflow-auto">
-                    <!-- navbar -->
-                    <div class="w-full flex items-center justify-between">
-                        <p-menubar class="w-full" class="w-full bg-transparent! border-none! rounded-none"
-                            [model]="_menuItems()">
-                            <ng-template #start>
-                                <div class="flex items-center space-x-1 gap-2">
-                                    @if(menuState() === 'minimal' && isSmall()) {
-                                    <p-button icon="pi pi-bars" [text]="true" tooltipPosition="bottom" pTooltip="Menu"
-                                        (onClick)="menu.toggleMenuState()" />
-                                    }
-                                </div>
-                            </ng-template>
-                            <ng-template #end>
-                                <div class="flex items-center space-x-1">
-                                    <p-button [rounded]="true" icon="pi pi-cog" [text]="true" size="large"
-                                        tooltipPosition="bottom" [pTooltip]="'settings.menu.open'|translate"
-                                        (onClick)="settingsStore.toggle()" />
-                                </div>
-                            </ng-template>
-                        </p-menubar>
-                    </div>
-                    <div class="flex w-full h-full flex-col overflow-auto min-h-0">
-                        <router-outlet />
-                    </div>
+                <div class="flex gap-2 items-center">
+                    <p-button icon="pi pi-cog" severity="secondary" [outlined]="true" [rounded]="true"
+                        (onClick)="settingsStore.toggle(true)" />
                 </div>
-            </ng-template>
-        </app-menu>
-    </div>
-</div>
+            </div>
+            <div class="min-h-0 flex flex-col overflow-auto p-2">
+                <router-outlet />
+            </div>
+        </div>
+    </ng-template>
+</app-main-menu>
+
 
 <p-toast />
-}

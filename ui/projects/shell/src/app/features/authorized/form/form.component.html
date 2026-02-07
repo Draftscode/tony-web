@@ -14,112 +14,80 @@
         }
         <div class="flex flex-col gap-2 md:flex-row">
 
+            <div class="flex flex-col gap-2">
+                <span class="text-xl font-semibold">Mandanteninfo</span>
 
-            <div formArrayName="persons" class="inline-flex flex-col space-y-2 w-full">
-                @for(person of _formGroup.controls.persons.controls; track person; let personIdx = $index) {
-                <div [formArrayName]="personIdx" class="inline-flex flex-col space-y-2 w-full">
+                <div formArrayName="persons" class="inline-flex flex-col space-y-2 w-full">
+                    @for(person of _formGroup.controls.persons.controls; track person; let personIdx = $index) {
+                    <div [formArrayName]="personIdx" class="inline-flex flex-col space-y-2 w-full">
 
-                    <div class="inline-flex space-x-4 justify-between">
-                        <div class="inline-flex flex-col space-y-1">
-                            <label for="firstname">{{'person.company'|translate}}</label>
-                            <input pSize="small" formControlName="company" pInputText id="company" />
+                        <div class="inline-flex space-x-4 justify-between">
+                            <div class="inline-flex flex-col space-y-1">
+                                <label for="firstname">{{'person.company'|translate}}</label>
+                                <input pSize="small" formControlName="company" pInputText id="company" />
+                            </div>
+                            <p-button icon="pi pi-trash" severity="warn" [text]="true" size="small"
+                                (onClick)="removePerson(personIdx)" />
                         </div>
-                        <p-button icon="pi pi-trash" severity="warn" [text]="true" size="small"
-                            (onClick)="removePerson(personIdx)" />
+                        <div class="inline-flex space-x-4">
+                            <div class="inline-flex flex-col space-y-1">
+                                <label for="gender">{{'person.gender'|translate}}</label>
+                                <p-select [options]="genders()" size="small" formControlName="gender" id="gender">
+                                    <ng-template #item let-item>
+                                        {{('label.salutation.'+item)|translate}}
+                                    </ng-template>
+                                    <ng-template #selectedItem>
+                                        {{('label.salutation.'+_formGroup.controls.persons.at(personIdx).controls.gender.value)|translate}}
+                                    </ng-template>
+                                </p-select>
+                            </div>
+
+                            <div class="inline-flex flex-col space-y-1">
+                                <label for="title">{{'person.title'|translate}}</label>
+                                <input pSize="small" formControlName="title" pInputText id="title" />
+                            </div>
+                        </div>
+                        <div class="inline-flex space-x-4">
+                            <div class="inline-flex flex-col space-y-1">
+                                <label for="firstname">{{'person.firstname'|translate}} *</label>
+                                <input pSize="small" formControlName="firstname" pInputText id="firstname" />
+                            </div>
+
+                            <div class="inline-flex flex-col space-y-1">
+                                <label for="lastname">{{'person.lastname'|translate}} *</label>
+                                <input pSize="small" formControlName="lastname" pInputText id="lastname" />
+                            </div>
+
+
+                        </div>
+
+                        <div class="inline-flex space-x-4">
+                            <div class="inline-flex flex-col space-y-1">
+                                <label for="firstname">{{'person.address.street'|translate}}</label>
+                                <input pSize="small" formControlName="street" pInputText id="street" />
+                            </div>
+                            <div class="inline-flex flex-col space-y-1">
+                                <label for="firstname">{{'person.address.no'|translate}}</label>
+                                <input pSize="small" formControlName="streetNo" pInputText id="streetNo" />
+                            </div>
+                        </div>
+                        <div class="inline-flex space-x-4">
+                            <div class="inline-flex flex-col space-y-1">
+                                <label for="firstname">{{'person.address.zip'|translate}}</label>
+                                <input pSize="small" formControlName="zipCode" pInputText id="zipCode" />
+                            </div>
+                        </div>
+                        <div class="inline-flex space-x-4">
+                            <div class="inline-flex flex-col space-y-1">
+                                <label for="firstname">{{'person.address.city'|translate}}</label>
+                                <input pSize="small" formControlName="city" pInputText id="city" />
+                            </div>
+                        </div>
                     </div>
-                    <div class="inline-flex space-x-4">
-                        <div class="inline-flex flex-col space-y-1">
-                            <label for="gender">{{'person.gender'|translate}}</label>
-                            <p-select [options]="genders()" size="small" formControlName="gender" id="gender">
-                                <ng-template #item let-item>
-                                    {{('label.salutation.'+item)|translate}}
-                                </ng-template>
-                                <ng-template #selectedItem>
-                                    {{('label.salutation.'+_formGroup.controls.persons.at(personIdx).controls.gender.value)|translate}}
-                                </ng-template>
-                            </p-select>
-                        </div>
-
-                        <div class="inline-flex flex-col space-y-1">
-                            <label for="title">{{'person.title'|translate}}</label>
-                            <input pSize="small" formControlName="title" pInputText id="title" />
-                        </div>
-                    </div>
-                    <div class="inline-flex space-x-4">
-                        <div class="inline-flex flex-col space-y-1">
-                            <label for="firstname">{{'person.firstname'|translate}} *</label>
-                            <input pSize="small" formControlName="firstname" pInputText id="firstname" />
-                        </div>
-
-                        <div class="inline-flex flex-col space-y-1">
-                            <label for="lastname">{{'person.lastname'|translate}} *</label>
-                            <input pSize="small" formControlName="lastname" pInputText id="lastname" />
-                        </div>
-
-
-                    </div>
-
-                    <div class="inline-flex space-x-4">
-                        <div class="inline-flex flex-col space-y-1">
-                            <label for="firstname">{{'person.address.street'|translate}}</label>
-                            <input pSize="small" formControlName="street" pInputText id="street" />
-                        </div>
-                        <div class="inline-flex flex-col space-y-1">
-                            <label for="firstname">{{'person.address.no'|translate}}</label>
-                            <input pSize="small" formControlName="streetNo" pInputText id="streetNo" />
-                        </div>
-                    </div>
-                    <div class="inline-flex space-x-4">
-                        <div class="inline-flex flex-col space-y-1">
-                            <label for="firstname">{{'person.address.zip'|translate}}</label>
-                            <input pSize="small" formControlName="zipCode" pInputText id="zipCode" />
-                        </div>
-                    </div>
-                    <div class="inline-flex space-x-4">
-                        <div class="inline-flex flex-col space-y-1">
-                            <label for="firstname">{{'person.address.city'|translate}}</label>
-                            <input pSize="small" formControlName="city" pInputText id="city" />
-                        </div>
-                    </div>
-                </div>
-                <p-divider />
-                }
-                <p-button (onClick)="addPerson()" icon="pi pi-plus" size="small" label="Person hinzufügen"
-                    severity="secondary" />
-            </div>
-            <p-divider [layout]="'vertical'" />
-            <div class="flex flex-col gap-2 overflow-auto min-h-[100px] w-full bg-gray-200 rounded p-2 max-h-[420px]">
-                <div class="flex h-full flex-col gap-2 w-full min--0 overflow-auto">
-
-                    <div class="w-full flex flex-col gap-2 p-2">
-                        @for(message of messages().items; track message.id) {
-                        @let me = message.userId === userId();
-                        <div class="flex" [class.justify-end]="me">
-                            <p-card class="w-[80%] my-message" [class.bg-highlight]="me">
-                                <ng-template #header>
-                                    <div class="flex w-full justify-end">
-                                        <p-button size="small" (onClick)="messageStore.delete(message.id)"
-                                            icon="pi pi-trash" [text]="true" />
-                                    </div>
-                                </ng-template>
-                                {{message.text}}
-                                <ng-template #footer>
-                                    <div class="flex w-full justify-between">
-                                        <span class="text-xs">{{message.user.username}}</span>
-                                        <span class="text-xs">{{message.createdAt |
-                                            date:('date.datetime'|translate)}}</span>
-                                    </div>
-                                </ng-template>
-                            </p-card>
-                        </div>
-                        }
-                    </div>
-                </div>
-                <div class="flex w-full gap-1 items-end">
-
-                    <textarea pInputTextarea [autoResize]="true" #chat class="w-full"></textarea>
-                    <p-button [disabled]="!chat.value" [rounded]="true" severity="primary" size="small"
-                        (onClick)="messageStore.send(chat.value); chat.value = ''" icon="pi pi-send" />
+                    <p-divider />
+                    }
+                    <p-button (onClick)="addPerson()" icon="pi pi-plus" size="small" label="Person hinzufügen"
+                        severity="secondary" />
                 </div>
             </div>
         </div>

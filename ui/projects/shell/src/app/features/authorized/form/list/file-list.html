@@ -49,8 +49,12 @@
                         </div>
                         }
                     </div>
-                    <p-button (onClick)="$event.stopPropagation(); op.toggle($event)" [text]="true"
-                        icon="pi pi-ellipsis-v" />
+                    <div class="flex gap-2 items-center">
+                        <p-button (onClick)="$event.stopPropagation(); chat.toggle($event)" icon="pi pi-comments"
+                            [text]="true" />
+                        <p-button size="small" (onClick)="$event.stopPropagation(); op.toggle($event)" [text]="true"
+                            icon="pi pi-ellipsis-v" />
+                    </div>
                 </div>
                 <p-popover #op>
                     <div class="flex flex-col">
@@ -58,7 +62,13 @@
                             icon="pi pi-pencil" [text]="true" />
                         <p-button [label]="'action.delete'|translate"
                             (onClick)="fileStore.deleteFile($event,item.filename)" icon="pi pi-trash" [text]="true" />
+
                     </div>
+                </p-popover>
+                <p-popover #chat>
+                    <ng-template #content>
+                        <app-chat class="flex flex-col w-[420px] max-w-full" [filename]="item.filename" />
+                    </ng-template>
                 </p-popover>
                 }
             </ng-template>

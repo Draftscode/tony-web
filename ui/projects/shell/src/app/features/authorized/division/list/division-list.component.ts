@@ -9,6 +9,7 @@ import { BlaudirektDivision } from "../../../../data-access/provider/blaudirekt.
 import { DivisionStore } from "../../../../data-access/store/division.store";
 import { SearchComponent } from "../../../../ui/search/search.component";
 import { TableComponent, TableConfig } from "../../../../ui/table/table.component";
+import { Tooltip } from "primeng/tooltip";
 
 @Component({
     selector: 'app-division-list',
@@ -36,6 +37,7 @@ export default class InsurerListComponent {
             { key: 'text', label: 'administration.division.label', width: 200 },
             { key: 'contractsCount', label: 'customer.contract.plural', sortable: false, width: 75 },
             { key: 'blocks', label: 'administration.block.plural', sortable: false, width: 75 },
+            { key: 'info', label: 'Beschreibung', sortable: false, width: 200 },
             { key: 'actions', label: '', sortable: false, width: 60 }
         ]
     });
@@ -49,6 +51,7 @@ export default class InsurerListComponent {
             sortOrder: event.sortOrder ?? -1
         });
     }
+
 
     protected createBlock(division: BlaudirektDivision) {
         this.divisionStore.createBlocks(division);

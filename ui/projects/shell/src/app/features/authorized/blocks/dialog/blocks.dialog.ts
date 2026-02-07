@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject, linkedSignal, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { applyEach, form, required, schema, submit, Field } from "@angular/forms/signals";
+import { applyEach, Field, form, required, schema, submit } from "@angular/forms/signals";
 import { TranslatePipe } from "@ngx-translate/core";
 import { ButtonModule } from "primeng/button";
 import { DynamicDialogConfig, DynamicDialogRef } from "primeng/dynamicdialog";
+import { EditorModule } from 'primeng/editor';
 import { InputTextModule } from "primeng/inputtext";
 import { SelectModule } from "primeng/select";
+import { TextareaModule } from "primeng/textarea";
 import { BlaudirektDivision, BuildingBlock } from "../../../../data-access/provider/blaudirekt.service";
 import { DivisionStore } from "../../../../data-access/store/division.store";
 
@@ -21,7 +23,7 @@ export const blockSchema = schema<BuildingBlock>((path) => {
     selector: 'app-blocks-dialog',
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: 'blocks.dialog.html',
-    imports: [SelectModule, TranslatePipe, Field, ButtonModule, InputTextModule, FormsModule],
+    imports: [SelectModule, TranslatePipe, Field, EditorModule, TextareaModule, ButtonModule, InputTextModule, FormsModule],
 })
 export class BlocksDialog {
     protected readonly divisionStore = inject(DivisionStore);
@@ -29,13 +31,14 @@ export class BlocksDialog {
     private readonly dialogRef = inject(DynamicDialogRef);
 
     protected readonly selectedBlock = signal<BlaudirektDivision>(this.dialogConfig.data.division);
-
     protected readonly model = linkedSignal(() => {
-        const defaultBlocks = this.selectedBlock().blocks?.length ? this.selectedBlock().blocks ?? [] : [{ key: '', description: '', placeholder: '' }];
+        const defaultBlocks =   this.selectedBlock().blocks?.length ? this.selectedBlock().blocks ?? [] : [{ key: '', description: '', placeholder: '' }];
         return {
             blocks: defaultBlocks,
+            info: this.dialogConfig.data.division.info,
         };
     });
+
 
     protected readonly blockForm = form(this.model, path => {
         applyEach(path.blocks, blockSchema)
@@ -53,7 +56,7 @@ export class BlocksDialog {
 
     protected close() {
         submit(this.blockForm, async (form) => {
-            const result = form.blocks().value();
+            const result = form().value();
             this.dialogRef.close({ type: 'manually', data: result });
         });
     }

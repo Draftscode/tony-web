@@ -46,7 +46,7 @@ export const DivisionStore = signalStore(
         createBlocks: async (division: BlaudirektDivision) => {
             const ref = store.dialogService.open(BlocksDialog, {
                 data: { division },
-                header: 'block.title',
+                header: 'block.label',
                 modal: true,
                 closable: true,
             });
@@ -57,7 +57,7 @@ export const DivisionStore = signalStore(
 
             const result = await lastValueFrom(ref.onClose.pipe(take(1)));
             if (result?.type === 'manually') {
-                await lastValueFrom(store.blaudirectService.editDivision(division.id, { blocks: result.data }));
+                await lastValueFrom(store.blaudirectService.editDivision(division.id, { blocks: result.data.blocks, info: result.data.info }));
                 patchState(store, { filter: { ...store.filter(), timestamp: new Date().toISOString() } });
             }
         },

@@ -88,7 +88,8 @@
         },
         "confirm": "Confirm",
         "delete": "Delete",
-        "edit": "Edit"
+        "edit": "Edit",
+        "comment": "Comments"
     },
     "date": {
         "datetime": "dd/MM/yyyy HH:mm"
@@ -111,7 +112,7 @@
         },
         "notification": {
             "label": "Notifications",
-                        "enabled": {
+            "enabled": {
                 "summary": "Benachrichtigungen aktiviert",
                 "detail": "Benachrichtigungen wurden aktiviert und sie werden jetzt über neue Events informiert."
             },

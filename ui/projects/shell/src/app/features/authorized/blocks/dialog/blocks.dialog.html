@@ -1,7 +1,8 @@
 <div class="flex flex-col min-w-[320px] gap-2">
     <div class="flex flex-col">
         <p-select [filter]="true" (onFilter)="divisionStore.search({query:$event.filter})" filterBy="name"
-            [options]="divisionStore.divisions.value().items" appendTo="body" [ngModel]="selectedBlock()">
+            [options]="divisionStore.divisions.value().items" appendTo="body"
+            (ngModelChange)="selectedBlock.set($event)" [ngModel]="selectedBlock()">
             <ng-template #selectedItem let-item>
                 {{item.text}}
             </ng-template>
@@ -36,6 +37,12 @@
         }
         <p-button [disabled]="blockForm().invalid()" (onClick)="addBlock()" [label]="'block.new'|translate"
             icon="pi pi-plus" [text]="true" size="small" />
+    </div>
+
+    <div class="flex flex-col">
+        <label for="info">Info</label>
+        <!-- <textarea pInputTextarea [autoResize]="true" [field]="blockForm.info"></textarea> -->
+        <p-editor [ngModel]="blockForm.info().value()" (ngModelChange)="blockForm.info().value.set($event)"></p-editor>
     </div>
 
     <div class="flex justify-end">

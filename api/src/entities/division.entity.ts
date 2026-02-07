@@ -26,4 +26,7 @@ export class DivisionEntity {
 
     @Column({ type: 'jsonb', nullable: true, default: () => "'[]'" })
     blocks: DivisionBlock[];
+
+    @Column({ nullable: true })
+    info: string;
 }

@@ -1,0 +1,51 @@
+<!-- wrapper -->
+<div class="flex w-full h-full z-10 relative text-color">
+    <!-- sidebar -->
+    <div (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()" [class]="`shrink-0 z-2 sidebar transition-all duration-500 ease-in-out overflow-hidden
+    ${sidebarClass()}
+    flex flex-col h-full bg-surface-0 shadow-lg dark:bg-surface-900`">
+        <div [class]="`flex flex-col w-full gap-1  ${mode() === 'slim':'items-center'}`">
+            @if(startRef()) {
+            <ng-container [ngTemplateOutlet]="startRef()" />
+            }
+        </div>
+
+        <div [cdkDropListDisabled]="isDragAndDropDisabled()" [class]="`flex shrink-0 min-h-[40px] flex-col w-full border-1 px-[0.2rem] flex flex-col w-full relative ${dragging() ?' border-dashed rounded border-primary bg-surface-100 dark:bg-surface-800' :'border-transparent'}`"
+            (cdkDropListDropped)="drop($event)" cdkDropList id="favoritesList" [cdkDropListData]="favorites()">
+            @for(item of favorites(); track item.id) {
+            <app-menu-item [favorites]="favorites()" [showLabel]="showLabel()" (dragStart)="dragStart()"
+                (dragEnd)="dragEnd()"
+                [class]="`max-w-full transition-all duration-500 ease-in-out flex ${mode() === 'slim' && item.items?.length ? '':''} ${mode() === 'slim'?'':'w-full'}`"
+                (toggled)="closeMenus(item)" [item]="item" />
+            }
+        </div>
+
+        <div cdkDropList [cdkDropListDisabled]="isDragAndDropDisabled()" cdkDropListHasAnchor id="menuList" [cdkDropListConnectedTo]="['favoritesList']"
+            cdkDropListSortingDisabled [cdkDropListData]="items()"
+            [class]="`flex px-[0.2rem] flex-col h-full min-h-0 items-start gap-2 ${mode() === 'slim' && !isMouseOver()?'overflow-hidden':'overflow-x-hidden overflow-y-hidden hover:overflow-y-auto'}`">
+            @for(item of items(); track item.id) {
+            <app-menu-item [favorites]="favorites()" [showLabel]="showLabel()" (dragStart)="dragStart()"
+                (dragEnd)="dragEnd()"
+                [class]="`max-w-full transition-all duration-500 ease-in-out flex w-full ${mode() === 'slim'?'':'w-full'}`"
+                (toggled)="closeMenus(item)" [item]="item" />
+            }
+        </div>
+
+
+        @if(endRef()) {
+        <ng-container [ngTemplateOutlet]="endRef()" />
+        }
+    </div>
+    <!-- content -->
+    <div
+        [class]="`z-1 transition-all duration-500 ease-in-out flex w-full h-full flex-col overflow-auto relative min-w-0 ${contentClass()}`">
+        @if(['over','static'].includes(mode()) && isSmall() && state() === 'expanded') {
+        <div (click)="toggle()" class="w-full h-full top-0 left-0 bg-surface-900 z-2 absolute opacity-[50%]"></div>
+        }
+        <div class="flex w-full h-full overflow-auto flex-col z-1">
+            @if(contentRef()) {
+            <ng-container [ngTemplateOutlet]="contentRef()" />
+            }
+        </div>
+    </div>
+</div>

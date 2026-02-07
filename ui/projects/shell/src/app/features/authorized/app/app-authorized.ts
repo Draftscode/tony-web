@@ -1,11 +1,14 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterModule, RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { MenuItem, TreeNode } from 'primeng/api';
+import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
+import { Breadcrumb } from 'primeng/breadcrumb';
 import { ButtonModule } from 'primeng/button';
+import { Card } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { DrawerModule } from 'primeng/drawer';
 import { MenubarModule } from 'primeng/menubar';
@@ -24,13 +27,15 @@ import { SettingsStore } from '../../../data-access/store/settings.store';
 import { AppMenuComponent } from '../../../ui/app-menu/app-menu.component';
 import { getMasterDataItems } from '../master-data/master-data.items';
 import { SettingsComponent } from '../settings/settings.component';
+import { MainMenuComponent } from './main-menu/main-menu.component';
 
 @Component({
   selector: 'app',
+  host: { class: 'w-full h-full contents' },
   imports: [
-    RouterOutlet, MessageModule, DrawerModule, AppMenuComponent,
-    DividerModule, TooltipModule, SettingsComponent, AvatarModule, RippleModule,
-    ToastModule, MenubarModule, TranslatePipe, ScrollerModule,
+    RouterOutlet, MessageModule, DrawerModule, AppMenuComponent, MainMenuComponent,
+    DividerModule, TooltipModule, SettingsComponent, AvatarModule, RippleModule, RouterModule,
+    ToastModule, MenubarModule, TranslatePipe, ScrollerModule, NgTemplateOutlet, Card, Breadcrumb,
     ButtonModule, ProgressSpinnerModule],
   templateUrl: 'app-authorized.html',
   styleUrl: 'app-authorized.scss',
@@ -50,12 +55,16 @@ export default class App {
 
   protected readonly menuState = signal<'minimal' | 'expanded'>('minimal');
 
+  protected readonly isVerySmall = toSignal(this.breakpointObserver.observe([Breakpoints.XSmall]).pipe(map(s => s.matches)));
+  protected readonly isSmall = toSignal(this.breakpointObserver.observe([Breakpoints.Small]).pipe(map(s => s.matches)));
+  protected readonly isMedium = toSignal(this.breakpointObserver.observe([Breakpoints.Medium]).pipe(map(s => s.matches)));
+  protected readonly avatarLabel = computed(() => this.accountStore.me.value()?.username.slice(0, 1).toUpperCase() ?? '');
+
+
   protected readonly menuItems = computed<MenuItem[]>(() => {
-    const items: TreeNode[] = [{
+    const items: MenuItem[] = [{
       key: 'files',
-      data: {
-        routerLink: ['files'],
-      },
+      routerLink: ['files'],
       label: 'label.files',
       icon: 'pi pi-folder-open'
     }];
@@ -64,26 +73,21 @@ export default class App {
 
       items.push({
         key: 'administration',
-        data: {
-          routerLink: ['administration'],
+        routerLink: ['administration'],
+        state: {
+          expanded: true,
         },
         label: 'administration.label',
         icon: 'pi pi-database',
-        children: getMasterDataItems(this.accountStore.me.value()),
+        items: getMasterDataItems(this.accountStore.me.value()),
       });
     }
 
     return items;
   });
 
-
-
   protected _toggleSidebar() {
     this._isSidebarOpen.update(s => !s);
   }
 
-  protected readonly isSmall = toSignal(this.breakpointObserver.observe([
-    Breakpoints.Small,
-    Breakpoints.XSmall,
-  ]).pipe(map(result => !!result.matches)));
 }

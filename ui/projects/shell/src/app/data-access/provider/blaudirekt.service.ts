@@ -55,6 +55,7 @@ export type BlaudirektDivision = {
     group: string;
     contractsCount: number;
     blocks?: BuildingBlock[];
+    info:string;
 }
 
 export type BlaudirectContract = {

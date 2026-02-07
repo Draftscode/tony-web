@@ -97,7 +97,8 @@
         },
         "confirm": "bestätigen",
         "delete": "Löschen",
-        "edit": "Bearbeiten"
+        "edit": "Bearbeiten",
+        "comment": "Kommentare"
     },
     "date": {
         "datetime": "dd.MM.yy HH:MM"

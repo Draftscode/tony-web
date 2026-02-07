@@ -52,9 +52,10 @@ export function toPdf(content: Content, translate: TranslateService) {
         border-radius: 4px;
         font-family: Arial, sans-serif;
         font-size: 12px;
-        border: 1px solid rgb(220,220,220);
+        // border: 1px solid rgb(220,220,220);
         border-radius: 4px;
         overflow: hidden;
+        border-collaps:collapse;
     }
 
 //     thead {
@@ -71,7 +72,7 @@ export function toPdf(content: Content, translate: TranslateService) {
             page-break-inside: avoid; /* fallback for older Chromium */
         }
         tr.even {
-        background-color: rgb(240,240,240);
+        background-color: rgb(250,250,250);
         }
 
         tr.odd {
@@ -79,10 +80,12 @@ export function toPdf(content: Content, translate: TranslateService) {
         }
 
         tr th {
-            padding: 6px;
+            padding: 12px 6px;
             text-align: left;
+            font-weight: bold;
             color: white;
-            background-color:rgb(25, 66, 109)
+            color:rgb(25, 66, 109);
+            border-bottom: 1px solid rgb(125,125,125);
         }
 
         tr td {
@@ -90,6 +93,11 @@ export function toPdf(content: Content, translate: TranslateService) {
         vertical-align: top;
         max-width: 320px;
         word-break: break-word;
+
+       
+  border-bottom: 1px solid #e5e7eb;
+//   padding: 12px 16px;
+
         }
 
         tr.border-row td {

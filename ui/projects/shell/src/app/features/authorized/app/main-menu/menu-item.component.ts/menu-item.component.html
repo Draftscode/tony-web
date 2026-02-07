@@ -1,0 +1,61 @@
+@if(item(); as _item) {
+<div class="flex flex-col w-full relative" [cdkDragData]="_item" cdkDrag [cdkDragDisabled]="isDragDisabled()"
+    (cdkDragStarted)="onDragStarted()" (cdkDragEnded)="onDragEnded()">
+    <a [class]="`flex gap-1 cursor-pointer rounded items-center p-2 h-[40px]
+    rounded-full justify-between ${!hasChildren() && !showLabel() ? 'w-[40px]':'w-full'}
+    hover:bg-surface-100 dark:hover:bg-surface-800`"
+        (click)="hasChildren() ? toggle(): _item.command ?_item.command({item: _item, originalEvent: $event}):null"
+        [routerLink]="_item.command ? undefined: _item.routerLink" [routerLinkActive]="['bg-highlight']"
+        [routerLinkActiveOptions]="{
+    fragment:'exact',
+    paths:'subset',
+    queryParams:'ignored',
+    matrixParams: 'subset' 
+    }" [queryParams]="_item.queryParams" [queryParamsHandling]="'merge'">
+        <div [class]="`flex gap-2 items-center h-[20px] max-w-full h-full`">
+            @if(itemRef()) {
+            <ng-container [ngTemplateOutlet]="itemRef()" />
+            }
+            @else {
+            @if(!hasChildren()){
+            <span class="flex w-[40px] justify-center absolute left-0 top-0 h-full items-center">
+                <i [class]="`${_item.icon} text-xl text-color`"></i>
+            </span>
+            }
+            @if(showLabel()) {
+            <span animate.enter="opacity-100" animate.leave="opacity-0"
+                [class]="`text-base text-color transition-all duration-500 ease-in-out whitespace-nowrap ${!hasChildren() ?'ml-[28px]':'ml-2'}`"
+                [class.font-semibold]="hasChildren()">
+                {{ _item.label | translate }}
+            </span>
+            }
+            @if(!showLabel() && hasChildren() && expanded()) {
+            <p-divider animate.enter="opacity-100" animate.leave="opacity-0"
+                [class]="`transition-all duration-500 ease-in-out`" />
+            }
+            }
+        </div>
+        <div class="flex ">
+            @if(hasChildren() && showLabel() && isCloseable()) {
+            <i [class]="`pi pi-chevron-up transition-transform duration-300 ease-in-out text-muted-color mr-2`"
+                [class.rotate-180]="expanded()"></i>
+            }
+        </div>
+    </a>
+    @if(expanded()) {
+    <div animate.enter="enter-animation" animate.leave="leave-animation"
+        class="overflow-hidden flex flex-col gap-1 items-start transition-all duration-200 ease-in-out">
+        @for(child of _item.items; track child.id) {
+        <app-menu-item [favorites]="favorites()" [class]="''" [item]="child" [showLabel]="showLabel()"
+            (dragStart)="onDragStarted()" (dragEnd)="onDragEnded()">
+            @if(itemRef()) {
+            <ng-template #item>
+                <ng-container [ngTemplateOutlet]="itemRef()" />
+            </ng-template>
+            }
+        </app-menu-item>
+        }
+    </div>
+    }
+</div>
+}

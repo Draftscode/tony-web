@@ -14,6 +14,12 @@
             {{row.blocks?.length ?? 0}}
         </div>
         }
+        @case ('info') {
+        @if(row.info) {
+        <div class="overflow-hidden w-full" [innerHTML]="row.info"></div>
+        <!-- <i class="pi pi-info-circle" [pTooltip]="row.info"></i> -->
+        }
+        }
         @case ('actions') {
         <div class="flex w-full justify-end">
             <p-button (onClick)="po.toggle($event)" icon="pi pi-ellipsis-v" [text]="true" />

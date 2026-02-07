@@ -1,0 +1,34 @@
+<span class="text-xl font-semibold">Notizen</span>
+<div class="flex flex-col gap-2 overflow-auto min-h-[100px] w-full bg-gray-200 rounded p-2 max-h-[420px]">
+    <div class="flex h-full flex-col gap-2 w-full min--0 overflow-auto" #scroller>
+        <div class="w-full flex flex-col gap-2 p-2">
+            @for(message of messages().items; track message.id) {
+            @let me = message.userId === userId();
+            <div class="flex" [class.justify-end]="me">
+                <p-card class="w-[80%] my-message" [class.bg-highlight]="me">
+                    <ng-template #header>
+                        <div class="flex w-full justify-end">
+                            <p-button size="small" (onClick)="messageStore.delete(message.id)" icon="pi pi-trash"
+                                [text]="true" />
+                        </div>
+                    </ng-template>
+                    {{message.text}}
+                    <ng-template #footer>
+                        <div class="flex w-full justify-between">
+                            <span class="text-xs">{{message.user.username}}</span>
+                            <span class="text-xs">{{message.createdAt |
+                                date:('date.datetime'|translate)}}</span>
+                        </div>
+                    </ng-template>
+                </p-card>
+            </div>
+            }
+        </div>
+    </div>
+    <div class="flex w-full gap-1 items-end">
+
+        <textarea pInputTextarea [autoResize]="true" #chat class="w-full"></textarea>
+        <p-button [disabled]="!chat.value" [rounded]="true" severity="primary" size="small"
+            (onClick)="messageStore.send(chat.value); chat.value = ''" icon="pi pi-send" />
+    </div>
+</div>
