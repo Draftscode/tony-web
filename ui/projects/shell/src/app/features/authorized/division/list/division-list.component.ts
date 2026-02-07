@@ -9,7 +9,6 @@ import { BlaudirektDivision } from "../../../../data-access/provider/blaudirekt.
 import { DivisionStore } from "../../../../data-access/store/division.store";
 import { SearchComponent } from "../../../../ui/search/search.component";
 import { TableComponent, TableConfig } from "../../../../ui/table/table.component";
-import { Tooltip } from "primeng/tooltip";
 
 @Component({
     selector: 'app-division-list',
@@ -30,7 +29,7 @@ import { Tooltip } from "primeng/tooltip";
     }
     `
 })
-export default class InsurerListComponent {
+export default class DivisionListComponent {
     protected readonly divisionStore = inject(DivisionStore);
     protected readonly divisionTableConfig = signal<TableConfig<BlaudirektDivision>>({
         columns: [
