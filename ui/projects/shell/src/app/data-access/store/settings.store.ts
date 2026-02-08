@@ -5,8 +5,11 @@ import { lastValueFrom } from "rxjs";
 import { MenuMode } from "../../features/authorized/app/main-menu/main-menu.component";
 import { withResources } from "../../utils/signals";
 import { BlaudirektService } from "../provider/blaudirekt.service";
+
 export type Language = {
-    key: string,
+    key: string;
+    label: string;
+    flag: string;
 }
 
 export const SettingsStore = signalStore(
@@ -14,7 +17,10 @@ export const SettingsStore = signalStore(
     withState({
         isVisible: false,
         i: new Date().toISOString(),
-        languages: [{ key: 'de-DE' }, { key: 'en-GB' }] as Language[],
+        languages: [
+            { key: 'de-DE', flag: 'germany', label: 'german' },
+            { key: 'en-GB', flag: 'united-kingdom', label: 'english' },
+            { key: 'hu-HU', flag: 'hungaria', label: 'hungarian' }] as Language[],
         selectedLanguageKey: null as string | null,
         isDark: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches as boolean,
         menuMode: MenuMode.slim as MenuMode,
