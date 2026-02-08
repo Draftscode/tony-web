@@ -1,8 +1,18 @@
 {
+    "group": {
+        "info": {
+            "label": "Divisions"
+        }
+    },
     "label": {
+        "sync": {
+            "label": "Update data"
+        },
         "frequency": {
             "monthly": "monthly"
         },
+        "links": "Links",
+        "link": "Link",
         "finances": {
             "old": "Old",
             "new": "New",
@@ -15,11 +25,11 @@
             "hungarian": "Hungarian"
         },
         "insurer": {
-            "no": "Insurance No.",
+            "no": "Ins. No.",
             "label": "Insurer"
         },
         "insured": {
-            "label": "Policyholder (PH)",
+            "label": "Policyholder",
             "short": "PH"
         },
         "group": "Group",
@@ -39,30 +49,31 @@
         "files": "Files",
         "password": "Password",
         "login": "Login",
+        "logout": "Logout",
         "user": "User",
         "pdf": "PDF",
-        "type": "What?",
-        "scope": "Benefit",
+        "type": "Type",
+        "scope": "Benefit/Scope",
         "signature": "Signature",
         "suggestion": "Suggestion",
-        "oneTimePayment": "One-off payment",
+        "oneTimePayment": "One-time payment",
         "contribution": {
-            "monthly": "Monthly contribution",
-            "label": "Contribution"
+            "monthly": "monthly premium",
+            "label": "Premium"
         },
         "party": "PH",
-        "nr": "Insurance No.",
-        "fromTo": "Duration",
+        "nr": "Ins.No.",
+        "fromTo": "Term",
         "new": "New",
         "acquisition": "Takeover",
-        "inventory": "Portfolio",
-        "terminated": "will be terminated",
+        "inventory": "Inventory",
+        "terminated": "is being cancelled",
         "move": "Move row",
         "line": "Row",
         "gender": {
             "male": "male",
             "female": "female",
-            "other": "other"
+            "other": "diverse"
         },
         "salutation": {
             "male": "Mr",
@@ -80,24 +91,27 @@
         "edit": {
             "value": "Edit {{value}}"
         },
+        "select": {
+            "value": "Select {{value}}"
+        },
         "pagination": "{{value}} of {{total}} {{entity}}"
     },
     "action": {
         "select": {
             "all": "Select all"
         },
-        "confirm": "Confirm",
+        "confirm": "confirm",
         "delete": "Delete",
         "edit": "Edit",
         "comment": "Comments"
     },
     "date": {
-        "datetime": "dd/MM/yyyy HH:mm"
+        "datetime": "dd/MM/yy HH:mm"
     },
     "theming": {
         "switch": {
-            "darkmode": "Switch dark mode",
-            "daymode": "Switch light mode"
+            "darkmode": "Switch to dark mode",
+            "daymode": "Switch to light mode"
         }
     },
     "messages": {
@@ -113,19 +127,98 @@
         "notification": {
             "label": "Notifications",
             "enabled": {
-                "summary": "Benachrichtigungen aktiviert",
-                "detail": "Benachrichtigungen wurden aktiviert und sie werden jetzt über neue Events informiert."
+                "summary": "Notifications enabled",
+                "detail": "Notifications have been enabled and you will now be informed about new events."
             },
             "disabled": {
-                "summary": "Benachrichtigungen deaktiviert",
-                "detail": "Benachrichtigungen wurden deaktivier und sie werden jetzt nicht mehr über neue Events informiert."
+                "summary": "Notifications disabled",
+                "detail": "Notifications have been disabled and you will no longer be informed about new events."
             }
         },
         "language": {
             "label": "Language"
         },
         "darkmode": {
-            "label": "Darkmode"
+            "label": "Dark mode"
         }
+    },
+    "administration": {
+        "label": "Administration",
+        "division": {
+            "label": "Division"
+        },
+        "block": {
+            "label": "Module",
+            "plural": "Modules"
+        }
+    },
+    "auth": {
+        "error": {
+            "login": "Login failed. Please check your credentials and try again."
+        },
+        "code": {
+            "forbidden": {
+                "summary": "Access denied",
+                "detail": "You do not have permission to access this resource."
+            }
+        },
+        "user": {
+            "label": "User"
+        }
+    },
+    "blaudirekt": {
+        "search": {
+            "customer": "Blaudirekt customer search"
+        },
+        "broker": {
+            "plural": "Insurers"
+        }
+    },
+    "block": {
+        "label": "Modules",
+        "new": "New module"
+    },
+    "customer": {
+        "label": "Client",
+        "plural": "Clients",
+        "status": {
+            "label": "Customer status",
+            "terminated": "Terminated",
+            "new": "New",
+            "advanced": "Documents uploaded"
+        },
+        "contract": {
+            "count": "Number of contracts",
+            "label": "Contract",
+            "plural": "Contracts"
+        }
+    },
+    "insurer": {
+        "label": "Insurer",
+        "plural": "Insurances",
+        "logo": "logo",
+        "name": "Name",
+        "blocks": "Modules"
+    },
+    "person": {
+        "username": "Username",
+        "gender": "Salutation",
+        "title": "Title",
+        "company": "Company",
+        "firstname": "First name",
+        "lastname": "Last name",
+        "address": {
+            "city": "City",
+            "no": "House number",
+            "street": "Street",
+            "zip": "Postcode"
+        }
+    },
+    "roles": {
+        "label": "Role",
+        "plural": "Roles"
+    },
+    "validation": {
+        "required": "Required field"
     }
 }

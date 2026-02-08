@@ -32,7 +32,6 @@ import { MonthlyPipe } from "./monthly.pipe";
 import { NewPipe } from "./new.pipe";
 import { SavingsPipe } from "./savings.pipe";
 import { TotalPipe } from "./total.pipe";
-import DivisionListComponent from "../division/list/division-list.component";
 
 type Header = {
     label: string;
@@ -89,13 +88,13 @@ export type FormType = {
 }
 
 @Component({
-    host: { class: 'w-full h-full p-4 m-auto' },
+    host: { class: 'w-full h-full m-auto' },
     selector: 'app-form',
     imports: [AutoCompleteModule, TranslatePipe, DatePickerModule,
         InputTextModule, TableModule, ProgressBarModule, DialogModule, SelectModule,
         TextareaModule, ReactiveFormsModule, CardModule, TotalPipe, FallbackImageDirective,
         AutoCompleteModule, ButtonModule, DividerModule, CDatePipe, TooltipModule,
-        SavingsPipe, ExistedPipe, NewPipe, MonthlyPipe, PopoverModule, DivisionListComponent
+        SavingsPipe, ExistedPipe, NewPipe, MonthlyPipe, PopoverModule
     ],
     providers: [CDatePipe],
     templateUrl: 'form.component.html',

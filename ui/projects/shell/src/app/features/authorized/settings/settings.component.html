@@ -11,12 +11,12 @@
         <p-divider />
         <div class="flex flex-col gap-1">
             <div class="flex gap-1 items-center">
-                <i [class]="`pi pi-${themeStore.isDark() ? 'sun':'moon'}`"></i>
+                <i [class]="`pi pi-${settingsStore.isDark() ? 'sun':'moon'}`"></i>
                 <label for="darkmode">{{'settings.darkmode.label'|translate}}</label>
             </div>
-            <p-toggleswitch (onChange)="themeStore.toggleDarkMode()"
-                [pTooltip]="`theming.switch.${themeStore.isDark()?'daymode':'darkmode'}`|translate"
-                tooltipPosition="bottom" inputId="darkmode" [ngModel]="themeStore.isDark()" />
+            <p-toggleswitch (onChange)="settingsStore.toggleDarkMode()"
+                [pTooltip]="`theming.switch.${settingsStore.isDark()?'daymode':'darkmode'}`|translate"
+                tooltipPosition="bottom" inputId="darkmode" [ngModel]="settingsStore.isDark()" />
         </div>
         <p-divider />
         <div class="flex flex-col gap-1">
@@ -24,8 +24,8 @@
                 <i class="pi pi-flag"></i>
                 <label for="language">{{'settings.language.label'|translate}}</label>
             </div>
-            <p-select (onChange)="languageStore.use($event.value.key)" inputId="language"
-                [options]="languageStore.languages()" [ngModel]="languageStore.currentLanguage()">
+            <p-select (onChange)="settingsStore.updateLanguage($event.value.key)" inputId="language"
+                [options]="settingsStore.languages()" [ngModel]="settingsStore.currentLanguage()">
                 <ng-template #selectedItem let-item>
                     <ng-container [ngTemplateOutlet]="language" [ngTemplateOutletContext]="{$implicit: item}" />
                 </ng-template>

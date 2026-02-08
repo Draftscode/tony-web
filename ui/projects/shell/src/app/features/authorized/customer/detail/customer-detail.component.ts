@@ -11,7 +11,7 @@ import { injectParam } from "../../../../utils/signals/inject-param";
     imports: [ButtonModule, DividerModule, TranslatePipe, RouterLink],
     templateUrl: 'customer-detail.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { class: 'flex p-4 w-full justify-center' },
+    host: { class: 'flex w-full justify-center' },
 })
 export default class CustomerDetailComponent {
     protected readonly customerStore = inject(CustomerStore);

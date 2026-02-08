@@ -90,13 +90,6 @@
                         severity="secondary" />
                 </div>
             </div>
-            <p-divider [layout]="'vertical'" />
-            <div class="w-full min-w-0 flex flex-col gap-2 overflow-auto h-[420px]">
-                <span class="text-xl font-semibold">Wissensdatenbank</span>
-                <div class="flex flex-col h-full min-h-0 overflow-auto">
-                    <app-division-list class="flex w-full h-full flex-col" />
-                </div>
-            </div>
         </div>
         <div formArrayName="groups" class="mt-8">
             @for(group of _formGroup.controls.groups.controls; track group; let groupIndex = $index) {

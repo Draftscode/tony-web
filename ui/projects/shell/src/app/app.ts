@@ -2,8 +2,8 @@ import { Component, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
-import { LanguageStore } from './data-access/store/language.store';
 import { FcmService } from './data-access/provider/fcm.service';
+import { SettingsStore } from './data-access/store/settings.store';
 
 @Component({
   selector: 'app-root',
@@ -11,14 +11,15 @@ import { FcmService } from './data-access/provider/fcm.service';
   templateUrl: './app.html',
 })
 export class App {
-  private readonly languageStore = inject(LanguageStore);
   private readonly title = inject(Title);
   private readonly fcm = inject(FcmService);
+  private readonly settingsStore = inject(SettingsStore);
 
   constructor() {
     this.title.setTitle('tonym');
-    this.languageStore.use(navigator.language);
     this.fcm.listen();
+    // this.settingsStore.init();
+    this.settingsStore.updateLanguage(navigator.language);
   }
 
 }

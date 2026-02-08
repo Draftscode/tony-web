@@ -1,4 +1,9 @@
 {
+    "group": {
+        "info": {
+            "label": "Bereiche"
+        }
+    },
     "label": {
         "sync": {
             "label": "Aktualisiere Daten"
@@ -136,5 +141,84 @@
         "darkmode": {
             "label": "Nachtmodus"
         }
+    },
+    "administration": {
+        "label": "Administration",
+        "division": {
+            "label": "Bereich"
+        },
+        "block": {
+            "label": "Baustein",
+            "plural": "Bausteine"
+        }
+    },
+    "auth": {
+        "error": {
+            "login": "Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldedaten und versuchen Sie es erneut."
+        },
+        "code": {
+            "forbidden": {
+                "summary": "Zugriff verweigert",
+                "detail": "Sie haben keine Berechtigung, auf diese Ressource zuzugreifen."
+            }
+        },
+        "user": {
+            "label": "Benutzer"
+        }
+    },
+    "blaudirekt": {
+        "search": {
+            "customer": "Blaudirekt Kunden-Suche"
+        },
+        "broker": {
+            "plural": "Versicherer"
+        }
+    },
+    "block": {
+        "label": "Bausteine",
+        "new": "Neuer Baustein"
+    },
+    "customer": {
+        "label": "Mandant",
+        "plural": "Mandanten",
+        "status": {
+            "label": "Kundenstatus",
+            "terminated": "Beendet",
+            "new": "Neu",
+            "advanced": "Dokumente hochgeladen"
+        },
+        "contract": {
+            "count": "Anzahl Verträge",
+            "label": "Vertrag",
+            "plural": "Verträge"
+        }
+    },
+    "insurer": {
+        "label": "Versicherer",
+        "plural": "Versicherungen",
+        "logo": "logo",
+        "name": "Name",
+        "blocks": "Bausteine"
+    },
+    "person": {
+        "username": "Benutzername",
+        "gender": "Anrede",
+        "title": "Titel",
+        "company": "Firma",
+        "firstname": "Vorname",
+        "lastname": "Nachname",
+        "address": {
+            "city": "Stadt",
+            "no": "Hausnummer",
+            "street": "Straße",
+            "zip": "Postleitzahl"
+        }
+    },
+    "roles": {
+        "label": "Rolle",
+        "plural": "Rollen"
+    },
+    "validation": {
+        "required": "Pflichtfeld"
     }
 }

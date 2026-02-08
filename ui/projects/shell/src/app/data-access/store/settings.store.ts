@@ -1,5 +1,5 @@
-import { booleanAttribute, inject } from "@angular/core";
-import { patchState, signalStore, withHooks, withMethods, withProps, withState } from "@ngrx/signals";
+import { booleanAttribute, computed, inject } from "@angular/core";
+import { patchState, signalStore, withComputed, withHooks, withMethods, withProps, withState } from "@ngrx/signals";
 import { TranslateService } from "@ngx-translate/core";
 import { lastValueFrom } from "rxjs";
 import { MenuMode } from "../../features/authorized/app/main-menu/main-menu.component";
@@ -26,7 +26,14 @@ export const SettingsStore = signalStore(
     withResources(store => ({
         status: store.baludirektService.getStatus(store.i),
     })),
+    withComputed(store => ({
+        currentLanguage: computed(() =>
+            store.languages().find(l => l.key === store.selectedLanguageKey()) ?? store.languages()[0])
+    })),
     withMethods(store => ({
+        init: () => {
+
+        },
         updateLanguage: (key: string | null) => {
             if (key) {
                 store.translate.use(key);

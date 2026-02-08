@@ -9,15 +9,6 @@ export class JsonFileLoader implements TranslateLoader {
     private readonly prefix = 'i18n';
     private readonly files = [
         'common',
-        'person',
-        'blaudirekt',
-        'validation',
-        'auth',
-        'roles',
-        'customer',
-        'block',
-        'insurer',
-        'admin'
     ];
     private readonly suffix = '.json';
 

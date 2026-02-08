@@ -12,7 +12,7 @@
             <!-- <img [src]="`${firstImage ?'images/logo/logo-plain.png':'images/logo/logo.png'}`"
                 class="h-[40px] w-auto flex-none overflow-visible object-contain" /> -->
             <div class="h-[28px] items-center flex p-1 mt-2">
-                <img [src]="'./images/logo-raw-no-text'+(_themeService.isDark()?'-dark':'')+'.png'"
+                <img [src]="'./images/logo-raw-no-text'+(settingsStore.isDark()?'-dark':'')+'.png'"
                     class="w-full max-w-[100px]" alt="Logo">
             </div>
             @if(mainMenu.isMouseOver() || menuMode === 'static') {
@@ -61,7 +61,7 @@
                     </p-card>
                     }
                     @if(!isVerySmall()) {
-                    <!-- <ng-container [ngTemplateOutlet]="searchTemplate" /> -->
+                    <ng-container [ngTemplateOutlet]="searchTemplate" />
                     }
                 </div>
                 <div class="flex gap-2 items-center">
@@ -78,3 +78,30 @@
 
 
 <p-toast />
+
+<ng-template #searchTemplate>
+    <p-iconfield>
+        <p-inputicon class="pi pi-search" />
+        <p-autocomplete #control optionValue="name" optionLabel="name" [completeOnFocus]="true"
+            (onSelect)="selectItem($event.value)" inputStyleClass="rounded-full" size="small" [group]="true"
+            [placeholder]="'label.search'|translate" (completeMethod)="query$.next($event.query)"
+            [suggestions]="searchItems()">
+            <ng-template let-item #item>
+                <div class="flex h-[24px] items-center justify-between gap-2 w-full">
+                    <div [innerHTML]="item.name" class="min-h-0 min-w-0 overflow-hidden max-w-[300px] text-ellipsis">
+                    </div>
+                    <p-button (onClick)="selectItem(item)" size="small" icon="pi pi-chevron-right" [text]="true" />
+                </div>
+            </ng-template>
+            <ng-template let-group #group>
+                <div class=" flex gap-2 items-center">
+                    @let icon = group.label === 'offer'? 'briefcase' :group.label === 'ip.asset' ?
+                    'shield': group.label === 'strategy'?'image' : group.label ===
+                    'jurisdiction'?'flag':group.label ==='options'?'address-book':'th-large';
+                    <i [class]="`pi pi-${icon}`"></i>
+                    <span>{{ `group.${group.label}.label`|translate }}</span>
+                </div>
+            </ng-template>
+        </p-autocomplete>
+    </p-iconfield>
+</ng-template>

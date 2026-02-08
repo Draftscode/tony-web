@@ -19,7 +19,7 @@ import { ChatComponent } from "../chat/chat.component";
 @Component({
     selector: 'app-file-list',
     templateUrl: 'file-list.html',
-    host: { class: 'flex p-4 w-full justify-center' },
+    host: { class: 'flex w-full justify-center' },
     imports: [DataViewModule, CardModule, RouterLink, TooltipModule, DatePipe, ChatComponent,
         FileUploadModule, DividerModule, RouterLinkActive, TranslatePipe, UserComponent,
         PopoverModule, ButtonModule, InputTextModule, InputGroupAddonModule, InputGroupModule]

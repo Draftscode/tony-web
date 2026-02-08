@@ -6,12 +6,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './features/auth/auth.module';
 import { BlaudirektModule } from './features/blaudirekt/blaudirekt.module';
+import { BrokerModule } from './features/broker/broker.module';
 import { FilesModule } from './features/files/files.module';
 import { LinksModule } from './features/links/links.module';
-import { RolesModule } from './features/roles/roles.module';
-import { UserModule } from './features/users/users.module';
-import { BrokerModule } from './features/broker/broker.module';
 import { NotesModule } from './features/notes/notes.module';
+import { RolesModule } from './features/roles/roles.module';
+import { SearchModule } from './features/search/search.modue';
+import { UserModule } from './features/users/users.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { NotesModule } from './features/notes/notes.module';
     AuthModule,
     LinksModule,
     BrokerModule,
+    SearchModule,
     NotesModule,
     UserModule,
     ScheduleModule.forRoot(),

@@ -1,8 +1,18 @@
 {
+    "group": {
+        "info": {
+            "label": "Divisions"
+        }
+    },
     "label": {
+        "sync": {
+            "label": "Adatok frissítése"
+        },
         "frequency": {
             "monthly": "havi"
         },
+        "links": "Kapcsolatok",
+        "link": "Kapcsolat",
         "finances": {
             "old": "Régi",
             "new": "Új",
@@ -19,8 +29,8 @@
             "label": "Biztosító"
         },
         "insured": {
-            "label": "Biztosított (BIZT)",
-            "short": "BIZT"
+            "label": "Szerződő (VN)",
+            "short": "VN"
         },
         "group": "Csoport",
         "product": "Termék",
@@ -39,25 +49,26 @@
         "files": "Fájlok",
         "password": "Jelszó",
         "login": "Bejelentkezés",
+        "logout": "Kijelentkezés",
         "user": "Felhasználó",
         "pdf": "PDF",
-        "type": "Mi?",
+        "type": "Típus",
         "scope": "Szolgáltatás",
         "signature": "Aláírás",
         "suggestion": "Javaslat",
-        "oneTimePayment": "Egyszeri befizetés",
+        "oneTimePayment": "Egyszeri díj",
         "contribution": {
-            "monthly": "Havi hozzájárulás",
-            "label": "Hozzájárulás"
+            "monthly": "havi díj",
+            "label": "Díj"
         },
-        "party": "BIZT",
-        "nr": "Bizt. sz.",
-        "fromTo": "Időtartam",
+        "party": "VN",
+        "nr": "Bizt.sz.",
+        "fromTo": "Futamidő",
         "new": "Új",
         "acquisition": "Átvétel",
         "inventory": "Állomány",
-        "terminated": "meg fog szűnni",
-        "move": "Sor áthelyezése",
+        "terminated": "felmondás alatt",
+        "move": "Sor mozgatása",
         "line": "Sor",
         "gender": {
             "male": "férfi",
@@ -66,13 +77,13 @@
         },
         "salutation": {
             "male": "Úr",
-            "female": "Asszony",
+            "female": "Asszony/Hölgy",
             "other": ""
         }
     },
     "utils": {
         "list": {
-            "empty": "No results."
+            "empty": "Nincs találat."
         },
         "create": {
             "value": "{{value}} létrehozása"
@@ -80,29 +91,32 @@
         "edit": {
             "value": "{{value}} szerkesztése"
         },
+        "select": {
+            "value": "{{value}} kiválasztása"
+        },
         "pagination": "{{value}} / {{total}} {{entity}}"
     },
     "action": {
         "select": {
-            "all": "Összes kijelölése"
+            "all": "Összes kiválasztása"
         },
-        "confirm": "Megerősítés",
+        "confirm": "megerősítés",
         "delete": "Törlés",
         "edit": "Szerkesztés",
-        "comment": "Comments"
+        "comment": "Megjegyzések"
     },
     "date": {
-        "datetime": "yyyy.MM.dd HH:mm"
+        "datetime": "yyyy.MM.dd. HH:mm"
     },
     "theming": {
         "switch": {
-            "darkmode": "Sötét mód váltása",
-            "daymode": "Világos mód váltása"
+            "darkmode": "Éjszakai mód bekapcsolása",
+            "daymode": "Nappali mód bekapcsolása"
         }
     },
     "messages": {
         "confirmation": {
-            "delete": "Biztosan törölni szeretné ezt a bejegyzést?"
+            "delete": "Valóban törölni szeretné ezt a bejegyzést?"
         }
     },
     "settings": {
@@ -113,19 +127,98 @@
         "notification": {
             "label": "Értesítések",
             "enabled": {
-                "summary": "Benachrichtigungen aktiviert",
-                "detail": "Benachrichtigungen wurden aktiviert und sie werden jetzt über neue Events informiert."
+                "summary": "Értesítések aktiválva",
+                "detail": "Az értesítéseket aktiváltuk, mostantól tájékoztatjuk az új eseményekről."
             },
             "disabled": {
-                "summary": "Benachrichtigungen deaktiviert",
-                "detail": "Benachrichtigungen wurden deaktivier und sie werden jetzt nicht mehr über neue Events informiert."
+                "summary": "Értesítések deaktiválva",
+                "detail": "Az értesítéseket deaktiváltuk, a továbbiakban nem kap tájékoztatást az új eseményekről."
             }
         },
         "language": {
-            "label": ""
+            "label": "Nyelv"
         },
         "darkmode": {
-            "label": ""
+            "label": "Éjszakai mód"
         }
+    },
+    "administration": {
+        "label": "Adminisztráció",
+        "division": {
+            "label": "Terület"
+        },
+        "block": {
+            "label": "Baustein (Modul)",
+            "plural": "Bausteine (Modulok)"
+        }
+    },
+    "auth": {
+        "error": {
+            "login": "Sikertelen bejelentkezés. Kérjük, ellenőrizze adatait és próbálja újra."
+        },
+        "code": {
+            "forbidden": {
+                "summary": "Hozzáférés megtagadva",
+                "detail": "Nincs jogosultsága az erőforrás eléréséhez."
+            }
+        },
+        "user": {
+            "label": "Felhasználó"
+        }
+    },
+    "blaudirekt": {
+        "search": {
+            "customer": "Blaudirekt ügyfélkereső"
+        },
+        "broker": {
+            "plural": "Biztosítók"
+        }
+    },
+    "block": {
+        "label": "Modulok",
+        "new": "Új modul"
+    },
+    "customer": {
+        "label": "Mandátum (Ügyfél)",
+        "plural": "Mandátumok (Ügyfelek)",
+        "status": {
+            "label": "Ügyfélstátusz",
+            "terminated": "Befejezett",
+            "new": "Új",
+            "advanced": "Dokumentumok feltöltve"
+        },
+        "contract": {
+            "count": "Szerződések száma",
+            "label": "Szerződés",
+            "plural": "Szerződések"
+        }
+    },
+    "insurer": {
+        "label": "Biztosító",
+        "plural": "Biztosítások",
+        "logo": "logó",
+        "name": "Név",
+        "blocks": "Modulok"
+    },
+    "person": {
+        "username": "Felhasználónév",
+        "gender": "Megszólítás",
+        "title": "Titulus",
+        "company": "Cég",
+        "firstname": "Keresztnév",
+        "lastname": "Vezetéknév",
+        "address": {
+            "city": "Város",
+            "no": "Házszám",
+            "street": "Utca",
+            "zip": "Irányítószám"
+        }
+    },
+    "roles": {
+        "label": "Szerepkör",
+        "plural": "Szerepkörök"
+    },
+    "validation": {
+        "required": "Kötelező mező"
     }
 }
