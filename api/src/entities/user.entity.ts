@@ -3,6 +3,7 @@ import type { Relation } from 'typeorm';
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { BrokerEntity } from './broker.entity';
 import { FileEntity } from "./file.entity";
+import { MessageEntity } from './message.entity';
 import { NoteEntity } from './note.entity';
 import { RoleEntity } from './roles.entity';
 @Entity()
@@ -49,4 +50,8 @@ export class UserEntity {
 
     @Column({ nullable: true })
     color: string;
+
+    @OneToMany(_ => MessageEntity, message => message.user, { nullable: true })
+    messages: Relation<MessageEntity[]>;
+
 }

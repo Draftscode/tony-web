@@ -2,6 +2,8 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Put, Query, UseGuar
 import { JwtAuthGuard } from "src/common/guards/jwt-auth.guard";
 import { NoteEntity } from "src/entities/note.entity";
 import { NotesService } from "./notes.service";
+import { User } from "../auth/data-access/authorized-request";
+import { UserEntity } from "src/entities/user.entity";
 
 @Controller('notes')
 export class NotesController {
@@ -26,8 +28,9 @@ export class NotesController {
     @UseGuards(JwtAuthGuard)
     @Put('')
     createNote(
+        @User() user: UserEntity,
         @Body() dto: Partial<NoteEntity> & { filename: string },
     ) {
-        return this.notesService.createNote(dto);
+        return this.notesService.createNote(user.id, dto);
     }
 }

@@ -1,8 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import puppeteer from "puppeteer";
 import { FileEntity } from "src/entities/file.entity";
+import { MessageEntity } from "src/entities/message.entity";
 import { UserEntity } from "src/entities/user.entity";
-import { DataSource, ILike, In } from "typeorm";
+import { DataSource } from "typeorm";
 import { FileDataGroup, FileDataPerson } from "./files.model";
 import { usePdfPreset } from "./pdf.preset";
 import { TONYM_LOGO } from "./tonym";
@@ -22,21 +23,70 @@ export type ImportedFileWrapper = {
 export class FilesService {
     constructor(private readonly dataSource: DataSource) { }
 
-    async getAll(query: string, user: UserEntity) {
-        const [items, total] = await this.dataSource.manager.findAndCount(FileEntity, {
-            where: {
-                filename: ILike(`%${query}%`),
-                userId: user?.users?.length ? In(user.users.map(u => u.id)) : undefined
-            },
-            order: {
-                filename: 'ASC',
-            },
-            take: 100,
-            skip: 0,
-        })
+    // async getAll(query: string, user: UserEntity) {
+    //     const [items, total] = await this.dataSource.manager.findAndCount(FileEntity, {
+    //         where: {
+    //             filename: ILike(`%${query}%`),
+    //             userId: user?.users?.length ? In(user.users.map(u => u.id)) : undefined
+    //         },
+    //         order: {
+    //             filename: 'ASC',
+    //         },
+    //         take: 100,
+    //         skip: 0,
+    //     })
 
-        return { items, total };
+    //     return { items, total };
+    // }
+    async getAll(query: string, user: UserEntity) {
+        const qb = this.dataSource
+            .getRepository(FileEntity)
+            .createQueryBuilder('file')
+
+            .leftJoinAndSelect('file.user', 'owner')
+
+            .leftJoin(
+                MessageEntity,
+                'message',
+                `
+            message.userId = :userId
+            AND message.message->>'filename' = file.filename
+            `,
+                { userId: user.id }
+            )
+
+            .addSelect('message.id', 'message_id')
+            .addSelect('message.message', 'message_content')
+            .addSelect('message.createdAt', 'message_createdAt')
+
+            .where('file.filename ILIKE :query', { query: `%${query}%` })
+            .orderBy('file.filename', 'ASC')
+            .take(100)
+            .skip(0);
+
+        const { entities, raw } = await qb.getRawAndEntities();
+
+        const items = entities.map((file, index) => {
+            const fileId = file.id;
+
+            const messages = raw
+                .filter(r => r.file_id === fileId && r.message_id)
+                .map(r => ({
+                    id: r.message_id,
+                    message: r.message_content,
+                    createdAt: r.message_createdAt,
+                }));
+
+            return {
+                ...file,
+                messages,
+            };
+        });
+
+        return { items, total: items.length };
     }
+
+
 
     async importFiles(files: ImportedFileWrapper[]) {
         return this.dataSource.manager.transaction(async manager => {

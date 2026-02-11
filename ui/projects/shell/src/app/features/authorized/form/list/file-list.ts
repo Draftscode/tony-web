@@ -10,6 +10,7 @@ import { FileSelectEvent, FileUploadModule } from "primeng/fileupload";
 import { InputGroupModule } from "primeng/inputgroup";
 import { InputGroupAddonModule } from "primeng/inputgroupaddon";
 import { InputTextModule } from "primeng/inputtext";
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { PopoverModule } from "primeng/popover";
 import { TooltipModule } from "primeng/tooltip";
 import { FileStore } from "../../../../data-access/store/file.store";
@@ -21,7 +22,7 @@ import { ChatComponent } from "../chat/chat.component";
     templateUrl: 'file-list.html',
     host: { class: 'flex w-full justify-center' },
     imports: [DataViewModule, CardModule, RouterLink, TooltipModule, DatePipe, ChatComponent,
-        FileUploadModule, DividerModule, RouterLinkActive, TranslatePipe, UserComponent,
+        FileUploadModule, DividerModule, RouterLinkActive, TranslatePipe, UserComponent, OverlayBadgeModule,
         PopoverModule, ButtonModule, InputTextModule, InputGroupAddonModule, InputGroupModule]
 })
 export default class FileList {

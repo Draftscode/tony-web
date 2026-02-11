@@ -1,9 +1,10 @@
 import { DatePipe } from "@angular/common";
-import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, viewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, untracked, viewChild } from "@angular/core";
 import { TranslatePipe } from "@ngx-translate/core";
 import { Button } from "primeng/button";
 import { Card } from "primeng/card";
 import { TextareaModule } from "primeng/textarea";
+import { DataFile } from "../../../../data-access/provider/file.service";
 import { AccountStore } from "../../../../data-access/store/account.store";
 import { MessageStore } from "../../../../data-access/store/message.store";
 
@@ -23,10 +24,21 @@ export class ChatComponent {
     protected readonly messages = computed(() => this.messageStore.messages.hasValue() ? this.messageStore.messages.value() : { items: [], total: 0 });
     protected readonly scroller = viewChild<ElementRef>('scroller');
     filename = input.required<string>();
+    file = input.required<DataFile>();
 
     constructor() {
         this.messageStore.connectFile(this.filename);
         this.messageStore.connectUser(this.userId);
+
+        effect(() => {
+            const file = this.file();
+            untracked(async () => {
+                if (!file.messages?.length) { return; }
+                for (const m of file.messages) {
+                    await this.accountStore.readMessage(m.id);
+                }
+            })
+        })
 
         effect(() => {
 

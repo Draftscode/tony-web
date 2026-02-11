@@ -10,6 +10,8 @@ export type DataFile = {
     lastModified: string;
     filename: string;
     user: User;
+    messageCount: number;
+    messages: any[];
 }
 
 @Injectable({ providedIn: 'root' })

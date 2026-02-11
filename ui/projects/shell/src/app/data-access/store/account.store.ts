@@ -48,6 +48,9 @@ export const AccountStore = signalStore(
             store.setCredentials(null);
             store.router.navigate(['/auth']);
         },
+        readMessage: async (messageId: number) => {
+            await lastValueFrom(store.userService.readMessage(messageId));
+        },
         login: async (username: string, password: string) => {
             const credentials = await lastValueFrom(store.authService.login(username, password));
             store.setCredentials(credentials);

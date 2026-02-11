@@ -50,7 +50,8 @@
                         }
                     </div>
                     <div class="flex gap-2 items-center">
-                        <p-button (onClick)="$event.stopPropagation(); chat.toggle($event)" icon="pi pi-comments"
+                        <p-button badgeSeverity="danger" [badge]="item.messages?.length"
+                            (onClick)="$event.stopPropagation(); chat.toggle($event)" icon="pi pi-comments"
                             [text]="true" />
                         <p-button size="small" (onClick)="$event.stopPropagation(); op.toggle($event)" [text]="true"
                             icon="pi pi-ellipsis-v" />
@@ -67,7 +68,7 @@
                 </p-popover>
                 <p-popover #chat>
                     <ng-template #content>
-                        <app-chat class="flex flex-col w-[420px] max-w-full" [filename]="item.filename" />
+                        <app-chat class="flex flex-col w-[420px] max-w-full" [file]="item" [filename]="item.filename" />
                     </ng-template>
                 </p-popover>
                 }

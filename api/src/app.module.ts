@@ -9,6 +9,7 @@ import { BlaudirektModule } from './features/blaudirekt/blaudirekt.module';
 import { BrokerModule } from './features/broker/broker.module';
 import { FilesModule } from './features/files/files.module';
 import { LinksModule } from './features/links/links.module';
+import { MessagesModule } from './features/messages/messages.module';
 import { NotesModule } from './features/notes/notes.module';
 import { RolesModule } from './features/roles/roles.module';
 import { SearchModule } from './features/search/search.modue';
@@ -20,6 +21,7 @@ import { UserModule } from './features/users/users.module';
     AuthModule,
     LinksModule,
     BrokerModule,
+    MessagesModule,
     SearchModule,
     NotesModule,
     UserModule,
