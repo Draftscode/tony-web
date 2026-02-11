@@ -32,6 +32,7 @@ import { MonthlyPipe } from "./monthly.pipe";
 import { NewPipe } from "./new.pipe";
 import { SavingsPipe } from "./savings.pipe";
 import { TotalPipe } from "./total.pipe";
+import { AccountStore } from "../../../data-access/store/account.store";
 
 type Header = {
     label: string;
@@ -224,12 +225,13 @@ export default class FormComponent {
     }
 
     private readonly cDatePipe = inject(CDatePipe);
+    private readonly accountStore = inject(AccountStore);
+
     protected async _onCreatePdf() {
         if (this._formGroup.invalid) { return; }
 
         const form = this.getData(true);
-
-        this.fileStore.createPdf(form);
+        this.fileStore.createPdf(form, this.accountStore.me.value()?.color);
     }
 
     private getData(transformDate: boolean = false) {

@@ -21,6 +21,8 @@ export type Role = {
 export type User = {
     id: number;
     roles: Role[];
+    logo: string | null;
+    color: string;
     firstname: string;
     lastname: string;
     username: string;
@@ -36,10 +38,13 @@ export type Credentials = {
 export class AuthService {
     private readonly http = inject(HttpClient);
 
-    getMe(accessToken: Signal<string | undefined>) {
+    getMe(accessToken: Signal<string | undefined>, i: Signal<string>) {
         return httpResource<User | null>(() => accessToken() ? ({
             url: `${environment.origin}/auth/me`,
             method: 'GET',
+            params: {
+                i: i(),
+            }
         }) : undefined, {
             defaultValue: null,
         })

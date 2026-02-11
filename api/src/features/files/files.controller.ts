@@ -15,9 +15,9 @@ export class FilesController {
     @UseGuards(JwtAuthGuard)
     @Get()
     getFiles(
-        @User() user:UserEntity,
+        @User() user: UserEntity,
         @Query('q') query: string) {
-        return this.filesService.getAll(query,user);
+        return this.filesService.getAll(query, user);
     }
 
     @UseGuards(JwtAuthGuard)
@@ -73,10 +73,13 @@ export class FilesController {
 
 
 
-    // @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard)
     @Post('pdf')
-    async createPdf(@Body('contents') contents: string, @Res() res: Response) {
-        const buffer = await this.filesService.createPdf(contents);
+    async createPdf(
+        @User() user: UserEntity,
+        @Body('contents') contents: string,
+        @Res() res: Response) {
+        const buffer = await this.filesService.createPdf(contents, { logo: user.logo });
         res.set({
             'Content-Type': 'application/pdf',
             'Content-Disposition': 'inline; filename="export.pdf"', // "inline" opens in browser tab

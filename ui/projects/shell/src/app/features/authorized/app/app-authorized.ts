@@ -3,7 +3,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule, RouterOutlet } from '@angular/router';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { AutoComplete } from 'primeng/autocomplete';
 import { AvatarModule } from 'primeng/avatar';
@@ -22,17 +22,19 @@ import { RippleModule } from 'primeng/ripple';
 import { ScrollerModule } from 'primeng/scroller';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
-import { debounceTime, map, startWith, Subject } from 'rxjs';
+import { debounceTime, lastValueFrom, map, startWith, Subject } from 'rxjs';
 import * as packageJson from '../../../../../../../package.json';
 import { ThemeService } from '../../../data-access/provider/theme.service';
 import { AccountStore } from '../../../data-access/store/account.store';
 import { BreadcrumbStore } from '../../../data-access/store/breadcrumb.store';
+import { DivisionStore } from '../../../data-access/store/division.store';
 import { SearchStore } from '../../../data-access/store/search.store';
 import { SettingsStore } from '../../../data-access/store/settings.store';
+import { GenericDialog } from '../../../dialogs/generic/generic.dialog';
 import { getMasterDataItems } from '../master-data/master-data.items';
 import { SettingsComponent } from '../settings/settings.component';
 import { MainMenuComponent } from './main-menu/main-menu.component';
-import { GenericDialog } from '../../../dialogs/generic/generic.dialog';
+import { ProfileComponent } from './profile/profile.component';
 
 @Component({
   selector: 'app',
@@ -46,6 +48,7 @@ import { GenericDialog } from '../../../dialogs/generic/generic.dialog';
   styleUrl: 'app-authorized.scss',
 })
 export default class App {
+  private readonly translate = inject(TranslateService);
   protected readonly version = packageJson.version;
   protected readonly _themeService = inject(ThemeService);
   protected readonly accountStore = inject(AccountStore);
@@ -101,25 +104,12 @@ export default class App {
     this.searchStore.connectQuery(this.query);
   }
 
-  protected selectItem(item: { kind: string; id: number; name: string; value: string }) {
+  private readonly divisionStore = inject(DivisionStore);
+  protected async selectItem(item: { kind: string; id: string; name: string; value: string }) {
     switch (item.kind) {
-      // case 'offer':
-      //   this.router.navigate(['/app', 'offer', item.id])
-      //   break;
-      // case 'ip.asset':
-      //   this.router.navigate(['/app', 'ipassets'], { queryParams: { id: item.id } })
-      //   break;
-      // case 'jurisdiction':
-      //   this.router.navigate(['/app', 'jurisdiction'], { queryParams: { id: item.id } })
-      //   break;
-      // case 'strategy':
-      //   this.router.navigate(['/app', 'complexity-options'], { queryParams: { id: item.id } })
-      //   break;
-      // case 'offer.item':
-      //   this.router.navigate(['/app', 'items'], { queryParams: { id: item.id } })
-      //   break;
+
       case 'info': {
-        this.dialogService.open(GenericDialog, {
+        const ref = this.dialogService.open(GenericDialog, {
           data: {
             contents: item.value
           },
@@ -128,9 +118,26 @@ export default class App {
           width: '420px',
           maximizable: true,
           header: item.name,
-        })
+        });
+        if (!ref) { return; }
+        const result = await lastValueFrom(ref.onClose);
+        if (result?.type === 'manually') {
+          await this.divisionStore.updateDivision(item.id, { info: result.data });
+        }
       }
     }
+  }
+
+  protected openProfile() {
+    const me = this.accountStore.me.value();
+    if (!me) { return; }
+    const name = me.firstname ? `${me.firstname} ${me.lastname ?? ''}` : me.username;
+    this.dialogService.open(ProfileComponent, {
+      header: this.translate.instant('utils.hello', { value: name }),
+      modal: true,
+      closable: true,
+      maximizable: true,
+    });
   }
 
 }

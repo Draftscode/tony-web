@@ -24,8 +24,8 @@
     <ng-template #end>
         <p-divider />
         <div class="w-full flex-col items-center justify-center flex mb-2 gap-2">
-            <div
-                [class]="`w-full px-2 flex gap-1 items-center ${ mainMenu.isMouseOver() || menuMode !== 'slim' ? '':'justify-center'}`">
+            <div (click)="openProfile()"
+                [class]="`cursor-pointer hover:bg-highlight rounded w-full px-2 flex gap-1 items-center ${ mainMenu.isMouseOver() || menuMode !== 'slim' ? '':'justify-center'}`">
                 <p-avatar [label]="avatarLabel()" shape="circle" />
                 @if(mainMenu.isMouseOver() || menuMode !== 'slim') {
                 <span>Hi</span>

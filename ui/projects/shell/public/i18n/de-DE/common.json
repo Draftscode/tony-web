@@ -5,6 +5,7 @@
         }
     },
     "label": {
+        "color": "Farbe",
         "sync": {
             "label": "Aktualisiere Daten"
         },
@@ -39,7 +40,10 @@
         "import": "Importieren",
         "file": {
             "label": "Datei",
-            "name": "Dateiname"
+            "name": "Dateiname",
+            "info": {
+                "empty": "Wähle eine Datei zum hochladen aus"
+            }
         },
         "users": "Benutzer",
         "plural": {
@@ -82,6 +86,7 @@
         }
     },
     "utils": {
+        "hello": "Hallo {{value}}",
         "list": {
             "empty": "Keine Ergebnisse."
         },
@@ -100,10 +105,12 @@
         "select": {
             "all": "Alles auswählen"
         },
+        "clear": "Zurücksetzen",
         "confirm": "bestätigen",
         "delete": "Löschen",
         "edit": "Bearbeiten",
-        "comment": "Kommentare"
+        "comment": "Kommentare",
+        "complete": "Fertig"
     },
     "date": {
         "datetime": "dd.MM.yy HH:MM"
@@ -142,10 +149,141 @@
             "label": "Nachtmodus"
         }
     },
+    "primeng": {
+        "date": "dd.mm.yy",
+        "startsWith": "Beginnt mit",
+        "contains": "Enthält",
+        "notContains": "Enthält nicht",
+        "endsWith": "Endet mit",
+        "equals": "Gleich",
+        "notEquals": "Ungleich",
+        "noFilter": "Kein Filter",
+        "lt": "Kleiner als",
+        "lte": "Kleiner oder gleich",
+        "gt": "Größer als",
+        "gte": "Größer oder gleich",
+        "dateIs": "Datum ist",
+        "dateIsNot": "Datum ist nicht",
+        "dateBefore": "Datum ist vor",
+        "dateAfter": "Datum ist nach",
+        "clear": "Zurücksetzen",
+        "apply": "Anwenden",
+        "matchAll": "Alle zutreffen",
+        "matchAny": "Mindestens eine zutreffen",
+        "addRule": "Regel hinzufügen",
+        "removeRule": "Regel entfernen",
+        "accept": "Ja",
+        "reject": "Nein",
+        "choose": "Auswählen",
+        "upload": "Hochladen",
+        "cancel": "Abbrechen",
+        "completed": "Abgeschlossen",
+        "pending": "Ausstehend",
+        "fileSizeTypes": [
+            "B",
+            "KB",
+            "MB",
+            "GB",
+            "TB",
+            "PB",
+            "EB",
+            "ZB",
+            "YB"
+        ],
+        "dayNames": [
+            "Sonntag",
+            "Montag",
+            "Dienstag",
+            "Mittwoch",
+            "Donnerstag",
+            "Freitag",
+            "Samstag"
+        ],
+        "dayNamesShort": [
+            "So",
+            "Mo",
+            "Di",
+            "Mi",
+            "Do",
+            "Fr",
+            "Sa"
+        ],
+        "dayNamesMin": [
+            "So",
+            "Mo",
+            "Di",
+            "Mi",
+            "Do",
+            "Fr",
+            "Sa"
+        ],
+        "monthNames": [
+            "Januar",
+            "Februar",
+            "März",
+            "April",
+            "Mai",
+            "Juni",
+            "Juli",
+            "August",
+            "September",
+            "Oktober",
+            "November",
+            "Dezember"
+        ],
+        "monthNamesShort": [
+            "Jan",
+            "Feb",
+            "Mär",
+            "Apr",
+            "Mai",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Okt",
+            "Nov",
+            "Dez"
+        ],
+        "chooseYear": "Jahr auswählen",
+        "chooseMonth": "Monat auswählen",
+        "chooseDate": "Datum auswählen",
+        "prevDecade": "Vorheriges Jahrzehnt",
+        "nextDecade": "Nächstes Jahrzehnt",
+        "prevYear": "Vorheriges Jahr",
+        "nextYear": "Nächstes Jahr",
+        "prevMonth": "Vorheriger Monat",
+        "nextMonth": "Nächster Monat",
+        "prevHour": "Vorherige Stunde",
+        "nextHour": "Nächste Stunde",
+        "prevMinute": "Vorherige Minute",
+        "nextMinute": "Nächste Minute",
+        "prevSecond": "Vorherige Sekunde",
+        "nextSecond": "Nächste Sekunde",
+        "am": "vorm.",
+        "pm": "nachm.",
+        "today": "Heute",
+        "weekHeader": "KW",
+        "firstDayOfWeek": 1,
+        "dateFormat": "dd.mm.yy",
+        "weak": "Schwach",
+        "medium": "Mittel",
+        "strong": "Stark",
+        "passwordPrompt": "Passwort eingeben",
+        "emptyFilterMessage": "Keine Ergebnisse gefunden",
+        "searchMessage": "{0} Ergebnisse verfügbar",
+        "selectionMessage": "{0} Elemente ausgewählt",
+        "emptySelectionMessage": "Kein Element ausgewählt",
+        "emptySearchMessage": "Keine Ergebnisse gefunden",
+        "emptyMessage": "Keine Optionen verfügbar"
+    },
     "administration": {
         "label": "Administration",
         "division": {
-            "label": "Bereich"
+            "label": "Bereich",
+            "info": {
+                "edit": "Dieser Bereich hat noch keine Beschreibung."
+            }
         },
         "block": {
             "label": "Baustein",
@@ -163,7 +301,8 @@
             }
         },
         "user": {
-            "label": "Benutzer"
+            "label": "Benutzer",
+            "logo": "Logo"
         }
     },
     "blaudirekt": {

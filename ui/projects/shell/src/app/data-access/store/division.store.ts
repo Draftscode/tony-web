@@ -61,6 +61,10 @@ export const DivisionStore = signalStore(
                 patchState(store, { filter: { ...store.filter(), timestamp: new Date().toISOString() } });
             }
         },
+        updateDivision: async (divisionId: string, dto: Partial<BlaudirektDivision>) => {
+            await lastValueFrom(store.blaudirectService.editDivision(divisionId, dto));
+            patchState(store, { filter: { ...store.filter(), timestamp: new Date().toISOString() } });
+        },
         search: (filter: Partial<{ query: string; limit: number; offset: number; sortField: string; sortOrder: number }>) => {
             patchState(store, { filter: { ...store.filter(), ...filter } });
         },

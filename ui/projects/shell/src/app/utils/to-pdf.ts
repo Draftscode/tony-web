@@ -39,8 +39,7 @@ export type Content = {
     groups: Group[],
 }
 
-export function toPdf(content: Content, translate: TranslateService) {
-
+export function toPdf(content: Content, translate: TranslateService, color: string | null = 'rgb(25, 66, 109)') {
     const styles = `
     .wrapper {
     overflow: hidden;
@@ -52,20 +51,11 @@ export function toPdf(content: Content, translate: TranslateService) {
         border-radius: 4px;
         font-family: Arial, sans-serif;
         font-size: 12px;
-        // border: 1px solid rgb(220,220,220);
         border-radius: 4px;
         overflow: hidden;
         border-collaps:collapse;
     }
 
-//     thead {
-//       display: table-header-group;
-//       }
-
-//       @media print {
-//   thead {
-//     display: table-row-group !important; /* This disables repetition */
-//   }
 }
         tr {
             break-inside: avoid;
@@ -83,8 +73,7 @@ export function toPdf(content: Content, translate: TranslateService) {
             padding: 12px 6px;
             text-align: left;
             font-weight: bold;
-            color: white;
-            color:rgb(25, 66, 109);
+            color:${color};
             border-bottom: 1px solid rgb(125,125,125);
         }
 
@@ -96,7 +85,6 @@ export function toPdf(content: Content, translate: TranslateService) {
 
        
   border-bottom: 1px solid #e5e7eb;
-//   padding: 12px 16px;
 
         }
 
@@ -154,8 +142,8 @@ export function toPdf(content: Content, translate: TranslateService) {
             <div>${row['nr'] ?? '-'}</div></td>`;
             cells += `<td>
             <div style="display: flex; align-items: center; gap: .25rem">${row['insurer'] ?
-                                    `<img style="height: 32px; width: 100px; padding: 4px; min-width: 100px; object-fit: contain" src="${img}" /><span>${row['insurer'].name}</span>` : '-'}</div></td>`;
-                   
+                    `<img style="height: 32px; width: 100px; padding: 4px; min-width: 100px; object-fit: contain" src="${img}" /><span>${row['insurer'].name}</span>` : '-'}</div></td>`;
+
             cells += `<td>
             <div>${row['party'] ?? '-'}</div></td>`;
             cells += `<td>

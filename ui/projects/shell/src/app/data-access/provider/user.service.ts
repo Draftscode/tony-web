@@ -29,4 +29,8 @@ export class UserService {
 
         return this.http.put<User>(`${environment.origin}/users/${id}`, user);
     }
+
+    editMe(user: Partial<User>) {
+        return this.http.put<User>(`${environment.origin}/users/me`, user);
+    }
 }

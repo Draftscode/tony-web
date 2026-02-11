@@ -4,6 +4,7 @@ import { JwtAuthGuard } from "../../common/guards/jwt-auth.guard";
 import { RolesGuard } from "../../common/guards/roles.guard";
 import { UserEntity } from "../../entities/user.entity";
 import { UsersService } from "./users.service";
+import { User } from "../auth/data-access/authorized-request";
 
 @Controller('users')
 export class UsersController {
@@ -17,6 +18,16 @@ export class UsersController {
         @Query('q') query: string,
     ) {
         return this.userService.getAll(query);
+    }
+
+    @UseInterceptors(ClassSerializerInterceptor)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Put('me')
+    editMe(
+        @User() me: UserEntity,
+        @Body() user: Partial<UserEntity>,
+    ) {
+        return this.userService.editUser(me.id, user);
     }
 
     @UseInterceptors(ClassSerializerInterceptor)

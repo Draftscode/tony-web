@@ -1,13 +1,15 @@
 import { computed, inject } from "@angular/core";
+import { Router } from "@angular/router";
 import { patchState, signalStore, withComputed, withHooks, withMethods, withProps, withState } from "@ngrx/signals";
 import { lastValueFrom } from "rxjs";
 import { withResources } from "../../utils/signals";
-import { AuthService, Credentials } from "../provider/auth.service";
-import {Router} from "@angular/router";
+import { AuthService, Credentials, User } from "../provider/auth.service";
+import { UserService } from "../provider/user.service";
 
 export const AccountStore = signalStore(
     { providedIn: 'root' },
     withState({
+        i: new Date().toISOString(),
         isRefreshing: false,
         timestamp: new Date().toISOString(),
         credentials: null as Credentials | null,
@@ -20,6 +22,7 @@ export const AccountStore = signalStore(
     withProps(store => ({
         router: inject(Router),
         authService: inject(AuthService),
+        userService: inject(UserService),
         setCredentials: (credentials: Credentials | null) => {
             if (credentials) {
                 localStorage.setItem('credentials', JSON.stringify(credentials ?? {}));
@@ -38,7 +41,7 @@ export const AccountStore = signalStore(
         }
     })),
     withResources(store => ({
-        me: store.authService.getMe(store.accessToken),
+        me: store.authService.getMe(store.accessToken, store.i),
     })),
     withMethods(store => ({
         logout: () => {
@@ -48,6 +51,10 @@ export const AccountStore = signalStore(
         login: async (username: string, password: string) => {
             const credentials = await lastValueFrom(store.authService.login(username, password));
             store.setCredentials(credentials);
+        },
+        editMe: async (dto: Partial<User>) => {
+            const user = await lastValueFrom(store.userService.editMe(dto));
+            patchState(store, { i: new Date().toISOString() });
         },
         refresh: async () => {
             const token = store.refreshToken();

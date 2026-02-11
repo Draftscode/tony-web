@@ -43,4 +43,10 @@ export class UserEntity {
     @ManyToMany(_ => UserEntity, user => user.users)
     @JoinTable()
     users: Relation<UserEntity[]>;
+
+    @Column({ nullable: true })
+    logo: string;
+
+    @Column({ nullable: true })
+    color: string;
 }

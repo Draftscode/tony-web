@@ -5,6 +5,7 @@ import { UserEntity } from "src/entities/user.entity";
 import { DataSource, ILike, In } from "typeorm";
 import { FileDataGroup, FileDataPerson } from "./files.model";
 import { usePdfPreset } from "./pdf.preset";
+import { TONYM_LOGO } from "./tonym";
 
 export type ImportedFile = {
     persons: FileDataPerson[];
@@ -101,7 +102,7 @@ export class FilesService {
         return this.dataSource.manager.findOne(FileEntity, { where: { filename } });
     }
 
-    async createPdf(contents: string) {
+    async createPdf(contents: string, options?: Partial<{ logo: string }>) {
         let browser;
         let pdfBuffer;
 
@@ -112,7 +113,7 @@ export class FilesService {
                 args: ['--no-sandbox', '--disable-setuid-sandbox']
             });
             const page = await browser.newPage();
-            await page.setContent(usePdfPreset(contents), { waitUntil: 'networkidle0' });
+            await page.setContent(usePdfPreset(options?.logo, contents), { waitUntil: 'networkidle0' });
             pdfBuffer = await page.pdf({
                 format: 'A4',                 // Page size
                 landscape: true,              // Landscape mode
@@ -133,8 +134,12 @@ export class FilesService {
 
                 // Footer template
                 footerTemplate: `
-        <div style="width:100%; font-size:12px; text-align:center; padding:10px;">
-          Page <span class="pageNumber"></span> of <span class="totalPages"></span>
+        <div style="width:100%; font-size:12px; text-align:center; padding:10px;justify-content: space-between; align-items: center; display: flex; flex-direction: row; gap: 12px">
+        <div></div> 
+        <div>
+        Page <span class="pageNumber"></span> of <span class="totalPages"></span>
+        </div>
+          <div style="gap: 4px; display: flex; align-items: center; font-size: 10px; color: rgb(100,100,00)">${options?.logo ? `powered by <img src="${TONYM_LOGO}" alt="powered by" style="width: auto; height: 24px" />` : ''}</div>
         </div>
       `,
             });

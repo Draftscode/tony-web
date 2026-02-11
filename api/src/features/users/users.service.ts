@@ -46,6 +46,8 @@ export class UsersService implements IUserRepository {
         })
     }
 
+    
+
     async getUser(id: number) {
         return this.datasource.manager.findOneOrFail(UserEntity, { where: { id }, relations: { users: true } });
     }

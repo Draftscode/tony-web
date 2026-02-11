@@ -1,0 +1,35 @@
+@if(me(); as me) {
+<div class="gap-2 p-2 flex min-w-[300px] flex-col">
+    <div class="flex flex-col gap-2">
+        <span class="text-muted">{{'label.color'|translate}}</span>
+        <div class="flex-1 flex flex-col items-center">
+            <label for="cp-hex" class="font-bold block mb-2"> HEX </label>
+            <p-colorpicker appendTo="body" (onHide)="changeColor($event)" [(ngModel)]="color" inputId="cp-hex" class="mb-4" />
+            <span>{{ color() }}</span>
+        </div>
+    </div>
+    <div class="flex flex-col gap-2">
+
+
+        <span class="text-muted">{{'auth.user.logo'|translate}}</span>
+        @if(me.logo) {
+        <div class="flex w-full justify-center">
+            <img [src]="me.logo" alt="logo" class="w-[200px] object-contain" />
+        </div>
+        }
+        @else {
+        <p-message severity="info" icon="pi pi-info-circle">{{'label.file.info.empty'|translate}}</p-message>
+        }
+    </div>
+    <div class="flex gap-2 w-full justify-end">
+        @if(me.logo) {
+        <p-button [label]="'action.clear'|translate" (onClick)="clear()" icon="pi pi-times" [text]="true" size="small"
+            severity="danger" />
+        }
+        <p-fileupload #upload [pTooltip]="'label.import'|translate" [auto]="true" [multiple]="false" mode="basic"
+            [uploadButtonProps]="{label:''}" [chooseButtonProps]="{label:'',size:'small',text: true}"
+            chooseIcon="pi pi-upload" name="import[]" accept="" maxFileSize="1000000" (onSelect)="onImport($event)">
+        </p-fileupload>
+    </div>
+</div>
+}

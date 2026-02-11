@@ -3,12 +3,12 @@ import { patchState, signalMethod, signalStore, withComputed, withMethods, withP
 import { TranslateService } from "@ngx-translate/core";
 import { ConfirmationService } from "primeng/api";
 import { DialogService } from "primeng/dynamicdialog";
-import { finalize, lastValueFrom, switchMap, take, tap } from "rxjs";
+import { finalize, lastValueFrom, switchMap, take } from "rxjs";
 import { FileDialogComponent } from "../../dialogs/file.dialog";
 import { withResources } from "../../utils/signals";
 import { Content, toPdf } from "../../utils/to-pdf";
-import { DataFile, FileService } from "../provider/file.service";
 import { BlaudirektCustomer } from "../provider/blaudirekt.service";
+import { DataFile, FileService } from "../provider/file.service";
 
 export const FileStore = signalStore(
     { providedIn: 'root' },
@@ -73,9 +73,9 @@ export const FileStore = signalStore(
                 }),
                 finalize(() => store.makeNonBusy())));
         },
-        createPdf: async <T extends Content>(contents: T) => {
+        createPdf: async <T extends Content>(contents: T, color?: string | null) => {
             store.makeBusy();
-            const html = toPdf(contents, store.translate);
+            const html = toPdf(contents, store.translate, color);
             const blob = await lastValueFrom(store.fileService.createPdf(html).pipe(finalize(() => store.makeNonBusy())));
             const fileURL = URL.createObjectURL(blob);
             window.open(fileURL, '_blank');
@@ -125,7 +125,7 @@ export const FileStore = signalStore(
                 width: '420px'
             });
 
-            if(!ref) {
+            if (!ref) {
                 return null;
             }
 
