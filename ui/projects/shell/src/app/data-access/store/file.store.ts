@@ -18,6 +18,8 @@ export const FileStore = signalStore(
             query: '' as string,
             timestamp: new Date().toISOString(),
         },
+        offset: 0,
+        limit: 10,
     }),
     withProps(store => ({
         fileService: inject(FileService),
@@ -35,12 +37,15 @@ export const FileStore = signalStore(
         }
     })),
     withResources(store => ({
-        files: store.fileService.getAllFiles(store.filter.query, store.filter.timestamp),
+        files: store.fileService.getAllFiles(store.filter.query, store.filter.timestamp, store.limit, store.offset),
     })),
     withMethods(store => ({
-        connectQuery: signalMethod<string>(query => {
+        changePage: (offset: number, limit: number) => {
+            patchState(store, { offset, limit });
+        },
+        connectQuery: signalMethod<string | undefined>(query => {
             if (store.filter.query() === query) { return; }
-            patchState(store, { filter: { ...store.filter(), query } });
+            patchState(store, { filter: { ...store.filter(), query: query ?? '' } });
         }),
         editFile: (file: DataFile) => {
             store.makeBusy();

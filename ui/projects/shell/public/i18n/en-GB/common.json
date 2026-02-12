@@ -305,6 +305,9 @@
             "logo": "Logo"
         }
     },
+     "color": {
+        "info": "The selected color will be represented in both, the ui and the final pdf."
+    },
     "blaudirekt": {
         "search": {
             "customer": "Blaudirekt customer search"

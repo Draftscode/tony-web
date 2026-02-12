@@ -16,12 +16,15 @@ import { TooltipModule } from "primeng/tooltip";
 import { FileStore } from "../../../../data-access/store/file.store";
 import { UserComponent } from "../../../../ui/user/user.component";
 import { ChatComponent } from "../chat/chat.component";
+import { Paginator, PaginatorState } from "primeng/paginator";
+import { debounceTime, map, startWith, Subject, tap } from "rxjs";
+import { toSignal } from "@angular/core/rxjs-interop";
 
 @Component({
     selector: 'app-file-list',
     templateUrl: 'file-list.html',
     host: { class: 'flex w-full justify-center' },
-    imports: [DataViewModule, CardModule, RouterLink, TooltipModule, DatePipe, ChatComponent,
+    imports: [DataViewModule, CardModule, RouterLink, TooltipModule, DatePipe, ChatComponent, Paginator,
         FileUploadModule, DividerModule, RouterLinkActive, TranslatePipe, UserComponent, OverlayBadgeModule,
         PopoverModule, ButtonModule, InputTextModule, InputGroupAddonModule, InputGroupModule]
 })
@@ -30,14 +33,19 @@ export default class FileList {
     private readonly router = inject(Router);
     private readonly activatedRoute = inject(ActivatedRoute);
 
-    protected readonly query = signal<string>('');
+    protected readonly query$ = new Subject<string>();
+    protected readonly query = toSignal<string>(this.query$.pipe(debounceTime(450), startWith(''), map(v => v ?? '')));
 
     constructor() {
         this.fileStore.connectQuery(this.query);
     }
 
     protected onInput(query: string) {
-        this.query.set(query);
+        this.query$.next(query);
+    }
+
+    protected onPageChange(e: PaginatorState) {
+        this.fileStore.changePage(e.page ?? 0, e.rows ?? 0);
     }
 
     protected async onCreateFile() {

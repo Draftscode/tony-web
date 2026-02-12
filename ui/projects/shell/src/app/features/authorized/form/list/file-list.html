@@ -10,7 +10,8 @@
                 <input class="w-full" pSize="small" [value]="query()" (input)="onInput(search.value)" #search pInputText
                     [placeholder]="'label.search'|translate" />
                 <p-inputgroup-addon>
-                    <p-button [disabled]="!query()" (onClick)="query.set('')" icon="pi pi-times" severity="secondary" />
+                    <p-button [disabled]="!query()" (onClick)="query$.next('')" icon="pi pi-times"
+                        severity="secondary" />
                 </p-inputgroup-addon>
 
             </p-inputgroup>
@@ -26,54 +27,55 @@
             } }}
         </div>
         }
-        <p-dataview [value]="fileStore.files.value().items">
-            <ng-template #emptymessage>
-                <div class="flex w-full justify-center">
-                    {{'utils.list.empty'|translate}}
-                </div>
-            </ng-template>
-            <ng-template #list let-items>
-                @for(item of items; track item.id) {
-                <div [routerLink]="[item.filename]" #rla="routerLinkActive" [queryParams]="{}"
-                    [routerLinkActive]="'bg-highlight'" pRipple
-                    class="flex hover:cursor-pointer items-center justify-between hover:bg-highlight hover:rounded-xl p-2">
-                    <div class="flex flex-col p-menu-item-link gap-0 w-full justify-start items-start">
-                        <div class="flex w-full items-center">
-                            <span class="pi pi-file"></span>
-                            <span class="ml-2">{{ item.filename }}</span>
-                        </div>
-                        @if(item.lastModified) {
-                        <div class="text-gray-400 text-sm text-left">
-                            {{item.lastModified | date:('date.datetime'|translate)}}
-                            <app-user [user]="item.user.username" />
-                        </div>
-                        }
-                    </div>
-                    <div class="flex gap-2 items-center">
-                        <p-button badgeSeverity="danger" [badge]="item.messages?.length"
-                            (onClick)="$event.stopPropagation(); chat.toggle($event)" icon="pi pi-comments"
-                            [text]="true" />
-                        <p-button size="small" (onClick)="$event.stopPropagation(); op.toggle($event)" [text]="true"
-                            icon="pi pi-ellipsis-v" />
-                    </div>
-                </div>
-                <p-popover #op>
-                    <div class="flex flex-col">
-                        <p-button [label]="'action.edit'|translate" (onClick)="fileStore.editFile(item)"
-                            icon="pi pi-pencil" [text]="true" />
-                        <p-button [label]="'action.delete'|translate"
-                            (onClick)="fileStore.deleteFile($event,item.filename)" icon="pi pi-trash" [text]="true" />
 
+        <div class="flex flex-col w-full">
+            @for(item of fileStore.files.value().items; track item.id) {
+            <div [routerLink]="[item.filename]" #rla="routerLinkActive" [queryParams]="{}"
+                [routerLinkActive]="'bg-highlight'" pRipple
+                class="w-full flex hover:cursor-pointer items-center justify-between hover:bg-highlight hover:rounded-xl p-2">
+                <div class="flex flex-col p-menu-item-link gap-0 w-full justify-start items-start">
+                    <div class="flex w-full items-center">
+                        <span class="pi pi-file"></span>
+                        <span class="ml-2">{{ item.filename }}</span>
                     </div>
-                </p-popover>
-                <p-popover #chat>
-                    <ng-template #content>
-                        <app-chat class="flex flex-col w-[420px] max-w-full" [file]="item" [filename]="item.filename" />
-                    </ng-template>
-                </p-popover>
-                }
-            </ng-template>
-        </p-dataview>
+                    @if(item.lastModified) {
+                    <div class="text-gray-400 text-sm text-left">
+                        {{item.lastModified | date:('date.datetime'|translate)}}
+                        <app-user [user]="item.user.username" />
+                    </div>
+                    }
+                </div>
+                <div class="flex gap-2 items-center">
+                    @let count = item.messages.length ? item.messages.length +'':'';
+                    <p-button badgeSeverity="danger" [badge]="count"
+                        (onClick)="$event.stopPropagation(); chat.toggle($event)" icon="pi pi-comments" [text]="true" />
+                    <p-button size="small" (onClick)="$event.stopPropagation(); op.toggle($event)" [text]="true"
+                        icon="pi pi-ellipsis-v" />
+                </div>
+            </div>
+            <p-popover #op>
+                <div class="flex flex-col">
+                    <p-button [label]="'action.edit'|translate" (onClick)="fileStore.editFile(item)" icon="pi pi-pencil"
+                        [text]="true" />
+                    <p-button [label]="'action.delete'|translate" (onClick)="fileStore.deleteFile($event,item.filename)"
+                        icon="pi pi-trash" [text]="true" />
+
+                </div>
+            </p-popover>
+            <p-popover #chat>
+                <ng-template #content>
+                    <app-chat class="flex flex-col w-[420px] max-w-full" [file]="item" [filename]="item.filename" />
+                </ng-template>
+            </p-popover>
+            }
+        </div>
+        <div class="card flex justify-center">
+            @if(fileStore.files.hasValue()) {
+            <p-paginator appendTo="body" (onPageChange)="onPageChange($event)" [first]="fileStore.offset()"
+                [rows]="fileStore.limit()" [totalRecords]="fileStore.files.value().total"
+                [rowsPerPageOptions]="[10, 20, 30]" />
+            }
+        </div>
 
         <p-divider class="mb-1" />
         <div class="flex px-2 w-full items-center">

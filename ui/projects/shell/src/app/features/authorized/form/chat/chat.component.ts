@@ -35,7 +35,7 @@ export class ChatComponent {
             untracked(async () => {
                 if (!file.messages?.length) { return; }
                 for (const m of file.messages) {
-                    await this.accountStore.readMessage(m.id);
+                    await this.messageStore.readMessage(m.id);
                 }
             })
         })

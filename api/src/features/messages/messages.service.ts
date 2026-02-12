@@ -7,7 +7,7 @@ export class MessagesService {
     constructor(private readonly datasource: DataSource) { }
 
     all(userId: number) {
-        return this.datasource.manager.findAndCount(MessageEntity, { where: { user: { id: userId } } })
+        return this.datasource.manager.findAndCount(MessageEntity, { where: { user: { id: userId } }, order: { createdAt: 'ASC' } })
     }
 
     removeOne(userId: number, id: number) {

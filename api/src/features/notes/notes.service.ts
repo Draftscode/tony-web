@@ -31,7 +31,7 @@ export class NotesService {
                     .getMany();
                 const messageEntities = users
                     .filter(u => u.id !== userId)
-                    .map(u => manager.create(MessageEntity, { message: { filename: note.filename }, user: u }));
+                    .map(u => manager.create(MessageEntity, { message: { filename: note.filename, type: 'CHAT' }, user: u }));
                 manager.save(MessageEntity, messageEntities);
             } catch { }
 

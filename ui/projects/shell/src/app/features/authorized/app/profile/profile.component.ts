@@ -9,10 +9,11 @@ import { Tooltip } from 'primeng/tooltip';
 import { AccountStore } from '../../../../data-access/store/account.store';
 import { fileToBase64 } from '../../../../utils/files/file-to-base64';
 import { FormsModule } from '@angular/forms';
+import { Divider } from "primeng/divider";
 
 @Component({
     selector: 'app-profile',
-    imports: [FileUpload, Button, Message, FormsModule, TranslatePipe, Tooltip, ColorPicker],
+    imports: [FileUpload, Button, Message, FormsModule, TranslatePipe, Tooltip, ColorPicker, Divider],
     templateUrl: 'profile.component.html',
 })
 export class ProfileComponent {
@@ -21,14 +22,15 @@ export class ProfileComponent {
     private readonly fileupload = viewChild(FileUpload);
     protected readonly me = computed(() => this.accountStore.me.hasValue() ? this.accountStore.me.value() : null);
 
-    protected readonly color = linkedSignal<string>(() => this.accountStore.me.hasValue() ? this.accountStore.me.value()?.color ?? '#6466f1' : '#6466f1');
+    protected readonly color = linkedSignal<string | null>(() =>
+        this.accountStore.me.hasValue() ? this.accountStore.me.value()?.color ?? '#0D4370' : '#0D4370');
 
     protected async clear() {
         await this.accountStore.editMe({ logo: null });
         this.fileupload()?.clear();
     }
 
-    protected async changeColor(e: string) {
+    protected async changeColor(e: string | null) {
         await this.accountStore.editMe({ color: this.color() })
     }
 

@@ -21,6 +21,9 @@ export const MessageStore = signalStore(
             await lastValueFrom(store.messageService.createMessage({ text: message, userId: store.userId()!, filename: store.file()! }));
             patchState(store, { i: new Date().toISOString() });
         },
+         readMessage: async (messageId: number) => {
+            await lastValueFrom(store.messageService.readMessage(messageId));
+        },
         delete: async (id: number) => {
             await lastValueFrom(store.messageService.deleteMessage(id));
             patchState(store, { i: new Date().toISOString() });

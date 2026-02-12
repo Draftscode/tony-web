@@ -34,7 +34,4 @@ export class UserService {
         return this.http.put<User>(`${environment.origin}/users/me`, user);
     }
 
-    readMessage(messageId: number) {
-        return this.http.delete(`${environment.origin}/messages/${messageId}`);
-    }
 }

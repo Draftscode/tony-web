@@ -18,13 +18,15 @@ export type DataFile = {
 export class FileService {
     private readonly http = inject(HttpClient);
 
-    getAllFiles(q: Signal<string>, timestamp: Signal<string>) {
+    getAllFiles(q: Signal<string>, timestamp: Signal<string>, limit: Signal<number>, offset: Signal<number>) {
         return httpResource<ListResponse<DataFile>>(() => ({
             url: `${environment.origin}/files`,
             method: 'GET',
             params: {
                 q: q(),
                 t: timestamp(),
+                limit: limit(),
+                offset: offset(),
             }
         }), {
             defaultValue: {

@@ -1,17 +1,25 @@
 @if(me(); as me) {
 <div class="gap-2 p-2 flex min-w-[300px] flex-col">
+
     <div class="flex flex-col gap-2">
-        <span class="text-muted">{{'label.color'|translate}}</span>
+        <span class="text-muted font-semibold">{{'label.color'|translate}}</span>
+        <p-message severity="info" icon="pi pi-info-circle">{{'color.info'|translate}}</p-message>
         <div class="flex-1 flex flex-col items-center">
             <label for="cp-hex" class="font-bold block mb-2"> HEX </label>
-            <p-colorpicker appendTo="body" (onHide)="changeColor($event)" [(ngModel)]="color" inputId="cp-hex" class="mb-4" />
+            <p-colorpicker appendTo="body" (onHide)="changeColor($event)" [(ngModel)]="color" inputId="cp-hex"
+                class="mb-4" />
             <span>{{ color() }}</span>
         </div>
+        <div class="flex w-full justify-end">
+            <p-button icon="pi pi-times" (onClick)="changeColor(null)" [label]="'action.clear'|translate" [size]="'small'"
+                [text]="true" severity="secondary" />
+        </div>
     </div>
+    <p-divider />
     <div class="flex flex-col gap-2">
 
 
-        <span class="text-muted">{{'auth.user.logo'|translate}}</span>
+        <span class="text-muted font-semibold">{{'auth.user.logo'|translate}}</span>
         @if(me.logo) {
         <div class="flex w-full justify-center">
             <img [src]="me.logo" alt="logo" class="w-[200px] object-contain" />

@@ -40,4 +40,8 @@ export class MessageService {
     deleteMessage(id: number) {
         return this.http.delete<void>(`${environment.origin}/notes/${id}`)
     }
+
+    readMessage(messageId: number) {
+        return this.http.delete(`${environment.origin}/messages/${messageId}`);
+    }
 }

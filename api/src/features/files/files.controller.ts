@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Query, Req, Res, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, Req, Res, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { File } from "buffer";
 import type { Request, Response } from "express";
@@ -16,8 +16,10 @@ export class FilesController {
     @Get()
     getFiles(
         @User() user: UserEntity,
-        @Query('q') query: string) {
-        return this.filesService.getAll(query, user);
+        @Query('q') query: string,
+        @Query('limit', ParseIntPipe) limit: number,
+        @Query('offset', ParseIntPipe) offset: number) {
+        return this.filesService.getAll(query, user, { limit, offset });
     }
 
     @UseGuards(JwtAuthGuard)

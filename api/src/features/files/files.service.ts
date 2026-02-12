@@ -38,7 +38,7 @@ export class FilesService {
 
     //     return { items, total };
     // }
-    async getAll(query: string, user: UserEntity) {
+    async getAll(query: string, user: UserEntity, options?: Partial<{ limit: number; offset: number }>) {
         const qb = this.dataSource
             .getRepository(FileEntity)
             .createQueryBuilder('file')
@@ -60,9 +60,9 @@ export class FilesService {
             .addSelect('message.createdAt', 'message_createdAt')
 
             .where('file.filename ILIKE :query', { query: `%${query}%` })
-            .orderBy('file.filename', 'ASC')
-            .take(100)
-            .skip(0);
+            .orderBy('file.lastModified', 'DESC')
+            .take(options?.limit ?? 100)
+            .skip(options?.offset ?? 0);
 
         const { entities, raw } = await qb.getRawAndEntities();
 

@@ -22,7 +22,7 @@ export type User = {
     id: number;
     roles: Role[];
     logo: string | null;
-    color: string;
+    color: string | null;
     firstname: string;
     lastname: string;
     username: string;

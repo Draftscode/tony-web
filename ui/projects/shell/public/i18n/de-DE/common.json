@@ -305,6 +305,9 @@
             "logo": "Logo"
         }
     },
+    "color": {
+        "info": "Die ausgewählte Farbe hat sowohl Auswirkung auf das UI, als auch auf die finale PDF."
+    },
     "blaudirekt": {
         "search": {
             "customer": "Blaudirekt Kunden-Suche"
