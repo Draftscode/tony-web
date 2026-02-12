@@ -150,6 +150,7 @@
         }
     },
     "primeng": {
+        "currentPageReportTemplate": "{first} bis {last} von {totalRecords}",
         "date": "dd.mm.yy",
         "startsWith": "Beginnt mit",
         "contains": "Enthält",

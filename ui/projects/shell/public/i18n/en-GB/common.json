@@ -86,6 +86,7 @@
         }
     },
     "primeng": {
+        "currentPageReportTemplate": "{first} to {last} of {totalRecords}",
         "date": "dd/mm/yy",
         "startsWith": "Starts with",
         "contains": "Contains",

@@ -19,13 +19,13 @@
                 [disabled]="!fileStore.files.value().items.length || fileStore.isLoading()" [text]="true"
                 icon="pi pi-refresh" (onClick)="fileStore.refresh()" severity="secondary" />
         </div>
-        <div class="w-full px-2 text-sm text-gray-400">
+        <!-- <div class="w-full px-2 text-sm text-gray-400">
             {{'utils.pagination'|translate:{
             value: fileStore.files.value().items.length,
             total: fileStore.files.value().total,
             entity: 'label.plural.files'|translate
             } }}
-        </div>
+        </div> -->
         }
 
         <div class="flex flex-col w-full">
@@ -71,7 +71,9 @@
         </div>
         <div class="card flex justify-center">
             @if(fileStore.files.hasValue()) {
-            <p-paginator appendTo="body" (onPageChange)="onPageChange($event)" [first]="fileStore.offset()"
+            <p-paginator [showCurrentPageReport]="true" [showPageLinks]="false" [showJumpToPageDropdown]="false"
+                [currentPageReportTemplate]="'primeng.currentPageReportTemplate'|translate" appendTo="body"
+                (onPageChange)="onPageChange($event)" [first]="fileStore.limit() * fileStore.offset()"
                 [rows]="fileStore.limit()" [totalRecords]="fileStore.files.value().total"
                 [rowsPerPageOptions]="[10, 20, 30]" />
             }

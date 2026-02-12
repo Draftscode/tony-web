@@ -45,6 +45,7 @@ export default class FileList {
     }
 
     protected onPageChange(e: PaginatorState) {
+        console.log(e)
         this.fileStore.changePage(e.page ?? 0, e.rows ?? 0);
     }
 

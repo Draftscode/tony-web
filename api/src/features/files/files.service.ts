@@ -23,50 +23,44 @@ export type ImportedFileWrapper = {
 export class FilesService {
     constructor(private readonly dataSource: DataSource) { }
 
-    // async getAll(query: string, user: UserEntity) {
-    //     const [items, total] = await this.dataSource.manager.findAndCount(FileEntity, {
-    //         where: {
-    //             filename: ILike(`%${query}%`),
-    //             userId: user?.users?.length ? In(user.users.map(u => u.id)) : undefined
-    //         },
-    //         order: {
-    //             filename: 'ASC',
-    //         },
-    //         take: 100,
-    //         skip: 0,
-    //     })
-
-    //     return { items, total };
-    // }
-    async getAll(query: string, user: UserEntity, options?: Partial<{ limit: number; offset: number }>) {
-        const qb = this.dataSource
-            .getRepository(FileEntity)
+    async getAll(
+        query: string,
+        user: UserEntity,
+        options?: Partial<{ limit: number; offset: number }>
+    ) {
+        const repository = this.dataSource.getRepository(FileEntity);
+        const _limit = options?.limit ?? 100;
+        const _offset = (options?.offset ?? 0) * _limit;
+        // ---------- MAIN QUERY (with pagination + joins) ----------
+        const qb = repository
             .createQueryBuilder('file')
-
             .leftJoinAndSelect('file.user', 'owner')
-
             .leftJoin(
                 MessageEntity,
                 'message',
                 `
-            message.userId = :userId
-            AND message.message->>'filename' = file.filename
-            `,
+        message.userId = :userId
+        AND message.message->>'filename' = file.filename
+      `,
                 { userId: user.id }
             )
-
             .addSelect('message.id', 'message_id')
             .addSelect('message.message', 'message_content')
             .addSelect('message.createdAt', 'message_createdAt')
-
             .where('file.filename ILIKE :query', { query: `%${query}%` })
             .orderBy('file.lastModified', 'DESC')
-            .take(options?.limit ?? 100)
-            .skip(options?.offset ?? 0);
+            .take(_limit)
+            .skip(_offset);
 
         const { entities, raw } = await qb.getRawAndEntities();
 
-        const items = entities.map((file, index) => {
+        // ---------- COUNT QUERY (without pagination & message join) ----------
+        const total = await repository
+            .createQueryBuilder('file')
+            .where('file.filename ILIKE :query', { query: `%${query}%` })
+            .getCount();
+
+        const items = entities.map((file) => {
             const fileId = file.id;
 
             const messages = raw
@@ -83,8 +77,10 @@ export class FilesService {
             };
         });
 
-        return { items, total: items.length };
+        return { items, total };
     }
+
+
 
 
 
