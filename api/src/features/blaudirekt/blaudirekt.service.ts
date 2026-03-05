@@ -15,6 +15,7 @@ import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity
 import { FcmService } from "../fcm/fcm.service";
 import { FilesService } from "../files/files.service";
 import { API, GRANT } from "./api";
+import { In } from "typeorm";
 
 async function imageUrlToBase64(url: string): Promise<string> {
     if (!url) { return ''; }
@@ -506,7 +507,16 @@ export class BlaudirektService {
         });
     }
 
-    private createOrUpdateContracts(contracts: Record<string, any>[]) {
+    private async createOrUpdateContracts(contracts: Record<string, any>[]) {
+        const companyIds: number[] = [...new Set<number>(
+            contracts.map(c => c.company?.id).filter(Boolean)
+        )];
+
+        const existingCompanies = await this.dataSource.manager.find(CompanyEntity, {
+            select: ['id'],
+            where: { id: In(companyIds) }
+        });
+        const existingCompanyIds = new Set(existingCompanies.map(c => c.id));
         const entities: QueryDeepPartialEntity<ContractEntity>[] = contracts
             ?.filter(contract => !!contract.id)
             .map(contract => ({
@@ -516,7 +526,9 @@ export class BlaudirektService {
                 policyNumber: contract.policyNumber,
                 start: contract.duration.begin,
                 end: contract.duration.end,
-                companyId: contract.company.id,
+                companyId: existingCompanyIds.has(contract.company?.id)
+                    ? contract.company.id
+                    : null,
                 risk: contract.risk,
                 customerId: contract.customer.id,
             }));
