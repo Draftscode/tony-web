@@ -40,7 +40,7 @@ export const InsurerStore = signalStore(
     })),
     withMethods(store => ({
         search: (filter: Partial<{ query: string; limit: number; offset: number; sortField: string; sortOrder: number }>) => {
-            patchState(store, { filter: { ...store.filter(), ...filter } });
+            patchState(store, { filter: { ...store.filter(), ...filter, timestamp: new Date().toISOString() } });
         },
     })),
 );

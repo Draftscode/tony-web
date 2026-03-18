@@ -1,8 +1,14 @@
 {
     "group": {
         "info": {
-            "label": "Bereiche"
+            "label": "Bereiche",
+            "subtitle": "Bereiche mit Bausteinen dokumentieren"
         }
+    },
+    "block": {
+        "label": "Bausteine",
+        "new": "Neuer Baustein",
+        "empty": "Dieser Bereich enthält noch keine Bausteine."
     },
     "label": {
         "color": "Farbe",
@@ -127,7 +133,7 @@
         "complete": "Fertig"
     },
     "date": {
-        "datetime": "dd.MM.yy HH:MM"
+        "datetime": "dd.MM.yy HH:mm"
     },
     "theming": {
         "switch": {
@@ -332,10 +338,6 @@
         "broker": {
             "plural": "Versicherer"
         }
-    },
-    "block": {
-        "label": "Bausteine",
-        "new": "Neuer Baustein"
     },
     "customer": {
         "label": "Mandant",

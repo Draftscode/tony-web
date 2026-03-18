@@ -11,6 +11,8 @@ import { DatePickerModule } from "primeng/datepicker";
 import { DialogModule } from "primeng/dialog";
 import { DividerModule } from 'primeng/divider';
 import { DialogService } from "primeng/dynamicdialog";
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { PopoverModule } from "primeng/popover";
 import { ProgressBarModule } from 'primeng/progressbar';
@@ -92,6 +94,7 @@ export type FormType = {
     host: { class: 'w-full h-full m-auto' },
     selector: 'app-form',
     imports: [AutoCompleteModule, TranslatePipe, DatePickerModule,
+        IconFieldModule, InputIconModule,
         InputTextModule, TableModule, ProgressBarModule, DialogModule, SelectModule,
         TextareaModule, ReactiveFormsModule, CardModule, TotalPipe, FallbackImageDirective,
         AutoCompleteModule, ButtonModule, DividerModule, CDatePipe, TooltipModule,

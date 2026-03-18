@@ -1,8 +1,14 @@
 {
     "group": {
         "info": {
-            "label": "Divisions"
+            "label": "Divisions",
+            "subtitle": "Document divisions with building blocks"
         }
+    },
+    "block": {
+        "label": "Modules",
+        "new": "New module",
+        "empty": "This division does not contain any building blocks yet."
     },
     "label": {
         "color": "Color",
@@ -332,10 +338,6 @@
         "broker": {
             "plural": "Insurers"
         }
-    },
-    "block": {
-        "label": "Modules",
-        "new": "New module"
     },
     "customer": {
         "label": "Client",

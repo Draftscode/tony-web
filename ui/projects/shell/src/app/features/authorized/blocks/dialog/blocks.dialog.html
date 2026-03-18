@@ -1,51 +1,94 @@
-<div class="flex flex-col min-w-[320px] gap-2">
-    <div class="flex flex-col">
-        <p-select [filter]="true" (onFilter)="divisionStore.search({query:$event.filter})" filterBy="name"
-            [options]="divisionStore.divisions.value().items" appendTo="body"
-            (ngModelChange)="selectedBlock.set($event)" [ngModel]="selectedBlock()">
-            <ng-template #selectedItem let-item>
-                {{item.text}}
-            </ng-template>
-            <ng-template #item let-item>
-                {{item.text}}
-            </ng-template>
-        </p-select>
-    </div>
+<div class="flex flex-col gap-5 w-[540px] max-w-full">
 
-    <div class="flex flex-col gap-2">
-        @for(block of blockForm.blocks; track block; let idx = $index) {
-        <div class="flex flex gap-2">
-            <div class="flex flex-col gap-1">
-                <label for="key">Key</label>
-                <input pInputText id="key" [field]="block.key" />
-            </div>
-
-            <div class="flex flex-col gap-1">
-                <label for="placeholder">Platzhalter</label>
-                <input pInputText id="placeholder" [field]="block.placeholder" />
-            </div>
-
-            <div class="flex flex-col gap-1">
-                <label for="description">Bemerkung</label>
-                <input pInputText id="description" [field]="block.description" />
-            </div>
-
-            <div class="flex items-center">
-                <p-button [text]="true" size="small" icon="pi pi-trash" (onClick)="removeBlock(idx)" />
-            </div>
+    <!-- Dialog header -->
+    <div class="flex items-center gap-3 pb-4 border-b border-surface-200 dark:border-surface-700">
+        <span class="flex w-10 h-10 shrink-0 justify-center items-center rounded-xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400">
+            <i class="pi pi-objects-column text-base"></i>
+        </span>
+        <div class="flex flex-col min-w-0">
+            <span class="text-base font-semibold text-surface-800 dark:text-surface-100">{{'group.info.label'|translate}}</span>
+            <span class="text-xs text-surface-400 dark:text-surface-500">{{'group.info.subtitle'|translate}}</span>
         </div>
-        }
-        <p-button [disabled]="blockForm().invalid()" (onClick)="addBlock()" [label]="'block.new'|translate"
-            icon="pi pi-plus" [text]="true" size="small" />
     </div>
 
-    <div class="flex flex-col">
-        <label for="info">Info</label>
-        <!-- <textarea pInputTextarea [autoResize]="true" [field]="blockForm.info"></textarea> -->
-        <p-editor [ngModel]="blockForm.info().value()" (ngModelChange)="blockForm.info().value.set($event)"></p-editor>
+    <!-- Division search + list -->
+    <div class="flex flex-col gap-2">
+        <label class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">{{'administration.division.label'|translate}}</label>
+        <p-iconfield>
+            <p-inputicon class="pi pi-search" />
+            <input pInputText [ngModel]="filterQuery()"
+                (ngModelChange)="filterQuery.set($event); divisionStore.search({query: $event})"
+                [placeholder]="'label.search'|translate" class="w-full" />
+            @if(filterQuery()) {
+            <p-inputicon class="pi pi-times cursor-pointer" (click)="clearFilter()" />
+            }
+        </p-iconfield>
+
+        <div class="flex flex-col max-h-[180px] overflow-y-auto rounded-lg border border-surface-200 dark:border-surface-700">
+            @for(div of divisionStore.divisions.value().items; track div.id) {
+            <button type="button"
+                class="flex items-center gap-3 px-3 py-2.5 text-left hover:bg-surface-50 dark:hover:bg-surface-800/60 transition-colors duration-100 border-b border-surface-100 dark:border-surface-800 last:border-b-0"
+                [class.bg-primary-50]="selectedBlock().id === div.id"
+                [class.dark:bg-primary-900]="selectedBlock().id === div.id"
+                (click)="selectedBlock.set(div)">
+                <span class="flex w-6 h-6 shrink-0 justify-center items-center rounded-md"
+                    [class.bg-primary-100]="selectedBlock().id === div.id"
+                    [class.bg-surface-100]="selectedBlock().id !== div.id"
+                    [class.text-primary-600]="selectedBlock().id === div.id"
+                    [class.text-surface-400]="selectedBlock().id !== div.id">
+                    <i class="pi pi-file text-xs"></i>
+                </span>
+                <span class="text-sm text-surface-700 dark:text-surface-200 flex-1 truncate">{{div.text}}</span>
+                @if(selectedBlock().id === div.id) {
+                <i class="pi pi-check text-xs text-primary-500"></i>
+                }
+            </button>
+            }
+        </div>
     </div>
 
-    <div class="flex justify-end">
-        <p-button [disabled]="blockForm().invalid()" (onClick)="close()" [label]="'label.save'|translate" />
+    <!-- Blocks editor -->
+    <div class="flex flex-col gap-3">
+        <label class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">{{'administration.block.plural'|translate}}</label>
+
+        <div class="flex flex-col gap-2">
+            @for(block of blockForm.blocks; track block; let idx = $index) {
+            <div class="flex items-end gap-2 p-3 rounded-lg bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700">
+                <div class="flex flex-col gap-1 flex-1">
+                    <label class="text-xs text-surface-400 dark:text-surface-500">Key *</label>
+                    <input pInputText [field]="block.key" class="w-full" size="small" />
+                </div>
+                <div class="flex flex-col gap-1 flex-1">
+                    <label class="text-xs text-surface-400 dark:text-surface-500">Platzhalter</label>
+                    <input pInputText [field]="block.placeholder" class="w-full" size="small" />
+                </div>
+                <div class="flex flex-col gap-1 flex-1">
+                    <label class="text-xs text-surface-400 dark:text-surface-500">Bemerkung</label>
+                    <input pInputText [field]="block.description" class="w-full" size="small" />
+                </div>
+                <p-button [text]="true" size="small" icon="pi pi-trash" severity="danger"
+                    class="shrink-0 mb-0.5" (onClick)="removeBlock(idx)" />
+            </div>
+            }
+        </div>
+
+        <p-button [disabled]="blockForm().invalid()" (onClick)="addBlock()"
+            [label]="'block.new'|translate" icon="pi pi-plus" [text]="true" size="small"
+            class="self-start" severity="secondary" />
     </div>
+
+    <!-- Info / Rich text -->
+    <div class="flex flex-col gap-2">
+        <label class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">Info</label>
+        <div class="rounded-lg overflow-hidden border border-surface-200 dark:border-surface-700">
+            <p-editor [ngModel]="blockForm.info().value()" (ngModelChange)="blockForm.info().value.set($event)" />
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex justify-end pt-2 border-t border-surface-200 dark:border-surface-700">
+        <p-button [disabled]="blockForm().invalid()" (onClick)="close()" icon="pi pi-check"
+            [label]="'label.save'|translate" />
+    </div>
+
 </div>

@@ -34,7 +34,8 @@ export class ProfileComponent {
 
 
     protected async resetColor() {
-        await this.accountStore.editMe({ color: null })
+        this.color.set('#0D4370');
+        await this.accountStore.editMe({ color: this.color() })
     }
 
     protected async onImport(e: FileSelectEvent) {

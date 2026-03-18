@@ -40,7 +40,7 @@
         <div class="flex flex-col gap-1 mt-3">
             <label for="insurer" class="text-sm font-medium text-surface-600 dark:text-surface-300">{{'label.insurer.label'|translate}}</label>
             <p-auto-complete formControlName="insurer" [dropdown]="true" appendTo="body" optionLabel="name"
-                [suggestions]="insurers()" styleClass="w-full" (completeMethod)="insurerStore.search({ query: $event.query})">
+                [completeOnFocus]="true" [suggestions]="insurers()" class="w-full" (completeMethod)="insurerStore.search({ query: $event.query})">
                 <ng-template #item let-item>
                     <div class="flex gap-2 items-center overflow-hidden text-ellipsis whitespace-nowrap max-w-[300px]">
                         <app-company [company]="item" />

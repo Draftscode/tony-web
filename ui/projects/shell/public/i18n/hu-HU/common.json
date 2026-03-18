@@ -1,13 +1,17 @@
 {
     "group": {
         "info": {
-            "label": "Területek"
+            "label": "Területek",
+            "subtitle": "Területek dokumentálása építőelemekkel"
         }
+    },
+    "block": {
+        "label": "Modulok",
+        "new": "Új modul",
+        "empty": "Ez a terület még nem tartalmaz építőelemeket."
     },
     "label": {
         "color": "Szín",
-        "yes": "Igen",
-        "no": "Nem",
         "sync": {
             "label": "Adatok frissítése"
         },
@@ -211,12 +215,72 @@
         "cancel": "Mégse",
         "completed": "Befejezve",
         "pending": "Függőben",
-        "fileSizeTypes": ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"],
-        "dayNames": ["Vasárnap", "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat"],
-        "dayNamesShort": ["V", "H", "K", "Sze", "Cs", "P", "Szo"],
-        "dayNamesMin": ["V", "H", "K", "Sz", "Cs", "P", "Sz"],
-        "monthNames": ["Január", "Február", "Március", "Április", "Május", "Június", "Július", "Augusztus", "Szeptember", "Október", "November", "December"],
-        "monthNamesShort": ["Jan", "Feb", "Már", "Ápr", "Máj", "Jún", "Júl", "Aug", "Sze", "Okt", "Nov", "Dec"],
+        "fileSizeTypes": [
+            "B",
+            "KB",
+            "MB",
+            "GB",
+            "TB",
+            "PB",
+            "EB",
+            "ZB",
+            "YB"
+        ],
+        "dayNames": [
+            "Vasárnap",
+            "Hétfő",
+            "Kedd",
+            "Szerda",
+            "Csütörtök",
+            "Péntek",
+            "Szombat"
+        ],
+        "dayNamesShort": [
+            "V",
+            "H",
+            "K",
+            "Sze",
+            "Cs",
+            "P",
+            "Szo"
+        ],
+        "dayNamesMin": [
+            "V",
+            "H",
+            "K",
+            "Sz",
+            "Cs",
+            "P",
+            "Sz"
+        ],
+        "monthNames": [
+            "Január",
+            "Február",
+            "Március",
+            "Április",
+            "Május",
+            "Június",
+            "Július",
+            "Augusztus",
+            "Szeptember",
+            "Október",
+            "November",
+            "December"
+        ],
+        "monthNamesShort": [
+            "Jan",
+            "Feb",
+            "Már",
+            "Ápr",
+            "Máj",
+            "Jún",
+            "Júl",
+            "Aug",
+            "Sze",
+            "Okt",
+            "Nov",
+            "Dec"
+        ],
         "chooseYear": "Év kiválasztása",
         "chooseMonth": "Hónap kiválasztása",
         "chooseDate": "Dátum kiválasztása",
@@ -276,10 +340,6 @@
         "broker": {
             "plural": "Biztosítók"
         }
-    },
-    "block": {
-        "label": "Modulok",
-        "new": "Új modul"
     },
     "customer": {
         "label": "Mandátum (Ügyfél)",

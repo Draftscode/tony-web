@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject, linkedSignal } from "@angular/core";
 import { Field, form, submit } from "@angular/forms/signals";
+import { TranslatePipe } from "@ngx-translate/core";
 import { ButtonModule } from "primeng/button";
-import { DividerModule } from "primeng/divider";
 import { DynamicDialogConfig, DynamicDialogRef } from "primeng/dynamicdialog";
-import { InputGroupModule } from "primeng/inputgroup";
-import { InputGroupAddonModule } from "primeng/inputgroupaddon";
 import { InputTextModule } from "primeng/inputtext";
 import { TooltipModule } from "primeng/tooltip";
 import { DivisionStore } from "../../data-access/store/division.store";
@@ -12,7 +10,7 @@ import { DivisionStore } from "../../data-access/store/division.store";
 @Component({
     selector: 'app-blocks-assistant-dialog',
     templateUrl: 'blocks-assistant.dialog.html',
-    imports: [InputTextModule, TooltipModule, Field, InputGroupAddonModule, InputGroupModule, DividerModule, ButtonModule],
+    imports: [InputTextModule, TooltipModule, Field, ButtonModule, TranslatePipe],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BlocksAssistantDialog {

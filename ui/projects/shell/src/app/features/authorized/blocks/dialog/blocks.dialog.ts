@@ -5,9 +5,12 @@ import { TranslatePipe } from "@ngx-translate/core";
 import { ButtonModule } from "primeng/button";
 import { DynamicDialogConfig, DynamicDialogRef } from "primeng/dynamicdialog";
 import { EditorModule } from 'primeng/editor';
+import { IconFieldModule } from "primeng/iconfield";
+import { InputIconModule } from "primeng/inputicon";
 import { InputTextModule } from "primeng/inputtext";
 import { SelectModule } from "primeng/select";
 import { TextareaModule } from "primeng/textarea";
+import { TooltipModule } from "primeng/tooltip";
 import { BlaudirektDivision, BuildingBlock } from "../../../../data-access/provider/blaudirekt.service";
 import { DivisionStore } from "../../../../data-access/store/division.store";
 
@@ -23,7 +26,7 @@ export const blockSchema = schema<BuildingBlock>((path) => {
     selector: 'app-blocks-dialog',
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: 'blocks.dialog.html',
-    imports: [SelectModule, TranslatePipe, Field, EditorModule, TextareaModule, ButtonModule, InputTextModule, FormsModule],
+    imports: [SelectModule, TranslatePipe, Field, EditorModule, TextareaModule, ButtonModule, InputTextModule, FormsModule, IconFieldModule, InputIconModule, TooltipModule],
 })
 export class BlocksDialog {
     protected readonly divisionStore = inject(DivisionStore);
@@ -31,6 +34,12 @@ export class BlocksDialog {
     private readonly dialogRef = inject(DynamicDialogRef);
 
     protected readonly selectedBlock = signal<BlaudirektDivision>(this.dialogConfig.data.division);
+    protected readonly filterQuery = signal('');
+
+    protected clearFilter() {
+        this.filterQuery.set('');
+        this.divisionStore.search({ query: '' });
+    }
     protected readonly model = linkedSignal(() => {
         const defaultBlocks =   this.selectedBlock().blocks?.length ? this.selectedBlock().blocks ?? [] : [{ key: '', description: '', placeholder: '' }];
         return {

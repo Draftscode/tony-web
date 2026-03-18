@@ -13,7 +13,13 @@
                 <span class="text-xs text-surface-400 dark:text-surface-500">{{'label.file.label'|translate}}</span>
             </div>
         </div>
-        <p-button [icon]="'pi pi-times'" [rounded]="true" [text]="true" severity="secondary" (onClick)="close()" />
+        <div class="flex items-center gap-2 shrink-0">
+            <p-button size="small" [disabled]="fileStore.isLoading() || _formGroup.invalid || _formGroup.pristine"
+                (onClick)="onSave()" icon="pi pi-save" [label]="'label.save'|translate" />
+            <p-button size="small" severity="secondary" [disabled]="fileStore.isLoading() || _formGroup.invalid"
+                (onClick)="_onCreatePdf()" icon="pi pi-file-pdf"
+                [label]="'utils.create.value'|translate:{value:'label.pdf'|translate}" />
+        </div>
     </div>
 
     <form [formGroup]="_formGroup" class="flex flex-col gap-6 overflow-auto w-full pt-4 flex-1 min-h-0 pr-1">
@@ -24,91 +30,95 @@
 
         <!-- Client Information Section -->
         <div class="flex flex-col gap-4 p-5 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <span class="flex w-7 h-7 justify-center items-center rounded-md bg-primary-100 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400">
-                        <i class="pi pi-user text-xs"></i>
-                    </span>
-                    <span class="text-sm font-semibold text-surface-700 dark:text-surface-200">Mandanteninfo</span>
-                </div>
+            <div class="flex items-center gap-2">
+                <span class="flex w-7 h-7 justify-center items-center rounded-md bg-primary-100 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400">
+                    <i class="pi pi-users text-xs"></i>
+                </span>
+                <span class="text-sm font-semibold text-surface-700 dark:text-surface-200">Mandanteninfo</span>
             </div>
 
-            <div formArrayName="persons" class="flex flex-col gap-4">
+            <div formArrayName="persons" class="flex flex-col gap-3">
                 @for(person of _formGroup.controls.persons.controls; track person; let personIdx = $index) {
-                <div [formArrayName]="personIdx"
-                    class="flex flex-col gap-4 p-4 rounded-lg bg-surface-0/50 dark:bg-surface-800/30 border border-surface-200 dark:border-surface-700 relative">
+                <div [formArrayName]="personIdx" class="flex flex-col gap-3 p-4 rounded-lg bg-white dark:bg-surface-900 border border-surface-200 dark:border-surface-700">
 
-                    <!-- Person header row -->
-                    <div class="flex items-start justify-between gap-3">
+                    <!-- Company + delete -->
+                    <div class="flex items-end gap-2">
                         <div class="flex flex-col gap-1 flex-1">
-                            <label for="company" class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">{{'person.company'|translate}}</label>
-                            <input pSize="small" formControlName="company" pInputText id="company" class="w-full" />
+                            <label for="company" class="text-xs text-surface-400 dark:text-surface-500">{{'person.company'|translate}}</label>
+                            <p-iconfield>
+                                <p-inputicon class="pi pi-building" />
+                                <input pSize="small" formControlName="company" pInputText id="company" class="w-full" />
+                            </p-iconfield>
                         </div>
                         <p-button icon="pi pi-trash" severity="danger" [text]="true" size="small"
-                            class="mt-5 shrink-0" (onClick)="removePerson(personIdx)" />
+                            class="shrink-0 mb-0.5" (onClick)="removePerson(personIdx)" />
                     </div>
 
-                    <!-- Gender & Title row -->
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    <!-- Salutation + Title -->
+                    <div class="grid grid-cols-2 gap-3">
                         <div class="flex flex-col gap-1">
-                            <label for="gender" class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">{{'person.gender'|translate}}</label>
+                            <label for="gender" class="text-xs text-surface-400 dark:text-surface-500">{{'person.gender'|translate}}</label>
                             <p-select [options]="genders()" size="small" formControlName="gender" id="gender" styleClass="w-full">
-                                <ng-template #item let-item>
-                                    {{('label.salutation.'+item)|translate}}
-                                </ng-template>
-                                <ng-template #selectedItem>
-                                    {{('label.salutation.'+_formGroup.controls.persons.at(personIdx).controls.gender.value)|translate}}
-                                </ng-template>
+                                <ng-template #item let-item>{{('label.salutation.'+item)|translate}}</ng-template>
+                                <ng-template #selectedItem>{{('label.salutation.'+_formGroup.controls.persons.at(personIdx).controls.gender.value)|translate}}</ng-template>
                             </p-select>
                         </div>
                         <div class="flex flex-col gap-1">
-                            <label for="title" class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">{{'person.title'|translate}}</label>
+                            <label for="title" class="text-xs text-surface-400 dark:text-surface-500">{{'person.title'|translate}}</label>
                             <input pSize="small" formControlName="title" pInputText id="title" class="w-full" />
                         </div>
                     </div>
 
-                    <!-- Name row -->
+                    <!-- First + Last name -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div class="flex flex-col gap-1">
-                            <label for="firstname" class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">
-                                {{'person.firstname'|translate}} <span class="text-red-400">*</span>
-                            </label>
-                            <input pSize="small" formControlName="firstname" pInputText id="firstname" class="w-full" />
+                            <label for="firstname" class="text-xs text-surface-400 dark:text-surface-500">{{'person.firstname'|translate}} <span class="text-red-400">*</span></label>
+                            <p-iconfield>
+                                <p-inputicon class="pi pi-user" />
+                                <input pSize="small" formControlName="firstname" pInputText id="firstname" class="w-full" />
+                            </p-iconfield>
                         </div>
                         <div class="flex flex-col gap-1">
-                            <label for="lastname" class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">
-                                {{'person.lastname'|translate}} <span class="text-red-400">*</span>
-                            </label>
-                            <input pSize="small" formControlName="lastname" pInputText id="lastname" class="w-full" />
+                            <label for="lastname" class="text-xs text-surface-400 dark:text-surface-500">{{'person.lastname'|translate}} <span class="text-red-400">*</span></label>
+                            <p-iconfield>
+                                <p-inputicon class="pi pi-user" />
+                                <input pSize="small" formControlName="lastname" pInputText id="lastname" class="w-full" />
+                            </p-iconfield>
                         </div>
                     </div>
 
-                    <!-- Address row -->
-                    <div class="grid grid-cols-3 gap-3">
-                        <div class="flex flex-col gap-1 col-span-2">
-                            <label for="street" class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">{{'person.address.street'|translate}}</label>
-                            <input pSize="small" formControlName="street" pInputText id="street" class="w-full" />
+                    <!-- Street + No -->
+                    <div class="grid grid-cols-4 gap-3">
+                        <div class="flex flex-col gap-1 col-span-3">
+                            <label for="street" class="text-xs text-surface-400 dark:text-surface-500">{{'person.address.street'|translate}}</label>
+                            <p-iconfield>
+                                <p-inputicon class="pi pi-map-marker" />
+                                <input pSize="small" formControlName="street" pInputText id="street" class="w-full" />
+                            </p-iconfield>
                         </div>
                         <div class="flex flex-col gap-1">
-                            <label for="streetNo" class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">{{'person.address.no'|translate}}</label>
+                            <label for="streetNo" class="text-xs text-surface-400 dark:text-surface-500">{{'person.address.no'|translate}}</label>
                             <input pSize="small" formControlName="streetNo" pInputText id="streetNo" class="w-full" />
                         </div>
                     </div>
 
+                    <!-- Zip + City -->
                     <div class="grid grid-cols-2 gap-3">
                         <div class="flex flex-col gap-1">
-                            <label for="zipCode" class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">{{'person.address.zip'|translate}}</label>
-                            <input pSize="small" formControlName="zipCode" pInputText id="zipCode" class="w-full" />
+                            <label for="zipCode" class="text-xs text-surface-400 dark:text-surface-500">{{'person.address.zip'|translate}}</label>
+                            <p-iconfield>
+                                <p-inputicon class="pi pi-hashtag" />
+                                <input pSize="small" formControlName="zipCode" pInputText id="zipCode" class="w-full" />
+                            </p-iconfield>
                         </div>
                         <div class="flex flex-col gap-1">
-                            <label for="city" class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">{{'person.address.city'|translate}}</label>
-                            <input pSize="small" formControlName="city" pInputText id="city" class="w-full" />
+                            <label for="city" class="text-xs text-surface-400 dark:text-surface-500">{{'person.address.city'|translate}}</label>
+                            <p-iconfield>
+                                <p-inputicon class="pi pi-map" />
+                                <input pSize="small" formControlName="city" pInputText id="city" class="w-full" />
+                            </p-iconfield>
                         </div>
                     </div>
-
-                    @if(!$last) {
-                    <p-divider styleClass="!my-0" />
-                    }
                 </div>
                 }
 
@@ -291,14 +301,6 @@
                 [label]="'utils.create.value'|translate:{value:'label.group'|translate}" />
         </div>
 
-        <!-- Form Actions -->
-        <div class="flex justify-end gap-2 pt-4 border-t border-surface-200 dark:border-surface-700">
-            <p-button size="small" [disabled]="fileStore.isLoading() || _formGroup.invalid || _formGroup.pristine"
-                (onClick)="onSave()" icon="pi pi-save" [label]="'label.save'|translate" />
-            <p-button size="small" severity="secondary" [disabled]="fileStore.isLoading() || _formGroup.invalid"
-                (onClick)="_onCreatePdf()" icon="pi pi-file-pdf"
-                [label]="'utils.create.value'|translate:{value:'label.pdf'|translate}" />
-        </div>
 
     </form>
     }
