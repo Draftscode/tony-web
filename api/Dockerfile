@@ -59,6 +59,7 @@ FROM base AS production
 COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/package*.json ./
+COPY --from=builder /usr/src/app/src/tonym-web-firebase-adminsdk-fbsvc-91736100ff.json ./src/
 RUN mkdir -p ./uploads
 
 EXPOSE 3000
