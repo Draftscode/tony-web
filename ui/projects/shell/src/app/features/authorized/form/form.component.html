@@ -1,273 +1,305 @@
-<p-card class="flex m-auto flex max-w-full" [style]="isNew() ? {'width':'auto'}:{'width':'100%'}">
+<p-card class="flex m-auto max-w-full h-full" [style]="isNew() ? {'width':'auto'}:{'width':'100%'}" [pt]="{root: 'flex flex-col h-full', body: 'flex flex-col flex-1 min-h-0', content: 'flex flex-col flex-1 min-h-0 p-0'}">
 
     @if(_filename()) {
-    <div class="flex w-full items-center justify-between">
-        <div>{{_filename()}}</div>
-        <div>
-            <p-button [icon]="'pi pi-times'" [rounded]="true" [text]="true" (onClick)="close()" />
+
+    <!-- Header -->
+    <div class="flex w-full items-center justify-between gap-4 pb-4 border-b border-surface-200 dark:border-surface-700">
+        <div class="flex items-center gap-3 min-w-0">
+            <span class="flex w-9 h-9 shrink-0 justify-center items-center rounded-lg bg-primary-50 dark:bg-primary-900/30 text-primary-500 dark:text-primary-400">
+                <i class="pi pi-file-edit text-sm"></i>
+            </span>
+            <div class="flex flex-col min-w-0">
+                <span class="text-base font-semibold text-surface-800 dark:text-surface-100 truncate">{{_filename()}}</span>
+                <span class="text-xs text-surface-400 dark:text-surface-500">{{'label.file.label'|translate}}</span>
+            </div>
         </div>
+        <p-button [icon]="'pi pi-times'" [rounded]="true" [text]="true" severity="secondary" (onClick)="close()" />
     </div>
-    <p-divider />
-    <form [formGroup]="_formGroup" class="inline-flex flex-col space-y-2 overflow-auto w-full p-2">
+
+    <form [formGroup]="_formGroup" class="flex flex-col gap-6 overflow-auto w-full pt-4 flex-1 min-h-0 pr-1">
+
         @if(fileStore.isLoading()) {
-        <p-progressbar mode="indeterminate" [style]="{ height: '6px' }" />
+        <p-progressbar mode="indeterminate" [style]="{ height: '4px' }" styleClass="rounded-full" />
         }
-        <div class="flex flex-col gap-2 md:flex-row">
 
+        <!-- Client Information Section -->
+        <div class="flex flex-col gap-4 p-5 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="flex w-7 h-7 justify-center items-center rounded-md bg-primary-100 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400">
+                        <i class="pi pi-user text-xs"></i>
+                    </span>
+                    <span class="text-sm font-semibold text-surface-700 dark:text-surface-200">Mandanteninfo</span>
+                </div>
+            </div>
 
-            <div class="flex flex-col gap-2">
-                <span class="text-xl font-semibold">Mandanteninfo</span>
-                <div formArrayName="persons" class="inline-flex flex-col space-y-2 w-full">
-                    @for(person of _formGroup.controls.persons.controls; track person; let personIdx = $index) {
-                    <div [formArrayName]="personIdx" class="inline-flex flex-col space-y-2 w-full">
+            <div formArrayName="persons" class="flex flex-col gap-4">
+                @for(person of _formGroup.controls.persons.controls; track person; let personIdx = $index) {
+                <div [formArrayName]="personIdx"
+                    class="flex flex-col gap-4 p-4 rounded-lg bg-surface-0/50 dark:bg-surface-800/30 border border-surface-200 dark:border-surface-700 relative">
 
-                        <div class="inline-flex space-x-4 justify-between">
-                            <div class="inline-flex flex-col space-y-1">
-                                <label for="firstname">{{'person.company'|translate}}</label>
-                                <input pSize="small" formControlName="company" pInputText id="company" />
-                            </div>
-                            <p-button icon="pi pi-trash" severity="warn" [text]="true" size="small"
-                                (onClick)="removePerson(personIdx)" />
+                    <!-- Person header row -->
+                    <div class="flex items-start justify-between gap-3">
+                        <div class="flex flex-col gap-1 flex-1">
+                            <label for="company" class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">{{'person.company'|translate}}</label>
+                            <input pSize="small" formControlName="company" pInputText id="company" class="w-full" />
                         </div>
-                        <div class="inline-flex space-x-4">
-                            <div class="inline-flex flex-col space-y-1">
-                                <label for="gender">{{'person.gender'|translate}}</label>
-                                <p-select [options]="genders()" size="small" formControlName="gender" id="gender">
-                                    <ng-template #item let-item>
-                                        {{('label.salutation.'+item)|translate}}
-                                    </ng-template>
-                                    <ng-template #selectedItem>
-                                        {{('label.salutation.'+_formGroup.controls.persons.at(personIdx).controls.gender.value)|translate}}
-                                    </ng-template>
-                                </p-select>
-                            </div>
+                        <p-button icon="pi pi-trash" severity="danger" [text]="true" size="small"
+                            class="mt-5 shrink-0" (onClick)="removePerson(personIdx)" />
+                    </div>
 
-                            <div class="inline-flex flex-col space-y-1">
-                                <label for="title">{{'person.title'|translate}}</label>
-                                <input pSize="small" formControlName="title" pInputText id="title" />
-                            </div>
+                    <!-- Gender & Title row -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        <div class="flex flex-col gap-1">
+                            <label for="gender" class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">{{'person.gender'|translate}}</label>
+                            <p-select [options]="genders()" size="small" formControlName="gender" id="gender" styleClass="w-full">
+                                <ng-template #item let-item>
+                                    {{('label.salutation.'+item)|translate}}
+                                </ng-template>
+                                <ng-template #selectedItem>
+                                    {{('label.salutation.'+_formGroup.controls.persons.at(personIdx).controls.gender.value)|translate}}
+                                </ng-template>
+                            </p-select>
                         </div>
-                        <div class="inline-flex space-x-4">
-                            <div class="inline-flex flex-col space-y-1">
-                                <label for="firstname">{{'person.firstname'|translate}} *</label>
-                                <input pSize="small" formControlName="firstname" pInputText id="firstname" />
-                            </div>
-
-                            <div class="inline-flex flex-col space-y-1">
-                                <label for="lastname">{{'person.lastname'|translate}} *</label>
-                                <input pSize="small" formControlName="lastname" pInputText id="lastname" />
-                            </div>
-
-
-                        </div>
-
-                        <div class="inline-flex space-x-4">
-                            <div class="inline-flex flex-col space-y-1">
-                                <label for="firstname">{{'person.address.street'|translate}}</label>
-                                <input pSize="small" formControlName="street" pInputText id="street" />
-                            </div>
-                            <div class="inline-flex flex-col space-y-1">
-                                <label for="firstname">{{'person.address.no'|translate}}</label>
-                                <input pSize="small" formControlName="streetNo" pInputText id="streetNo" />
-                            </div>
-                        </div>
-                        <div class="inline-flex space-x-4">
-                            <div class="inline-flex flex-col space-y-1">
-                                <label for="firstname">{{'person.address.zip'|translate}}</label>
-                                <input pSize="small" formControlName="zipCode" pInputText id="zipCode" />
-                            </div>
-                        </div>
-                        <div class="inline-flex space-x-4">
-                            <div class="inline-flex flex-col space-y-1">
-                                <label for="firstname">{{'person.address.city'|translate}}</label>
-                                <input pSize="small" formControlName="city" pInputText id="city" />
-                            </div>
+                        <div class="flex flex-col gap-1">
+                            <label for="title" class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">{{'person.title'|translate}}</label>
+                            <input pSize="small" formControlName="title" pInputText id="title" class="w-full" />
                         </div>
                     </div>
-                    <p-divider />
+
+                    <!-- Name row -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="flex flex-col gap-1">
+                            <label for="firstname" class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">
+                                {{'person.firstname'|translate}} <span class="text-red-400">*</span>
+                            </label>
+                            <input pSize="small" formControlName="firstname" pInputText id="firstname" class="w-full" />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label for="lastname" class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">
+                                {{'person.lastname'|translate}} <span class="text-red-400">*</span>
+                            </label>
+                            <input pSize="small" formControlName="lastname" pInputText id="lastname" class="w-full" />
+                        </div>
+                    </div>
+
+                    <!-- Address row -->
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="flex flex-col gap-1 col-span-2">
+                            <label for="street" class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">{{'person.address.street'|translate}}</label>
+                            <input pSize="small" formControlName="street" pInputText id="street" class="w-full" />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label for="streetNo" class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">{{'person.address.no'|translate}}</label>
+                            <input pSize="small" formControlName="streetNo" pInputText id="streetNo" class="w-full" />
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="flex flex-col gap-1">
+                            <label for="zipCode" class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">{{'person.address.zip'|translate}}</label>
+                            <input pSize="small" formControlName="zipCode" pInputText id="zipCode" class="w-full" />
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label for="city" class="text-xs font-medium text-surface-500 dark:text-surface-400 uppercase tracking-wide">{{'person.address.city'|translate}}</label>
+                            <input pSize="small" formControlName="city" pInputText id="city" class="w-full" />
+                        </div>
+                    </div>
+
+                    @if(!$last) {
+                    <p-divider styleClass="!my-0" />
                     }
-                    <p-button (onClick)="addPerson()" icon="pi pi-plus" size="small" label="Person hinzufügen"
-                        severity="secondary" />
                 </div>
+                }
+
+                <p-button (onClick)="addPerson()" icon="pi pi-plus" size="small" label="Person hinzufügen"
+                    severity="secondary" [text]="true" styleClass="self-start" />
             </div>
         </div>
-        <div formArrayName="groups" class="mt-8">
+
+        <!-- Groups / Contract Items -->
+        <div formArrayName="groups" class="flex flex-col gap-6">
             @for(group of _formGroup.controls.groups.controls; track group; let groupIndex = $index) {
-            <div class="w-full flex flex-col space-y-2" [formArrayName]="groupIndex">
-                <div class="flex items-center gap-1">
-                    <span class="text-xl font-semibold">{{group.controls.name.value}}</span>
-                    <p-button icon="pi pi-pencil" size="small" [text]="true" (onClick)="onEditGroup(groupIndex)" />
-                    <p-button icon="pi pi-trash" size="small" severity="warn" [text]="true"
-                        (onClick)="onRemoveGroup(groupIndex)" />
+            <div class="flex flex-col gap-4 p-5 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700" [formArrayName]="groupIndex">
+
+                <!-- Group Header -->
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="flex w-7 h-7 justify-center items-center rounded-md bg-primary-100 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400">
+                            <i class="pi pi-list text-xs"></i>
+                        </span>
+                        <span class="text-sm font-semibold text-surface-700 dark:text-surface-200">{{group.controls.name.value}}</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <p-button icon="pi pi-pencil" size="small" [text]="true" severity="secondary"
+                            (onClick)="onEditGroup(groupIndex)" />
+                        <p-button icon="pi pi-trash" size="small" severity="danger" [text]="true"
+                            (onClick)="onRemoveGroup(groupIndex)" />
+                    </div>
                 </div>
-                <p-table (onRowReorder)="onRowReorder()"
-                    [value]="_formGroup.controls.groups.at(groupIndex).controls.items.controls"
-                    [tableStyle]="{ 'min-width': '50rem', width:'100%' }">
-                    <ng-template #header>
-                        <tr>
-                            <th id="move" style="width:6rem"></th>
-                            <th style="min-width: 200px" [id]="'table-header-type'">{{'label.type'|translate}}
-                            </th>
-                            <th style="min-width: 200px" [id]="'table-header-nr'">{{'label.nr'|translate}}
-                            </th>
-                            <th style="min-width: 200px" [id]="'table-header-insurer'">
-                                {{'label.insurer.label'|translate}}
-                            </th>
-                            <th style="min-width: 200px" [id]="'table-header-party'">{{'label.party'|translate}}
-                            </th>
-                            <th style="min-width: 200px" [id]="'table-header-scope'">{{'label.scope'|translate}}
-                            </th>
-                            <th [id]="'table-header-suggestion'">{{'label.suggestion'|translate}}
-                            </th>
-                            <th style="min-width: 200px" [id]="'table-header-fromTo'">{{'label.fromTo'|translate}}
-                            </th>
-                            <th style="min-width: 200px" [id]="'table-header-oneTimePayment'">
-                                {{'label.oneTimePayment'|translate}}
-                            </th>
-                            <th style="min-width: 200px" [style.width.px]="100" [id]="'table-header-contribution'">
-                                {{'label.contribution.monthly'|translate}}
-                            </th>
-                            <th id="actions"></th>
-                        </tr>
-                    </ng-template>
-                    <ng-template #body let-item let-rowIndex="rowIndex">
-                        <tr [formGroup]="item" [pReorderableRow]="rowIndex">
-                            <td>
-                                <div class="flex gap-2 items-center">
 
-                                    <span class="pi pi-bars" pReorderableRowHandle></span>
-                                    @if(_formGroup.controls.groups.value.length > 1) {
-                                    <p-button [pTooltip]="'label.move'|translate" [text]="true"
-                                        (onClick)="po.toggle($event)" icon="pi pi-chevron-down" size="small" />
-                                    <p-popover #po>
-                                        @for(item of _formGroup.controls.groups.value; track item.name) {
-                                        @if(item.name !== group.value.name) {
-                                        <div>
-                                            <p-button [text]="true" size="small"
-                                                (onClick)="moveTo(group.value.name!,item.name!,rowIndex)"
-                                                [label]="item.name!" />
-                                        </div>
+                <!-- Items Table -->
+                <div class="rounded-lg overflow-hidden border border-surface-200 dark:border-surface-700">
+                    <p-table (onRowReorder)="onRowReorder()"
+                        [value]="_formGroup.controls.groups.at(groupIndex).controls.items.controls"
+                        [tableStyle]="{ 'min-width': '50rem', width:'100%' }"
+                        styleClass="!rounded-none">
+                        <ng-template #header>
+                            <tr>
+                                <th id="move" style="width:6rem" class="bg-surface-100 dark:bg-surface-700 text-xs font-semibold uppercase tracking-wide text-surface-500 dark:text-surface-400"></th>
+                                <th style="min-width: 200px" [id]="'table-header-type'" class="bg-surface-100 dark:bg-surface-700 text-xs font-semibold uppercase tracking-wide text-surface-500 dark:text-surface-400">{{'label.type'|translate}}</th>
+                                <th style="min-width: 160px" [id]="'table-header-nr'" class="bg-surface-100 dark:bg-surface-700 text-xs font-semibold uppercase tracking-wide text-surface-500 dark:text-surface-400">{{'label.nr'|translate}}</th>
+                                <th style="min-width: 200px" [id]="'table-header-insurer'" class="bg-surface-100 dark:bg-surface-700 text-xs font-semibold uppercase tracking-wide text-surface-500 dark:text-surface-400">{{'label.insurer.label'|translate}}</th>
+                                <th style="min-width: 160px" [id]="'table-header-party'" class="bg-surface-100 dark:bg-surface-700 text-xs font-semibold uppercase tracking-wide text-surface-500 dark:text-surface-400">{{'label.party'|translate}}</th>
+                                <th style="min-width: 200px" [id]="'table-header-scope'" class="bg-surface-100 dark:bg-surface-700 text-xs font-semibold uppercase tracking-wide text-surface-500 dark:text-surface-400">{{'label.scope'|translate}}</th>
+                                <th [id]="'table-header-suggestion'" class="bg-surface-100 dark:bg-surface-700 text-xs font-semibold uppercase tracking-wide text-surface-500 dark:text-surface-400">{{'label.suggestion'|translate}}</th>
+                                <th style="min-width: 180px" [id]="'table-header-fromTo'" class="bg-surface-100 dark:bg-surface-700 text-xs font-semibold uppercase tracking-wide text-surface-500 dark:text-surface-400">{{'label.fromTo'|translate}}</th>
+                                <th style="min-width: 140px" [id]="'table-header-oneTimePayment'" class="bg-surface-100 dark:bg-surface-700 text-xs font-semibold uppercase tracking-wide text-surface-500 dark:text-surface-400">{{'label.oneTimePayment'|translate}}</th>
+                                <th style="min-width: 140px" [id]="'table-header-contribution'" class="bg-surface-100 dark:bg-surface-700 text-xs font-semibold uppercase tracking-wide text-surface-500 dark:text-surface-400">{{'label.contribution.monthly'|translate}}</th>
+                                <th id="actions" class="bg-surface-100 dark:bg-surface-700"></th>
+                            </tr>
+                        </ng-template>
+                        <ng-template #body let-item let-rowIndex="rowIndex">
+                            <tr [formGroup]="item" [pReorderableRow]="rowIndex"
+                                class="hover:bg-surface-50 dark:hover:bg-surface-800/60 transition-colors duration-100">
+                                <td class="py-2">
+                                    <div class="flex gap-1 items-center">
+                                        <span class="pi pi-bars text-surface-300 dark:text-surface-600 cursor-grab" pReorderableRowHandle></span>
+                                        @if(_formGroup.controls.groups.value.length > 1) {
+                                        <p-button [pTooltip]="'label.move'|translate" [text]="true"
+                                            (onClick)="po.toggle($event)" icon="pi pi-chevron-down" size="small"
+                                            severity="secondary" />
+                                        <p-popover #po>
+                                            @for(item of _formGroup.controls.groups.value; track item.name) {
+                                            @if(item.name !== group.value.name) {
+                                            <div>
+                                                <p-button [text]="true" size="small"
+                                                    (onClick)="moveTo(group.value.name!,item.name!,rowIndex)"
+                                                    [label]="item.name!" />
+                                            </div>
+                                            }
+                                            }
+                                        </p-popover>
                                         }
-                                        }
-                                    </p-popover>
+                                    </div>
+                                </td>
+                                <td class="py-2 text-sm text-surface-700 dark:text-surface-200">
+                                    {{ item.controls.type.value}}
+                                </td>
+                                <td class="py-2 text-sm text-surface-700 dark:text-surface-200">
+                                    {{ item.controls.nr.value}}
+                                </td>
+                                <td class="py-2">
+                                    <div class="flex flex-row gap-2 items-center">
+                                        <img class="p-1 w-[80px] h-[28px] object-contain min-w-[80px] rounded border border-surface-200 dark:border-surface-700 bg-white" alt="Insurer"
+                                            [src]="item.controls.insurer.value?.logo" fallback="images/empty.jpg" />
+                                        <span class="text-sm text-surface-700 dark:text-surface-200 truncate max-w-[120px]">{{ item.controls.insurer.value?.name }}</span>
+                                    </div>
+                                </td>
+                                <td class="py-2 text-sm text-surface-700 dark:text-surface-200">
+                                    {{ item.controls.party.value}}
+                                </td>
+                                <td class="py-2 max-w-[320px] text-sm text-surface-600 dark:text-surface-300" style="word-break: break-word;">
+                                    {{ item.controls.scope.value}}
+                                </td>
+                                <td class="py-2">
+                                    @if(item.controls.suggestion.value) {
+                                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300">
+                                        {{('label.'+ item.controls.suggestion.value.value) | translate}}
+                                    </span>
                                     }
-                                </div>
-                            </td>
-                            <td>
-                                {{ item.controls.type.value}}
-                            </td>
-                            <td>
-                                {{ item.controls.nr.value}}
-                            </td>
-                            <td>
-                                <div class="flex flex-row gap-2 items-center">
+                                </td>
+                                <td class="py-2 text-sm text-surface-700 dark:text-surface-200">
+                                    {{ item.controls.fromTo.value |cDate:'dd.MM.yy'}}
+                                </td>
+                                <td class="py-2 text-sm font-medium text-surface-700 dark:text-surface-200">
+                                    {{ item.controls.oneTimePayment.value}}&nbsp;€
+                                </td>
+                                <td class="py-2 text-sm font-medium text-surface-700 dark:text-surface-200">
+                                    <span>{{ item | monthly}}</span>&nbsp;€
+                                </td>
+                                <td class="py-2">
+                                    <div class="inline-flex gap-0.5">
+                                        <p-button [text]="true" size="small" [disabled]="fileStore.isLoading()"
+                                            icon="pi pi-pencil" severity="secondary"
+                                            (onClick)="onEditRow(groupIndex,rowIndex)" />
+                                        <p-button [text]="true" size="small" [disabled]="fileStore.isLoading()"
+                                            icon="pi pi-trash" severity="danger"
+                                            (onClick)="_onRemoveRow(groupIndex,rowIndex)" />
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template #footer>
+                            <tr class="bg-surface-50/80 dark:bg-surface-800/50">
+                                <td colspan="8" class="border-b-0 border-t border-surface-300 dark:border-surface-600 py-2">
+                                    <div class="flex gap-2 items-center">
+                                        <span class="text-sm font-semibold text-surface-700 dark:text-surface-200">{{'label.finances.old'|translate}}</span>
+                                        <span class="text-xs text-surface-400 dark:text-surface-500">({{'label.frequency.monthly'|translate}})</span>
+                                    </div>
+                                </td>
+                                <td class="border-b-0 border-t border-surface-300 dark:border-surface-600 py-2"></td>
+                                <td class="text-sm font-semibold text-surface-700 dark:text-surface-200 border-b-0 border-t border-surface-300 dark:border-surface-600 py-2">
+                                    {{_formGroup.controls.groups.at(groupIndex).controls.items.controls | existed:'contribution'}} €
+                                </td>
+                                <td class="border-b-0 border-t border-surface-300 dark:border-surface-600 py-2"></td>
+                            </tr>
+                            <tr class="bg-surface-50/80 dark:bg-surface-800/50">
+                                <td colspan="8" class="border-b-0 py-2">
+                                    <div class="flex gap-2 items-center">
+                                        <span class="text-sm font-semibold text-surface-700 dark:text-surface-200">{{'label.finances.new'|translate}}</span>
+                                        <span class="text-xs text-surface-400 dark:text-surface-500">({{'label.frequency.monthly'|translate}})</span>
+                                    </div>
+                                </td>
+                                <td class="text-sm font-semibold text-surface-700 dark:text-surface-200 border-b-0 py-2">
+                                    {{_formGroup.controls.groups.at(groupIndex).controls.items.controls | totalOnce:'oneTimePayment'}} €
+                                </td>
+                                <td class="text-sm font-semibold text-surface-700 dark:text-surface-200 border-b-0 py-2">
+                                    {{_formGroup.controls.groups.at(groupIndex).controls.items.controls | newContribution:'contribution'}} €
+                                </td>
+                                <td class="border-b-0 py-2"></td>
+                            </tr>
+                            <tr class="bg-primary-50/50 dark:bg-primary-900/10">
+                                <td colspan="8" class="border-b-0 py-2">
+                                    <div class="flex gap-2 items-center">
+                                        <span class="text-sm font-semibold text-primary-700 dark:text-primary-300">{{'label.finances.savings'|translate}}</span>
+                                        <span class="text-xs text-primary-400 dark:text-primary-500">({{'label.frequency.monthly'|translate}})</span>
+                                    </div>
+                                </td>
+                                <td class="border-b-0 py-2"></td>
+                                <td class="text-sm font-bold text-primary-700 dark:text-primary-300 border-b-0 py-2">
+                                    {{_formGroup.controls.groups.at(groupIndex).controls.items.controls | savings:'contribution'}} €
+                                </td>
+                                <td class="border-b-0 py-2"></td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
 
-                                    <img class="p-1 w-[100px] h-[32px] object-contain min-w-[100px]" alt="Insurer"
-                                        [src]="item.controls.insurer.value?.logo" fallback="images/empty.jpg" />
-                                    {{ item.controls.insurer.value?.name }}
-                                </div>
-                            </td>
-                            <td>
-                                {{ item.controls.party.value}}
-                            </td>
-                            <td class="max-w-[320px]" style="word-break: break-word;">
-                                {{ item.controls.scope.value}}
-                            </td>
-                            <td>
-                                @if(item.controls.suggestion.value) {
-                                {{('label.'+ item.controls.suggestion.value.value) | translate}}
-                                }
-                            </td>
-                            <td>
-                                {{ item.controls.fromTo.value |cDate:'dd.MM.yy'}}
-                            </td>
-                            <td>
-                                {{ item.controls.oneTimePayment.value}}€
-                            </td>
-                            <td>
-                                <span>
-                                    {{ item | monthly}}
-                                </span>€
-                            </td>
-                            <td>
-                                <div class="inline-flex gap-1">
-
-                                    <p-button [text]="true" size="small" [disabled]="fileStore.isLoading()"
-                                        icon="pi pi-pencil" severity="secondary"
-                                        (onClick)="onEditRow(groupIndex,rowIndex)" />
-                                    <p-button [text]="true" size="small" [disabled]="fileStore.isLoading()"
-                                        icon="pi pi-trash" severity="danger"
-                                        (onClick)="_onRemoveRow(groupIndex,rowIndex)" />
-                                </div>
-                            </td>
-                        </tr>
-                    </ng-template>
-                    <ng-template #footer>
-                        <tr>
-                            <td colspan="8" class="border-b-0 border-t-2 border-gray-500 dark:border-gray-300">
-                                <div class="flex gap-2">
-                                    <span class="font-semibold">{{'label.finances.old'|translate}}</span><span
-                                        class="text-gray-500">({{'label.frequency.monthly'|translate}})</span>
-                                </div>
-                            </td>
-                            <td class="font-semibold border-b-0 border-t-2 border-gray-500 dark:border-gray-300"></td>
-                            <td class="font-semibold border-b-0 border-t-2 border-gray-500 dark:border-gray-300">
-                                {{_formGroup.controls.groups.at(groupIndex).controls.items.controls |
-                                existed:'contribution'}} €</td>
-                            <td class="font-semibold border-b-0 border-t-2 border-black dark:border-white"></td>
-                        </tr>
-                        <tr>
-                            <td colspan="8" class="border-b-0">
-                                <div class="flex gap-2">
-                                    <span class="font-semibold">{{'label.finances.new'|translate}}</span><span
-                                        class="text-gray-500">({{'label.frequency.monthly'|translate}})</span>
-                                </div>
-                            </td>
-
-                            <td class="font-semibold border-b-0">
-
-                                {{_formGroup.controls.groups.at(groupIndex).controls.items.controls |
-                                totalOnce:'oneTimePayment'}} €
-                            </td>
-                            <td class="font-semibold border-b-0">
-                                {{_formGroup.controls.groups.at(groupIndex).controls.items.controls |
-                                newContribution:'contribution'}} €</td>
-                            <td class="border-b-0"></td>
-                        </tr>
-                        <tr>
-                            <td colspan="8" class="border-b-0">
-                                <div class="flex gap-2">
-                                    <span class="font-semibold">{{'label.finances.savings'|translate}}</span><span
-                                        class="text-gray-500">({{'label.frequency.monthly'|translate}})</span>
-                                </div>
-                            </td>
-                            <td class="font-semibold border-b-0"></td>
-                            <td class="font-semibold border-b-0">
-                                {{_formGroup.controls.groups.at(groupIndex).controls.items.controls |
-                                savings:'contribution'}} €</td>
-                            <td class="border-b-0"></td>
-                        </tr>
-                    </ng-template>
-                </p-table>
-                <div class="w-full flex justify-end">
+                <div class="flex justify-end">
                     <p-button [disabled]="fileStore.isLoading()" icon="pi pi-plus" severity="secondary"
-                        (onClick)="_onAddRow(groupIndex)" size="small"
+                        [text]="true" (onClick)="_onAddRow(groupIndex)" size="small"
                         [label]="'utils.create.value'|translate:{value:'label.line'|translate}" />
                 </div>
-
             </div>
-            <p-divider />
             }
         </div>
-        <p-button icon="pi pi-plus" (onClick)="onAddGroup()" severity="secondary" size="small"
-            [label]="'utils.create.value'|translate:{value:'label.group'|translate}" />
 
-        <div class="w-full flex justify-end space-x-2">
+        <!-- Add Group -->
+        <div class="flex">
+            <p-button icon="pi pi-plus" (onClick)="onAddGroup()" severity="secondary" [text]="true" size="small"
+                [label]="'utils.create.value'|translate:{value:'label.group'|translate}" />
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex justify-end gap-2 pt-4 border-t border-surface-200 dark:border-surface-700">
             <p-button size="small" [disabled]="fileStore.isLoading() || _formGroup.invalid || _formGroup.pristine"
                 (onClick)="onSave()" icon="pi pi-save" [label]="'label.save'|translate" />
-            <p-button size="small" [disabled]="fileStore.isLoading() || _formGroup.invalid" (onClick)="_onCreatePdf()"
-                icon="pi pi-plus" [label]="'utils.create.value'|translate:{value:'label.pdf'|translate}" />
+            <p-button size="small" severity="secondary" [disabled]="fileStore.isLoading() || _formGroup.invalid"
+                (onClick)="_onCreatePdf()" icon="pi pi-file-pdf"
+                [label]="'utils.create.value'|translate:{value:'label.pdf'|translate}" />
         </div>
+
     </form>
     }
 </p-card>

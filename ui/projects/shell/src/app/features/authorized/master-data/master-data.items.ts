@@ -9,7 +9,8 @@ export function getMasterDataItems(me: User | null): MenuItem[] {
             key: 'users',
             routerLink: ['administration', 'users'],
             label: 'label.users',
-            icon: 'pi pi-sitemap'
+            icon: 'pi pi-sitemap',
+            iconClass: 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400'
         });
     }
     if (me?.roles.find(role => [SystemRole.admin, SystemRole.customers].includes(role.name))) {
@@ -18,7 +19,7 @@ export function getMasterDataItems(me: User | null): MenuItem[] {
             routerLink: ['administration', 'customer'],
             label: 'customer.label',
             icon: 'pi pi-users',
-
+            iconClass: 'bg-sky-100 dark:bg-sky-900/40 text-sky-600 dark:text-sky-400'
         })
     }
     if (me?.roles.find(role => [SystemRole.admin, SystemRole.insurers].includes(role.name))) {
@@ -26,7 +27,8 @@ export function getMasterDataItems(me: User | null): MenuItem[] {
             key: 'insurer',
             routerLink: ['administration', 'insurer'],
             label: 'insurer.label',
-            icon: 'pi pi-crown'
+            icon: 'pi pi-crown',
+            iconClass: 'bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400'
         });
     }
     if (me?.roles.find(role => [SystemRole.admin, SystemRole.divisions].includes(role.name))) {
@@ -34,7 +36,8 @@ export function getMasterDataItems(me: User | null): MenuItem[] {
             key: 'division',
             routerLink: ['administration', 'division'],
             label: 'administration.division.label',
-            icon: 'pi pi-home'
+            icon: 'pi pi-home',
+            iconClass: 'bg-rose-100 dark:bg-rose-900/40 text-rose-600 dark:text-rose-400'
         });
     }
 

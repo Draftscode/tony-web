@@ -1,94 +1,101 @@
-<p-card class="w-full max-w-4xl">
-    <div class="flex flex-col">
+<p-card class="flex w-full max-w-4xl" [pt]="{body: 'p-0', content: 'p-0'}">
 
-        @if(fileStore.files.value().total !== 0 || fileStore.filter.query()) {
-        <div class="flex">
-            <p-inputgroup>
-                <p-inputgroup-addon>
-                    <i class="pi pi-search"></i>
-                </p-inputgroup-addon>
-                <input class="w-full" pSize="small" [value]="query()" (input)="onInput(search.value)" #search pInputText
-                    [placeholder]="'label.search'|translate" />
-                <p-inputgroup-addon>
-                    <p-button [disabled]="!query()" (onClick)="query$.next('')" icon="pi pi-times"
-                        severity="secondary" />
-                </p-inputgroup-addon>
-
-            </p-inputgroup>
-            <p-button [pTooltip]="'label.refresh'|translate"
-                [disabled]="!fileStore.files.value().items.length || fileStore.isLoading()" [text]="true"
-                icon="pi pi-refresh" (onClick)="fileStore.refresh()" severity="secondary" />
+    <!-- Card header -->
+    <ng-template #header>
+        <div class="flex items-center gap-3 px-6 pt-6 pb-4 border-b border-surface-100 dark:border-surface-800">
+            <span class="flex w-10 h-10 shrink-0 justify-center items-center rounded-xl bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400">
+                <i class="pi pi-folder-open text-base"></i>
+            </span>
+            <div class="flex flex-col min-w-0">
+                <span class="text-base font-semibold text-surface-800 dark:text-surface-100">{{'label.files'|translate}}</span>
+                <span class="text-xs text-surface-400 dark:text-surface-500">{{'label.fileList.subtitle'|translate}}</span>
+            </div>
         </div>
-        <!-- <div class="w-full px-2 text-sm text-gray-400">
-            {{'utils.pagination'|translate:{
-            value: fileStore.files.value().items.length,
-            total: fileStore.files.value().total,
-            entity: 'label.plural.files'|translate
-            } }}
-        </div> -->
-        }
+    </ng-template>
 
-        <div class="flex flex-col w-full">
-            @for(item of fileStore.files.value().items; track item.id) {
-            <div [routerLink]="[item.filename]" #rla="routerLinkActive" [queryParams]="{}"
-                [routerLinkActive]="'bg-highlight'" pRipple
-                class="w-full flex hover:cursor-pointer items-center justify-between hover:bg-highlight hover:rounded-xl p-2">
-                <div class="flex flex-col p-menu-item-link gap-0 w-full justify-start items-start">
-                    <div class="flex w-full items-center">
-                        <span class="pi pi-file"></span>
-                        <span class="ml-2">{{ item.filename }}</span>
-                    </div>
+    <!-- Toolbar: search + actions -->
+    <div class="flex items-center gap-2 px-4 py-3 border-b border-surface-100 dark:border-surface-800">
+        <p-iconfield class="flex-1">
+            <p-inputicon class="pi pi-search" />
+            <input class="w-full" pInputText size="small"
+                [value]="query()" (input)="onInput(search.value)" #search
+                [placeholder]="'label.search'|translate" />
+            @if(query()) {
+            <p-inputicon class="pi pi-times cursor-pointer" (click)="query$.next('')" />
+            }
+        </p-iconfield>
+
+        <p-fileupload [pTooltip]="'label.import'|translate" [auto]="true" [multiple]="true" mode="basic"
+            [uploadButtonProps]="{label:''}" [chooseButtonProps]="{label:'',size:'small',text:true,rounded:true}"
+            class="no-label" chooseIcon="pi pi-upload" name="import[]" accept="" maxFileSize="1000000"
+            (onSelect)="onImport($event)" />
+
+        <p-button icon="pi pi-plus" size="small" (onClick)="onCreateFile()"
+            [label]="'utils.create.value'|translate:{value:'label.file.label'|translate}" />
+
+        <p-button [pTooltip]="'label.refresh'|translate"
+            [disabled]="!fileStore.files.value().items.length || fileStore.isLoading()" [text]="true"
+            [rounded]="true" icon="pi pi-refresh" (onClick)="fileStore.refresh()" severity="secondary"
+            size="small" />
+    </div>
+
+    <!-- List items -->
+    <div class="flex flex-col">
+        @for(item of fileStore.files.value().items; track item.id) {
+        <div [routerLink]="[item.filename]" #rla="routerLinkActive" [queryParams]="{}"
+            [routerLinkActive]="'!bg-primary-50 dark:!bg-primary-900/20'" pRipple
+            class="flex items-center justify-between px-4 py-3 hover:bg-surface-50 dark:hover:bg-surface-800/40 cursor-pointer transition-colors duration-150 group border-b border-surface-100 dark:border-surface-800 last:border-b-0">
+            <div class="flex items-center gap-3 min-w-0">
+                <span class="flex w-[34px] h-[34px] shrink-0 justify-center items-center rounded-lg bg-primary-50 dark:bg-primary-900/30 text-primary-500 dark:text-primary-400">
+                    <i class="pi pi-file text-sm"></i>
+                </span>
+                <div class="flex flex-col min-w-0">
+                    <span class="text-sm font-medium text-surface-700 dark:text-surface-200 truncate">{{ item.filename }}</span>
                     @if(item.lastModified) {
-                    <div class="text-gray-400 text-sm text-left">
-                        {{item.lastModified | date:('date.datetime'|translate)}}
+                    <div class="flex items-center gap-2 mt-0.5">
+                        <span class="text-xs text-surface-400 dark:text-surface-500">{{item.lastModified | date:('date.datetime'|translate)}}</span>
                         <app-user [user]="item.user.username" />
                     </div>
                     }
                 </div>
-                <div class="flex gap-2 items-center">
-                    @let count = item.messages.length ? item.messages.length +'':'';
-                    <p-button badgeSeverity="danger" [badge]="count"
-                        (onClick)="$event.stopPropagation(); chat.toggle($event)" icon="pi pi-comments" [text]="true" />
-                    <p-button size="small" (onClick)="$event.stopPropagation(); op.toggle($event)" [text]="true"
-                        icon="pi pi-ellipsis-v" />
-                </div>
             </div>
-            <p-popover #op>
-                <div class="flex flex-col">
-                    <p-button [label]="'action.edit'|translate" (onClick)="fileStore.editFile(item)" icon="pi pi-pencil"
-                        [text]="true" />
-                    <p-button [label]="'action.delete'|translate" (onClick)="fileStore.deleteFile($event,item.filename)"
-                        icon="pi pi-trash" [text]="true" />
-
-                </div>
-            </p-popover>
-            <p-popover #chat>
-                <ng-template #content>
-                    <app-chat class="flex flex-col w-[420px] max-w-full" [file]="item" [filename]="item.filename" />
-                </ng-template>
-            </p-popover>
-            }
+            <div class="flex gap-1 items-center">
+                @let count = item.messages.length ? item.messages.length +'':'';
+                <p-button badgeSeverity="danger" [badge]="count"
+                    (onClick)="$event.stopPropagation(); chat.toggle($event)" icon="pi pi-comments"
+                    [text]="true" [rounded]="true" size="small" severity="secondary"
+                    [class]="count ? '' : 'opacity-0 group-hover:opacity-100 transition-opacity duration-150'" />
+                <p-button size="small" (onClick)="$event.stopPropagation(); op.toggle($event)" [text]="true"
+                    [rounded]="true" icon="pi pi-ellipsis-v" severity="secondary"
+                    class="opacity-0 group-hover:opacity-100 transition-opacity duration-150" />
+            </div>
         </div>
-        <div class="card flex justify-center">
-            @if(fileStore.files.hasValue()) {
-            <p-paginator [showCurrentPageReport]="true" [showPageLinks]="false" [showJumpToPageDropdown]="false"
-                [currentPageReportTemplate]="'primeng.currentPageReportTemplate'|translate" appendTo="body"
-                (onPageChange)="onPageChange($event)" [first]="fileStore.limit() * fileStore.offset()"
-                [rows]="fileStore.limit()" [totalRecords]="fileStore.files.value().total"
-                [rowsPerPageOptions]="[10, 20, 30]" />
-            }
-        </div>
-
-        <p-divider class="mb-1" />
-        <div class="flex px-2 w-full items-center">
-            <p-fileupload [pTooltip]="'label.import'|translate" [auto]="true" [multiple]="true" mode="basic"
-                [uploadButtonProps]="{label:''}" [chooseButtonProps]="{label:'',size:'large',text: true}"
-                class="no-label" chooseIcon="pi pi-upload" name="import[]" accept="" maxFileSize="1000000"
-                (onSelect)="onImport($event)" />
-            <p-divider layout="vertical" />
-            <p-button icon="pi pi-plus" class="w-full" styleClass="w-full" (onClick)="onCreateFile()"
-                [label]="'utils.create.value'|translate:{value:'label.file.label'|translate}" severity="secondary"
-                [text]="true" />
-        </div>
+        <p-popover #op>
+            <div class="flex flex-col">
+                <p-button [label]="'action.edit'|translate" (onClick)="fileStore.editFile(item)"
+                    icon="pi pi-pencil" [text]="true" />
+                <p-button [label]="'action.delete'|translate"
+                    (onClick)="fileStore.deleteFile($event,item.filename)" icon="pi pi-trash" [text]="true"
+                    severity="danger" />
+            </div>
+        </p-popover>
+        <p-popover #chat>
+            <ng-template #content>
+                <app-chat class="flex flex-col w-[420px] max-w-full" [file]="item" [filename]="item.filename" />
+            </ng-template>
+        </p-popover>
+        }
     </div>
+
+    <!-- Paginator -->
+    @if(fileStore.files.hasValue()) {
+    <div class="border-t border-surface-100 dark:border-surface-800 rounded-2xl overflow-hidden">
+        <p-paginator [showCurrentPageReport]="true" [showPageLinks]="false" [showJumpToPageDropdown]="false"
+            [currentPageReportTemplate]="'primeng.currentPageReportTemplate'|translate" appendTo="body"
+            (onPageChange)="onPageChange($event)" [first]="fileStore.limit() * fileStore.offset()"
+            [rows]="fileStore.limit()" [totalRecords]="fileStore.files.value().total"
+            [rowsPerPageOptions]="[10, 20, 30]" />
+    </div>
+    }
+
 </p-card>

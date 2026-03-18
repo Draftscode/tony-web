@@ -1,10 +1,13 @@
 {
     "group": {
         "info": {
-            "label": "Divisions"
+            "label": "Területek"
         }
     },
     "label": {
+        "color": "Szín",
+        "yes": "Igen",
+        "no": "Nem",
         "sync": {
             "label": "Adatok frissítése"
         },
@@ -39,7 +42,10 @@
         "import": "Importálás",
         "file": {
             "label": "Fájl",
-            "name": "Fájlnév"
+            "name": "Fájlnév",
+            "info": {
+                "empty": "Válasszon fájlt a feltöltéshez"
+            }
         },
         "users": "Felhasználók",
         "plural": {
@@ -47,6 +53,9 @@
         },
         "search": "Keresés",
         "files": "Fájlok",
+        "fileList": {
+            "subtitle": "Összes ügyfél fájl kezelése"
+        },
         "password": "Jelszó",
         "login": "Bejelentkezés",
         "logout": "Kijelentkezés",
@@ -79,9 +88,23 @@
             "male": "Úr",
             "female": "Asszony/Hölgy",
             "other": ""
+        },
+        "import": "Importálás",
+        "logout": "Kijelentkezés",
+        "yes": "Igen",
+        "no": "Nem",
+        "logo": {
+            "subtitle": "A logó megjelenik a generált PDF-ekben."
+        },
+        "upload": {
+            "dropzone": {
+                "title": "Kattintson vagy húzza ide a fájlt",
+                "subtitle": "PNG, JPG legfeljebb 1 MB"
+            }
         }
     },
     "utils": {
+        "hello": "Helló {{value}}",
         "list": {
             "empty": "Nincs találat."
         },
@@ -100,10 +123,12 @@
         "select": {
             "all": "Összes kiválasztása"
         },
-        "confirm": "megerősítés",
+        "clear": "Visszaállítás",
+        "confirm": "Megerősítés",
         "delete": "Törlés",
         "edit": "Szerkesztés",
-        "comment": "Megjegyzések"
+        "comment": "Megjegyzések",
+        "complete": "Kész"
     },
     "date": {
         "datetime": "yyyy.MM.dd. HH:mm"
@@ -145,12 +170,84 @@
     "administration": {
         "label": "Adminisztráció",
         "division": {
-            "label": "Terület"
+            "label": "Terület",
+            "info": {
+                "edit": "Ennek a területnek még nincs leírása."
+            }
         },
         "block": {
-            "label": "Baustein (Modul)",
-            "plural": "Bausteine (Modulok)"
+            "label": "Modul",
+            "plural": "Modulok"
         }
+    },
+    "primeng": {
+        "currentPageReportTemplate": "{first} – {last} / {totalRecords}",
+        "date": "yyyy.mm.dd",
+        "startsWith": "Kezdődik",
+        "contains": "Tartalmaz",
+        "notContains": "Nem tartalmaz",
+        "endsWith": "Végződik",
+        "equals": "Egyenlő",
+        "notEquals": "Nem egyenlő",
+        "noFilter": "Nincs szűrő",
+        "lt": "Kisebb mint",
+        "lte": "Kisebb vagy egyenlő",
+        "gt": "Nagyobb mint",
+        "gte": "Nagyobb vagy egyenlő",
+        "dateIs": "Dátum",
+        "dateIsNot": "Nem ez a dátum",
+        "dateBefore": "Dátum előtt",
+        "dateAfter": "Dátum után",
+        "clear": "Visszaállítás",
+        "apply": "Alkalmaz",
+        "matchAll": "Mindegyik egyezik",
+        "matchAny": "Legalább egy egyezik",
+        "addRule": "Szabály hozzáadása",
+        "removeRule": "Szabály eltávolítása",
+        "accept": "Igen",
+        "reject": "Nem",
+        "choose": "Kiválasztás",
+        "upload": "Feltöltés",
+        "cancel": "Mégse",
+        "completed": "Befejezve",
+        "pending": "Függőben",
+        "fileSizeTypes": ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"],
+        "dayNames": ["Vasárnap", "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat"],
+        "dayNamesShort": ["V", "H", "K", "Sze", "Cs", "P", "Szo"],
+        "dayNamesMin": ["V", "H", "K", "Sz", "Cs", "P", "Sz"],
+        "monthNames": ["Január", "Február", "Március", "Április", "Május", "Június", "Július", "Augusztus", "Szeptember", "Október", "November", "December"],
+        "monthNamesShort": ["Jan", "Feb", "Már", "Ápr", "Máj", "Jún", "Júl", "Aug", "Sze", "Okt", "Nov", "Dec"],
+        "chooseYear": "Év kiválasztása",
+        "chooseMonth": "Hónap kiválasztása",
+        "chooseDate": "Dátum kiválasztása",
+        "prevDecade": "Előző évtized",
+        "nextDecade": "Következő évtized",
+        "prevYear": "Előző év",
+        "nextYear": "Következő év",
+        "prevMonth": "Előző hónap",
+        "nextMonth": "Következő hónap",
+        "prevHour": "Előző óra",
+        "nextHour": "Következő óra",
+        "prevMinute": "Előző perc",
+        "nextMinute": "Következő perc",
+        "prevSecond": "Előző másodperc",
+        "nextSecond": "Következő másodperc",
+        "am": "de.",
+        "pm": "du.",
+        "today": "Ma",
+        "weekHeader": "Hét",
+        "firstDayOfWeek": 1,
+        "dateFormat": "yyyy.mm.dd",
+        "weak": "Gyenge",
+        "medium": "Közepes",
+        "strong": "Erős",
+        "passwordPrompt": "Adjon meg jelszót",
+        "emptyFilterMessage": "Nincs találat",
+        "searchMessage": "{0} találat érhető el",
+        "selectionMessage": "{0} elem kiválasztva",
+        "emptySelectionMessage": "Nincs kiválasztott elem",
+        "emptySearchMessage": "Nincs találat",
+        "emptyMessage": "Nincsenek elérhető lehetőségek"
     },
     "auth": {
         "error": {
@@ -163,7 +260,13 @@
             }
         },
         "user": {
-            "label": "Felhasználó"
+            "label": "Felhasználó",
+            "logo": "Logó"
+        }
+    },
+    "color": {
+        "info": {
+            "subtitle": "Hatással van mind a felületre, mind a végső PDF-re."
         }
     },
     "blaudirekt": {

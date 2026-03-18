@@ -51,6 +51,9 @@
         },
         "search": "Search",
         "files": "Files",
+        "fileList": {
+            "subtitle": "Manage all client files"
+        },
         "password": "Password",
         "login": "Login",
         "logout": "Logout",
@@ -83,6 +86,17 @@
             "male": "Mr",
             "female": "Ms",
             "other": ""
+        },
+        "yes": "Yes",
+        "no": "No",
+        "logo": {
+            "subtitle": "The logo appears in the generated PDFs."
+        },
+        "upload": {
+            "dropzone": {
+                "title": "Click or drop file here",
+                "subtitle": "PNG, JPG up to 1 MB"
+            }
         }
     },
     "primeng": {
@@ -306,8 +320,10 @@
             "logo": "Logo"
         }
     },
-     "color": {
-        "info": "The selected color will be represented in both, the ui and the final pdf."
+    "color": {
+        "info": {
+            "subtitle": "Affects both the UI and the final PDF."
+        }
     },
     "blaudirekt": {
         "search": {

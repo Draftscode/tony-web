@@ -19,8 +19,8 @@ export class StringToColorPipe implements PipeTransform {
         // Map hash to a hue (0 - 360)
         const hue = Math.abs(hash) % 360;
 
-        // Full saturation and lightness = 50% for vibrant colors
-        const hsl = `hsl(${hue}, 90%, 50%)`;
+        // Muted saturation and slightly darker lightness for professional look
+        const hsl = `hsl(${hue}, 55%, 42%)`;
 
         if (options?.contrast) {
             return this.getContrastTextColor(hsl);

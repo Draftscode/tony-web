@@ -1,28 +1,37 @@
 <div class="flex flex-col h-full w-full">
-    <div class="flex flex-col h-full min-h-0 overflow-auto w-full">
-        <div class="flex flex-col gap-1">
-            <div class="flex gap-1 items-center">
-                <i class="pi pi-bell"></i>
-                <label for="notification">{{'settings.notification.label'|translate}}</label>
+    <div class="flex flex-col h-full min-h-0 overflow-auto w-full gap-1">
+        <div class="flex justify-between items-center py-2">
+            <div class="flex gap-2 items-center">
+                <span class="flex items-center justify-center bg-amber-100 text-amber-600 rounded-lg p-1.5">
+                    <i class="pi pi-bell text-sm"></i>
+                </span>
+                <label for="notification"
+                    class="text-sm font-medium cursor-pointer">{{'settings.notification.label'|translate}}</label>
             </div>
             <p-toggleswitch [ngModel]="fcm.isGranted()" (onChange)="$event ? requestPermission($event):null"
                 inputId="notification" />
         </div>
         <p-divider />
-        <div class="flex flex-col gap-1">
-            <div class="flex gap-1 items-center">
-                <i [class]="`pi pi-${settingsStore.isDark() ? 'sun':'moon'}`"></i>
-                <label for="darkmode">{{'settings.darkmode.label'|translate}}</label>
+        <div class="flex justify-between items-center py-2">
+            <div class="flex gap-2 items-center">
+                <span class="flex items-center justify-center bg-indigo-100 text-indigo-600 rounded-lg p-1.5">
+                    <i [class]="`pi pi-${settingsStore.isDark() ? 'sun':'moon'} text-sm`"></i>
+                </span>
+                <label for="darkmode"
+                    class="text-sm font-medium cursor-pointer">{{'settings.darkmode.label'|translate}}</label>
             </div>
             <p-toggleswitch (onChange)="settingsStore.toggleDarkMode()"
                 [pTooltip]="`theming.switch.${settingsStore.isDark()?'daymode':'darkmode'}`|translate"
                 tooltipPosition="bottom" inputId="darkmode" [ngModel]="settingsStore.isDark()" />
         </div>
         <p-divider />
-        <div class="flex flex-col gap-1">
-            <div class="flex gap-1 items-center">
-                <i class="pi pi-flag"></i>
-                <label for="language">{{'settings.language.label'|translate}}</label>
+        <div class="flex flex-col gap-2 py-2">
+            <div class="flex gap-2 items-center">
+                <span class="flex items-center justify-center bg-sky-100 text-sky-600 rounded-lg p-1.5">
+                    <i class="pi pi-flag text-sm"></i>
+                </span>
+                <label for="language"
+                    class="text-sm font-medium cursor-pointer">{{'settings.language.label'|translate}}</label>
             </div>
             <p-select (onChange)="settingsStore.updateLanguage($event.value.key)" inputId="language"
                 [options]="settingsStore.languages()" [ngModel]="settingsStore.currentLanguage()">
@@ -35,17 +44,27 @@
             </p-select>
         </div>
         <p-divider />
-        <div class="flex flex-col gap-1 w-full">
+        <div class="flex flex-col py-2 w-full gap-2">
             @let isDisabled = settingsStore.status.value().isSynching;
-            <p-button [label]="'label.sync.label'|translate" styleClass="w-full"
-                [icon]="`pi pi-refresh ${isDisabled ? 'pi-spin':''}`" class="w-full flex" [disabled]="isDisabled"
+            <div class="flex gap-2 items-center">
+                <span class="flex items-center justify-center bg-emerald-100 text-emerald-600 rounded-lg p-1.5">
+                    <i [class]="`pi pi-refresh text-sm ${isDisabled ? 'pi-spin':''}`"></i>
+                </span>
+                <span class="text-sm font-medium">{{'label.sync.label'|translate}}</span>
+            </div>
+            <p-button [label]="'label.sync.label'|translate" size="small"
+                [icon]="`pi pi-refresh ${isDisabled ? 'pi-spin':''}`" [disabled]="isDisabled"
                 (onClick)="settingsStore.synchronize()" />
         </div>
     </div>
     <div class="flex w-full flex-col">
         <p-divider />
-        <p-button severity="secondary" styleClass="w-full" [label]="'label.logout'|translate" [icon]="`pi pi-sign-out`"
-            class="w-full flex" (onClick)="accountStore.logout()" />
+        <button
+            class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-red-500 bg-red-50 hover:bg-red-100 border border-red-100 transition-colors duration-150 cursor-pointer"
+            (click)="accountStore.logout()">
+            <i class="pi pi-sign-out"></i>
+            {{'label.logout'|translate}}
+        </button>
     </div>
 </div>
 

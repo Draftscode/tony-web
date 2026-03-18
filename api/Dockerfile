@@ -1,72 +1,66 @@
-FROM node:22-alpine  AS development
+# ---------- BASE (shared deps) ----------
+FROM node:24-slim AS base
 
-
-# Install dependencies for Puppeteer + Chromium
-RUN apk add --no-cache \
-      chromium \
-      nss \
-      freetype \
-      harfbuzz \
-      ca-certificates \
-      ttf-freefont \
-      nodejs \
-      yarn \
-      bash \
-      udev \
-      lcms2 \
-      git \
-      chromium-chromedriver
-
-# Specify our working directory, this is in our container/in our image
 WORKDIR /usr/src/app
 
-# Copy the package.jsons from host to container
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# Install Chromium + required libs (shared by dev & prod)
+RUN apt-get update && apt-get install -y \
+  chromium \
+  ca-certificates \
+  fonts-liberation \
+  libnss3 \
+  libatk-bridge2.0-0 \
+  libx11-xcb1 \
+  libxcb1 \
+  libxcomposite1 \
+  libxdamage1 \
+  libxrandr2 \
+  libgbm1 \
+  libasound2 \
+  libpangocairo-1.0-0 \
+  libgtk-3-0 \
+  libglib2.0-0 \
+  libdrm2 \
+  libxfixes3 \
+  libxext6 \
+  libxi6 \
+  libxtst6 \
+  && rm -rf /var/lib/apt/lists/*
+
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+
+
+# ---------- DEVELOPMENT ----------
+FROM base AS development
+
 COPY package*.json ./
+RUN npm install && npm i -g @nestjs/cli
 
-# Here we install all the deps
-RUN npm install --include=optional  && \
-    npm i -g @nestjs/cli && \
-    npm rebuild sharp
-
-# Bundle app source / copy all other files
 COPY . .
 
-# Build the app to the /dist folder
+# optional: if you run dev server
+CMD ["npm", "run", "start:dev"]
+
+
+# ---------- BUILD ----------
+FROM base AS builder
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
 RUN npm run build
 
-EXPOSE 3000
 
-################
-## PRODUCTION ##
-################
-# Build another image named production
-FROM node:22-alpine AS production
+# ---------- PRODUCTION ----------
+FROM base AS production
 
-# Install Chromium dependencies in production image
-RUN apk add --no-cache \
-      chromium \
-      nss \
-      freetype \
-      harfbuzz \
-      ca-certificates \
-      ttf-freefont \
-      udev \
-      lcms2 \
-      chromium-chromedriver
-
-# Set node env to prod
-ARG NODE_ENV=production
-
-# Set Working Directory
-WORKDIR /usr/src/app
-
-# Copy all from development stage
-COPY --from=development /usr/src/app/ .
+# copy only what we need
+COPY --from=builder /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/node_modules ./node_modules
+COPY --from=builder /usr/src/app/package*.json ./
+COPY --from=builder /usr/src/app/uploads ./uploads
 
 EXPOSE 3000
 
-RUN ls -l dist/
-
-# run commands
 CMD ["node", "dist/main"]

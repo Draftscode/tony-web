@@ -7,7 +7,6 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { AutoComplete } from 'primeng/autocomplete';
 import { AvatarModule } from 'primeng/avatar';
-import { Breadcrumb } from 'primeng/breadcrumb';
 import { ButtonModule } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
@@ -42,7 +41,7 @@ import { ProfileComponent } from './profile/profile.component';
   imports: [
     RouterOutlet, MessageModule, DrawerModule, MainMenuComponent, InputIcon, IconField, AutoComplete,
     DividerModule, TooltipModule, SettingsComponent, AvatarModule, RippleModule, RouterModule,
-    ToastModule, MenubarModule, TranslatePipe, ScrollerModule, Card, Breadcrumb,
+    ToastModule, MenubarModule, TranslatePipe, ScrollerModule, Card,
     ButtonModule, ProgressSpinnerModule, NgTemplateOutlet],
   templateUrl: 'app-authorized.html',
   styleUrl: 'app-authorized.scss',
@@ -80,7 +79,8 @@ export default class App {
       key: 'files',
       routerLink: ['files'],
       label: 'label.files',
-      icon: 'pi pi-folder-open'
+      icon: 'pi pi-folder-open',
+      iconClass: 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400'
     }];
 
     if (this.accountStore.me.value()?.roles.find(role => role.name === 'admin')) {
@@ -93,6 +93,7 @@ export default class App {
         },
         label: 'administration.label',
         icon: 'pi pi-database',
+        iconClass: 'bg-violet-100 dark:bg-violet-900/40 text-violet-600 dark:text-violet-400',
         items: getMasterDataItems(this.accountStore.me.value()),
       });
     }

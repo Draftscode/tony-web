@@ -1,73 +1,99 @@
-<form [formGroup]="_formGroup" class="inline-flex flex-col space-y-2 overflow-hidden w-full" (ngSubmit)="close()">
+<form [formGroup]="_formGroup" class="flex flex-col gap-6 w-full overflow-hidden" (ngSubmit)="close()">
 
-    <div class="inline-flex flex-col">
-        <label for="type">{{'label.product'|translate}}</label>
-        <!-- <input id="type" pInputText formControlName="type" /> -->
-        <p-select formControlName="type" [editable]="true" [options]="divisionStore.divisions.value().items"
-            optionValue="text" optionLabel="text" />
-    </div>
-    <div class="inline-flex flex-col">
-        <label for="scope">{{'label.scope'|translate}}</label>
-        <p-inputgroup>
-            <input id="scope" pInputText formControlName="scope" />
-            <p-inputgroup-addon>
-                <p-button [disabled]="!_formGroup.controls.type.value" icon="pi pi-bolt" label="Assistant"
-                    (onClick)="onAssistant()" />
-            </p-inputgroup-addon>
-        </p-inputgroup>
-    </div>
-    <div class="inline-flex flex-col">
-        <label for="nr">{{'label.insurer.no'|translate}}</label>
-        <input id="nr" pInputText formControlName="nr" />
-    </div>
-    <div class="inline-flex flex-col">
-        <label for="party">{{'label.insured.label'|translate}}</label>
-        <input id="party" pInputText formControlName="party" />
-    </div>
-    <div class="inline-flex flex-col">
-        <label for="insurer">{{'label.insurer.label'|translate}}</label>
-        <p-auto-complete formControlName="insurer" [dropdown]="true" appendTo="body" optionLabel="name"
-            [suggestions]="insurers()" (completeMethod)="insurerStore.search({ query: $event.query})">
-            <ng-template #item let-item>
-                <div class="flex gap-2 items-center overflow-hidden text-ellipsis whitespace-nowrap max-w-[300px]">
-                    <app-company [company]="item" />
-                </div>
-            </ng-template>
-        </p-auto-complete>
-    </div>
+    <!-- Product & Scope -->
+    <div class="flex flex-col gap-1 p-4 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700">
+        <span class="text-xs font-semibold uppercase tracking-wider text-surface-400 dark:text-surface-500 mb-2">{{'label.product'|translate}}</span>
 
-    <div class="inline-flex flex-col">
-        <label for="suggestion">{{'label.suggestion'|translate}}</label>
-        <p-autocomplete [readonly]="true" appendTo="body" (completeMethod)="onSearch($event.query)"
-            [completeOnFocus]="true" [dropdown]="true" [forceSelection]="true" formControlName="suggestion"
-            [suggestions]="_suggs" optionLabel="label" optionValue="value" />
-    </div>
-    <div class="inline-flex flex-col">
-        <label for="fromTo">{{'label.fromTo'|translate}}</label>
-        <p-datepicker inputId="fromTo" dateFormat="dd.mm.yy" appendTo="body" formControlName="fromTo"
-            selectionMode="range" [readonlyInput]="false" />
-    </div>
-
-    <div class="flex gap-2">
-        <div class="inline-flex flex-col">
-            <label for="oneTimePayment">{{'label.oneTimePayment'|translate}}</label>
-            <p-inputnumber [minFractionDigits]="2" [maxFractionDigits]="2" inputId="oneTimePayment" mode="decimal"
-                formControlName="oneTimePayment" />
+        <div class="flex flex-col gap-1">
+            <label for="type" class="text-sm font-medium text-surface-600 dark:text-surface-300">{{'label.product'|translate}}</label>
+            <p-select formControlName="type" [editable]="true" [options]="divisionStore.divisions.value().items"
+                optionValue="text" optionLabel="text" styleClass="w-full" />
         </div>
-        <div class="inline-flex flex-col">
-            <label for="contribution">{{'label.contribution.label'|translate}}</label>
-            <p-inputnumber [minFractionDigits]="2" [maxFractionDigits]="2" inputId="contribution" mode="decimal"
-                formControlName="contribution" />
-        </div>
-        <div class="inline-flex flex-col">
-            <label for="monthly">{{'label.frequency.monthly'|translate}}</label>
-            <p-checkbox [binary]="true" formControlName="monthly" inputId="monthly" />
+
+        <div class="flex flex-col gap-1 mt-3">
+            <label for="scope" class="text-sm font-medium text-surface-600 dark:text-surface-300">{{'label.scope'|translate}}</label>
+            <p-inputgroup>
+                <input id="scope" pInputText formControlName="scope" class="w-full" />
+                <p-inputgroup-addon>
+                    <p-button [disabled]="!_formGroup.controls.type.value" icon="pi pi-bolt" label="Assistant"
+                        (onClick)="onAssistant()" />
+                </p-inputgroup-addon>
+            </p-inputgroup>
         </div>
     </div>
 
-    <p-divider />
-    <div class="w-full flex justify-end">
-        <p-button type="submit" [disabled]="_formGroup.invalid" (onClick)="close()" icon="pi pi-plus"
+    <!-- Parties -->
+    <div class="flex flex-col gap-1 p-4 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700">
+        <span class="text-xs font-semibold uppercase tracking-wider text-surface-400 dark:text-surface-500 mb-2">{{'label.insured.label'|translate}}</span>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-1">
+                <label for="nr" class="text-sm font-medium text-surface-600 dark:text-surface-300">{{'label.insurer.no'|translate}}</label>
+                <input id="nr" pInputText formControlName="nr" class="w-full" />
+            </div>
+            <div class="flex flex-col gap-1">
+                <label for="party" class="text-sm font-medium text-surface-600 dark:text-surface-300">{{'label.insured.label'|translate}}</label>
+                <input id="party" pInputText formControlName="party" class="w-full" />
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-1 mt-3">
+            <label for="insurer" class="text-sm font-medium text-surface-600 dark:text-surface-300">{{'label.insurer.label'|translate}}</label>
+            <p-auto-complete formControlName="insurer" [dropdown]="true" appendTo="body" optionLabel="name"
+                [suggestions]="insurers()" styleClass="w-full" (completeMethod)="insurerStore.search({ query: $event.query})">
+                <ng-template #item let-item>
+                    <div class="flex gap-2 items-center overflow-hidden text-ellipsis whitespace-nowrap max-w-[300px]">
+                        <app-company [company]="item" />
+                    </div>
+                </ng-template>
+            </p-auto-complete>
+        </div>
+    </div>
+
+    <!-- Status & Dates -->
+    <div class="flex flex-col gap-1 p-4 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700">
+        <span class="text-xs font-semibold uppercase tracking-wider text-surface-400 dark:text-surface-500 mb-2">{{'label.suggestion'|translate}}</span>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-1">
+                <label for="suggestion" class="text-sm font-medium text-surface-600 dark:text-surface-300">{{'label.suggestion'|translate}}</label>
+                <p-autocomplete [readonly]="true" appendTo="body" (completeMethod)="onSearch($event.query)"
+                    [completeOnFocus]="true" [dropdown]="true" [forceSelection]="true" formControlName="suggestion"
+                    [suggestions]="_suggs" optionLabel="label" optionValue="value" styleClass="w-full" />
+            </div>
+            <div class="flex flex-col gap-1">
+                <label for="fromTo" class="text-sm font-medium text-surface-600 dark:text-surface-300">{{'label.fromTo'|translate}}</label>
+                <p-datepicker inputId="fromTo" dateFormat="dd.mm.yy" appendTo="body" formControlName="fromTo"
+                    selectionMode="range" [readonlyInput]="false" styleClass="w-full" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Financials -->
+    <div class="flex flex-col gap-1 p-4 rounded-xl bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700">
+        <span class="text-xs font-semibold uppercase tracking-wider text-surface-400 dark:text-surface-500 mb-2">{{'label.contribution.label'|translate}}</span>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
+            <div class="flex flex-col gap-1">
+                <label for="oneTimePayment" class="text-sm font-medium text-surface-600 dark:text-surface-300">{{'label.oneTimePayment'|translate}}</label>
+                <p-inputnumber [minFractionDigits]="2" [maxFractionDigits]="2" inputId="oneTimePayment" mode="decimal"
+                    formControlName="oneTimePayment" styleClass="w-full" />
+            </div>
+            <div class="flex flex-col gap-1">
+                <label for="contribution" class="text-sm font-medium text-surface-600 dark:text-surface-300">{{'label.contribution.label'|translate}}</label>
+                <p-inputnumber [minFractionDigits]="2" [maxFractionDigits]="2" inputId="contribution" mode="decimal"
+                    formControlName="contribution" styleClass="w-full" />
+            </div>
+            <div class="flex items-center gap-3 pb-2">
+                <p-checkbox [binary]="true" formControlName="monthly" inputId="monthly" />
+                <label for="monthly" class="text-sm font-medium text-surface-600 dark:text-surface-300 cursor-pointer">{{'label.frequency.monthly'|translate}}</label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex justify-end pt-2 border-t border-surface-200 dark:border-surface-700">
+        <p-button type="submit" [disabled]="_formGroup.invalid" (onClick)="close()" icon="pi pi-check"
             [label]="'label.save'|translate" />
     </div>
 </form>

@@ -7,69 +7,87 @@
 <app-main-menu [items]="menuItems()" [expandOnHover]="true" [isDragAndDropDisabled]="true" #mainMenu
     class="flex w-full h-full w-full bg-surface-50 dark:bg-surface-950" [mode]="menuMode">
     <ng-template #start>
-        <div class="p-1 flex justify-between items-center w-full">
-            <!-- @let firstImage = !mainMenu.isMouseOver() && menuMode === 'slim'; -->
-            <!-- <img [src]="`${firstImage ?'images/logo/logo-plain.png':'images/logo/logo.png'}`"
-                class="h-[40px] w-auto flex-none overflow-visible object-contain" /> -->
-            <div class="h-[28px] items-center flex p-1 mt-2">
+        <div class="px-3 py-3 flex justify-between items-center w-full border-b border-surface-100 dark:border-surface-800 mb-1">
+            @if(mainMenu.isMouseOver() || menuMode !== 'slim') {
+            <div class="h-[28px] items-center flex">
                 <img [src]="'./images/logo-raw-no-text'+(settingsStore.isDark()?'-dark':'')+'.png'"
                     class="w-full max-w-[100px]" alt="Logo">
             </div>
-            @if(mainMenu.isMouseOver() || menuMode === 'static') {
             <p-button (onClick)="settingsStore.toggleMenuMode()" size="small" [text]="true" [rounded]="true"
                 [icon]="`pi pi-circle-${menuMode === 'slim'?'off':'on'}`" />
+            } @else {
+            <div class="flex w-full justify-center" (click)="openProfile()">
+                <p-avatar [label]="avatarLabel()" shape="circle"
+                    [pt]="{root: {class: 'bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 font-semibold cursor-pointer'}}" />
+            </div>
             }
         </div>
     </ng-template>
     <ng-template #end>
-        <p-divider />
-        <div class="w-full flex-col items-center justify-center flex mb-2 gap-2">
-            <div (click)="openProfile()"
-                [class]="`cursor-pointer hover:bg-highlight rounded w-full px-2 flex gap-1 items-center ${ mainMenu.isMouseOver() || menuMode !== 'slim' ? '':'justify-center'}`">
-                <p-avatar [label]="avatarLabel()" shape="circle" />
-                @if(mainMenu.isMouseOver() || menuMode !== 'slim') {
-                <span>Hi</span>
-                <span class="text-muted font-semibold">{{accountStore.me.value()?.username}}</span>
-                }
-            </div>
+        <div class="border-t border-surface-100 dark:border-surface-800 mt-1">
             @if(mainMenu.isMouseOver() || menuMode !== 'slim') {
-            <p-button icon="pi pi-sign-out" styleClass="w-full" class="w-full" [label]="'label.logout'|translate"
-                [text]="true" (onClick)="accountStore.logout()" />
+            <div (click)="openProfile()"
+                class="cursor-pointer hover:bg-primary-50 dark:hover:bg-primary-950/30 transition-colors duration-150 rounded-lg mx-2 mt-2 mb-1 px-2 py-2 flex gap-2 items-center">
+                <p-avatar [label]="avatarLabel()" shape="circle"
+                    [pt]="{root: {class: 'bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 font-semibold shrink-0'}}" />
+                <div class="flex flex-col min-w-0">
+                    <span class="text-sm font-semibold text-surface-700 dark:text-surface-200 truncate">{{accountStore.me.value()?.username}}</span>
+                    <span class="text-xs text-surface-400 dark:text-surface-500">v{{version}}</span>
+                </div>
+            </div>
+            }
+            @if(mainMenu.isMouseOver() || menuMode !== 'slim') {
+            <div class="px-2 pb-3">
+                <button type="button" (click)="accountStore.logout()"
+                    class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-950/30 hover:bg-red-100 dark:hover:bg-red-900/40 border border-red-100 dark:border-red-900/40 transition-colors duration-150 cursor-pointer">
+                    <i class="pi pi-sign-out text-sm"></i>
+                    <span>{{ 'label.logout' | translate }}</span>
+                </button>
+            </div>
+            } @else {
+            <div class="flex justify-center pt-3 pb-3">
+                <button type="button" (click)="accountStore.logout()"
+                    class="flex items-center justify-center w-9 h-9 rounded-full text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-950/30 hover:bg-red-100 dark:hover:bg-red-900/40 border border-red-100 dark:border-red-900/40 transition-colors duration-150 cursor-pointer">
+                    <i class="pi pi-sign-out text-sm"></i>
+                </button>
+            </div>
             }
         </div>
     </ng-template>
     <ng-template #content>
         <div class="flex w-full h-full flex-col">
-            <div class="flex w-full gap-1 justify-between p-2 items-center">
+            <div class="flex w-full gap-2 justify-between px-3 py-2 items-center">
                 <div class="flex gap-2 items-center">
                     @if(mainMenu.state() === 'collapsed') {
-                    <p-button icon="pi pi-bars" severity="secondary" [outlined]="true" [rounded]="true"
+                    <p-button icon="pi pi-bars" severity="secondary" [text]="true" [rounded]="true"
                         (onClick)="mainMenu.toggle()" />
                     }
-                    @if(!isVerySmall() && !isSmall()) {
-                    <p-card class="p-0 rounded-full overflow-hidden shrink-0 items-center gap-1" [pt]="{body:'p-0'}">
-                        <p-breadcrumb styleClass="px-3 py-2 text-sm" [model]="breadcrumbStore.pruned()"
+                    <!-- @if(!isVerySmall() && !isSmall()) {
+                    <p-card [pt]="{root: {class: 'shadow-sm'}, body: {class: 'py-0 px-4'}, content: {class: 'p-0'}}">
+                        <p-breadcrumb styleClass="border-0 bg-transparent px-0 py-1.5 text-sm" [model]="breadcrumbStore.pruned()"
                             [home]="breadcrumbStore.home()">
-                            <ng-template #separator>|</ng-template>
+                            <ng-template #separator>
+                                <span class="text-surface-300 dark:text-surface-600 mx-1">/</span>
+                            </ng-template>
                             <ng-template #item let-item>
-                                <a class="cursor-pointer" [queryParams]="item.queryParams" [routerLink]="item.url">
-                                    <i [class]="item.icon"></i>
+                                <a class="cursor-pointer text-surface-600 dark:text-surface-300 hover:text-primary-500 transition-colors duration-150 flex items-center gap-1" [queryParams]="item.queryParams" [routerLink]="item.url">
+                                    @if(item.icon) { <i [class]="item.icon + ' text-xs'"></i> }
                                     <span>{{item.label | translate}}</span>
                                 </a>
                             </ng-template>
                         </p-breadcrumb>
                     </p-card>
-                    }
+                    } -->
                     @if(!isVerySmall()) {
                     <ng-container [ngTemplateOutlet]="searchTemplate" />
                     }
                 </div>
-                <div class="flex gap-2 items-center">
-                    <p-button icon="pi pi-cog" severity="secondary" [outlined]="true" [rounded]="true"
+                <p-card class="rounded-full" [pt]="{root: {class: 'shadow-sm'}, body: {class: 'p-1'}, content: {class: 'p-0'}}">
+                    <p-button icon="pi pi-cog" severity="secondary" [text]="true" [rounded]="true"
                         (onClick)="settingsStore.toggle(true)" />
-                </div>
+                </p-card>
             </div>
-            <div class="min-h-0 flex flex-col overflow-auto p-2">
+            <div class="min-h-0 flex flex-col overflow-auto p-3">
                 <router-outlet />
             </div>
         </div>

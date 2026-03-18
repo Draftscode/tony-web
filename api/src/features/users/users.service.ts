@@ -20,30 +20,34 @@ export class UsersService implements IUserRepository {
     }
 
     async initializeApp() {
-        await this.datasource.manager.transaction(async manager => {
-            let e = await manager.findOne(UserEntity, { where: { username: 'admin' } });
+        try {
+            await this.datasource.manager.transaction(async manager => {
+                let e = await manager.findOne(UserEntity, { where: { username: 'admin' } });
 
-            if (!e) {
-                e = manager.create(UserEntity, { username: 'admin' });
-            }
+                if (!e) {
+                    e = manager.create(UserEntity, { username: 'admin' });
+                }
 
-            await manager.upsert(RoleEntity, [
-                { name: 'admin' },
-                { name: 'insurers' },
-                { name: 'customers' },
-                { name: 'divisions' },
-                { name: 'users' },
-            ], {
-                conflictPaths: ['name']
-            });
-            e.firstname = 'admin';
-            e.lastname = '';
-            e.roles = [await manager.findOneOrFail(RoleEntity, { where: { name: 'admin' } })]
-            e.password = encodePassword('tonym');
+                await manager.upsert(RoleEntity, [
+                    { name: 'admin' },
+                    { name: 'insurers' },
+                    { name: 'customers' },
+                    { name: 'divisions' },
+                    { name: 'users' },
+                ], {
+                    conflictPaths: ['name']
+                });
+                e.firstname = 'admin';
+                e.lastname = '';
+                e.roles = [await manager.findOneOrFail(RoleEntity, { where: { name: 'admin' } })]
+                e.password = encodePassword('tonym');
 
 
-            await manager.save(e);
-        })
+                await manager.save(e);
+            })
+        } catch {
+
+        }
     }
 
 

@@ -8,7 +8,9 @@ import { DataViewModule } from 'primeng/dataview';
 import { DividerModule } from "primeng/divider";
 import { FileSelectEvent, FileUploadModule } from "primeng/fileupload";
 import { InputGroupModule } from "primeng/inputgroup";
+import { IconFieldModule } from "primeng/iconfield";
 import { InputGroupAddonModule } from "primeng/inputgroupaddon";
+import { InputIconModule } from "primeng/inputicon";
 import { InputTextModule } from "primeng/inputtext";
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { PopoverModule } from "primeng/popover";
@@ -26,7 +28,8 @@ import { toSignal } from "@angular/core/rxjs-interop";
     host: { class: 'flex w-full justify-center' },
     imports: [DataViewModule, CardModule, RouterLink, TooltipModule, DatePipe, ChatComponent, Paginator,
         FileUploadModule, DividerModule, RouterLinkActive, TranslatePipe, UserComponent, OverlayBadgeModule,
-        PopoverModule, ButtonModule, InputTextModule, InputGroupAddonModule, InputGroupModule]
+        PopoverModule, ButtonModule, InputTextModule, InputGroupAddonModule, InputGroupModule,
+        IconFieldModule, InputIconModule]
 })
 export default class FileList {
     protected readonly fileStore = inject(FileStore);

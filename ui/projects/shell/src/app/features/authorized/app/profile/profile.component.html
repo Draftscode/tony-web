@@ -1,9 +1,16 @@
 @if(me(); as me) {
-<div class="gap-2 p-2 flex min-w-[300px] flex-col">
+<div class="gap-4 p-2 flex min-w-[300px] flex-col">
 
-    <div class="flex flex-col gap-2">
-        <span class="text-muted font-semibold">{{'label.color'|translate}}</span>
-        <p-message severity="info" icon="pi pi-info-circle">{{'color.info'|translate}}</p-message>
+    <div class="flex flex-col gap-3">
+        <div class="flex items-center gap-3">
+            <span class="flex items-center justify-center bg-violet-100 text-violet-600 rounded-lg p-2">
+                <i class="pi pi-palette text-base"></i>
+            </span>
+            <div class="flex flex-col">
+                <span class="font-semibold text-sm">{{'label.color'|translate}}</span>
+                <span class="text-xs text-surface-500">{{'color.info.subtitle'|translate}}</span>
+            </div>
+        </div>
         <div class="flex-1 flex flex-col items-center">
             <label for="cp-hex" class="font-bold block mb-2"> HEX </label>
             <p-colorpicker appendTo="body" (onHide)="changeColor($event)" [(ngModel)]="color" inputId="cp-hex"
@@ -11,33 +18,45 @@
             <span>{{ color() }}</span>
         </div>
         <div class="flex w-full justify-end">
-            <p-button icon="pi pi-times" (onClick)="changeColor(null)" [label]="'action.clear'|translate" [size]="'small'"
+            <p-button icon="pi pi-times" (onClick)="resetColor()" [label]="'action.clear'|translate" [size]="'small'"
                 [text]="true" severity="secondary" />
         </div>
     </div>
     <p-divider />
-    <div class="flex flex-col gap-2">
-
-
-        <span class="text-muted font-semibold">{{'auth.user.logo'|translate}}</span>
+    <div class="flex flex-col gap-3">
+        <div class="flex items-center gap-3">
+            <span class="flex items-center justify-center bg-sky-100 text-sky-600 rounded-lg p-2">
+                <i class="pi pi-image text-base"></i>
+            </span>
+            <div class="flex flex-col">
+                <span class="font-semibold text-sm">{{'auth.user.logo'|translate}}</span>
+                <span class="text-xs text-surface-500">{{'label.logo.subtitle'|translate}}</span>
+            </div>
+        </div>
         @if(me.logo) {
         <div class="flex w-full justify-center">
             <img [src]="me.logo" alt="logo" class="w-[200px] object-contain" />
         </div>
         }
-        @else {
-        <p-message severity="info" icon="pi pi-info-circle">{{'label.file.info.empty'|translate}}</p-message>
-        }
-    </div>
-    <div class="flex gap-2 w-full justify-end">
-        @if(me.logo) {
-        <p-button [label]="'action.clear'|translate" (onClick)="clear()" icon="pi pi-times" [text]="true" size="small"
-            severity="danger" />
-        }
-        <p-fileupload #upload [pTooltip]="'label.import'|translate" [auto]="true" [multiple]="false" mode="basic"
-            [uploadButtonProps]="{label:''}" [chooseButtonProps]="{label:'',size:'small',text: true}"
-            chooseIcon="pi pi-upload" name="import[]" accept="" maxFileSize="1000000" (onSelect)="onImport($event)">
-        </p-fileupload>
+        <div class="flex flex-col gap-3">
+            <label
+                class="flex flex-col items-center justify-center gap-2 w-full border-2 border-dashed border-surface-300 rounded-xl p-6 cursor-pointer hover:border-primary hover:bg-surface-50 transition-colors duration-150">
+                <i class="pi pi-cloud-upload text-3xl text-surface-400"></i>
+                <span class="text-sm font-medium text-surface-700">{{'label.upload.dropzone.title'|translate}}</span>
+                <span class="text-xs text-surface-400">{{'label.upload.dropzone.subtitle'|translate}}</span>
+                <p-fileupload #upload [auto]="true" [multiple]="false" mode="basic" [uploadButtonProps]="{label:''}"
+                    [chooseButtonProps]="{label:'',size:'small',text: true, styleClass: 'opacity-0 absolute'}"
+                    chooseIcon="pi pi-upload" name="import[]" accept="" maxFileSize="1000000"
+                    (onSelect)="onImport($event)" class="opacity-0 absolute w-0 h-0 overflow-hidden">
+                </p-fileupload>
+            </label>
+            @if(me.logo) {
+            <div class="flex justify-end">
+                <p-button [label]="'action.clear'|translate" (onClick)="clear()" icon="pi pi-times" [text]="true"
+                    size="small" severity="danger" />
+            </div>
+            }
+        </div>
     </div>
 </div>
 }

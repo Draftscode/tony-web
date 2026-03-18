@@ -51,6 +51,9 @@
         },
         "search": "Suche",
         "files": "Dateien",
+        "fileList": {
+            "subtitle": "Alle Mandantendateien verwalten"
+        },
         "password": "Passwort",
         "login": "Anmelden",
         "logout": "Abmelden",
@@ -83,6 +86,17 @@
             "male": "Herr",
             "female": "Frau",
             "other": ""
+        },
+        "yes": "Ja",
+        "no": "Nein",
+        "logo": {
+            "subtitle": "Das Logo erscheint in den generierten PDFs."
+        },
+        "upload": {
+            "dropzone": {
+                "title": "Klicken oder Datei hier ablegen",
+                "subtitle": "PNG, JPG bis 1 MB"
+            }
         }
     },
     "utils": {
@@ -307,7 +321,9 @@
         }
     },
     "color": {
-        "info": "Die ausgewählte Farbe hat sowohl Auswirkung auf das UI, als auch auf die finale PDF."
+        "info": {
+            "subtitle": "Wirkt sich auf das UI und die finale PDF aus."
+        }
     },
     "blaudirekt": {
         "search": {

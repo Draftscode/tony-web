@@ -1,5 +1,5 @@
 import { CdkDrag } from "@angular/cdk/drag-drop";
-import { NgTemplateOutlet } from "@angular/common";
+import { NgClass, NgTemplateOutlet } from "@angular/common";
 import { ChangeDetectionStrategy, Component, computed, contentChild, forwardRef, input, linkedSignal, model, output, TemplateRef } from "@angular/core";
 import { RouterLink, RouterLinkActive } from "@angular/router";
 import { TranslatePipe } from "@ngx-translate/core";
@@ -11,7 +11,7 @@ import { DividerModule } from "primeng/divider";
     templateUrl: './menu-item.component.html',
     styleUrl: './menu-item.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [MenuItemComponent, CdkDrag, NgTemplateOutlet, RouterLink, RouterLinkActive, TranslatePipe, DividerModule],
+    imports: [MenuItemComponent, CdkDrag, NgTemplateOutlet, NgClass, RouterLink, RouterLinkActive, TranslatePipe, DividerModule],
     host: { class: 'relative flex flex-col w-full' },
     viewProviders: [
         { provide: CdkDrag, useExisting: forwardRef(() => CdkDrag) }

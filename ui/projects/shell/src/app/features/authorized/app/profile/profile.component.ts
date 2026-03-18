@@ -1,19 +1,17 @@
-import { Component, computed, inject, linkedSignal, signal, viewChild } from '@angular/core';
+import { Component, computed, inject, linkedSignal, viewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Button } from 'primeng/button';
-import { ColorPicker, ColorPickerChangeEvent } from 'primeng/colorpicker';
+import { ColorPicker } from 'primeng/colorpicker';
+import { Divider } from "primeng/divider";
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FileSelectEvent, FileUpload } from 'primeng/fileupload';
-import { Message } from 'primeng/message';
-import { Tooltip } from 'primeng/tooltip';
 import { AccountStore } from '../../../../data-access/store/account.store';
 import { fileToBase64 } from '../../../../utils/files/file-to-base64';
-import { FormsModule } from '@angular/forms';
-import { Divider } from "primeng/divider";
 
 @Component({
     selector: 'app-profile',
-    imports: [FileUpload, Button, Message, FormsModule, TranslatePipe, Tooltip, ColorPicker, Divider],
+    imports: [FileUpload, Button, FormsModule, TranslatePipe, ColorPicker, Divider],
     templateUrl: 'profile.component.html',
 })
 export class ProfileComponent {
@@ -32,6 +30,11 @@ export class ProfileComponent {
 
     protected async changeColor(e: string | null) {
         await this.accountStore.editMe({ color: this.color() })
+    }
+
+
+    protected async resetColor() {
+        await this.accountStore.editMe({ color: null })
     }
 
     protected async onImport(e: FileSelectEvent) {
