@@ -1,26 +1,71 @@
-<div class="flex flex-col gap-2">
-    <div class="flex flex-col gap-2 overflow-auto min-h-0">
+<div class="flex flex-col gap-5 w-[480px] max-w-full pt-6">
+
+    <!-- Header -->
+    <div class="flex items-center gap-3 pb-5 border-b border-surface-200 dark:border-surface-700">
+        @if(color() === 'blue') {
+        <span class="flex w-10 h-10 shrink-0 justify-center items-center rounded-xl bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400">
+            <i [class]="'pi pi-' + icon() + ' text-base'"></i>
+        </span>
+        } @else if(color() === 'green') {
+        <span class="flex w-10 h-10 shrink-0 justify-center items-center rounded-xl bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400">
+            <i [class]="'pi pi-' + icon() + ' text-base'"></i>
+        </span>
+        } @else if(color() === 'orange') {
+        <span class="flex w-10 h-10 shrink-0 justify-center items-center rounded-xl bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400">
+            <i [class]="'pi pi-' + icon() + ' text-base'"></i>
+        </span>
+        } @else if(color() === 'red') {
+        <span class="flex w-10 h-10 shrink-0 justify-center items-center rounded-xl bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400">
+            <i [class]="'pi pi-' + icon() + ' text-base'"></i>
+        </span>
+        } @else if(color() === 'purple') {
+        <span class="flex w-10 h-10 shrink-0 justify-center items-center rounded-xl bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400">
+            <i [class]="'pi pi-' + icon() + ' text-base'"></i>
+        </span>
+        } @else {
+        <span class="flex w-10 h-10 shrink-0 justify-center items-center rounded-xl bg-violet-100 dark:bg-violet-900/40 text-violet-600 dark:text-violet-400">
+            <i [class]="'pi pi-' + icon() + ' text-base'"></i>
+        </span>
+        }
+        <div class="flex flex-col min-w-0 flex-1">
+            <span class="text-base font-semibold text-surface-800 dark:text-surface-100">{{dialogConf.data.name}}</span>
+            <span class="text-xs text-surface-400 dark:text-surface-500">{{ 'group.' + dialogConf.data.kind + '.label' | translate }}</span>
+        </div>
+        <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="secondary" size="small"
+            (onClick)="dialogRef.close()" />
+    </div>
+
+    <!-- Content -->
+    <div class="flex flex-col gap-3 min-h-0">
         @if(!editable()) {
-        @if(safeContent()) {
-        <p [innerHTML]="safeContent()" class="overflow-hidden"></p>
-        }
-        @else {
-        <p-message severity="info" icon="pi pi-info-circle">
-            {{'administration.division.info.edit'|translate}}
-        </p-message>
-        }
-        }
-        @else {
-        <p-editor [style]="{ height: '320px' }" [(ngModel)]="content"></p-editor>
+            @if(safeContent()) {
+            <div class="p-4 rounded-lg bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700">
+                <div [innerHTML]="safeContent()" class="text-sm text-surface-700 dark:text-surface-200 leading-relaxed overflow-auto max-h-[360px]"></div>
+            </div>
+            } @else {
+            <div class="flex flex-col items-center gap-3 py-8 text-center">
+                <span class="flex w-12 h-12 justify-center items-center rounded-xl bg-surface-100 dark:bg-surface-800 text-surface-400 dark:text-surface-500">
+                    <i class="pi pi-file-edit text-xl"></i>
+                </span>
+                <div class="flex flex-col gap-1">
+                    <span class="text-sm font-medium text-surface-600 dark:text-surface-300">{{'administration.division.info.edit'|translate}}</span>
+                    <span class="text-xs text-surface-400 dark:text-surface-500">{{'action.edit'|translate}}</span>
+                </div>
+            </div>
+            }
+        } @else {
+        <p-editor [style]="{ height: '320px' }" [(ngModel)]="content" />
         }
     </div>
-    <div class="flex justify-end w-full">
+
+    <!-- Actions -->
+    <div class="flex justify-end pt-2 border-t border-surface-200 dark:border-surface-700">
         @if(!editable()) {
         <p-button [label]="'action.edit'|translate" severity="secondary" icon="pi pi-pencil"
             (onClick)="editable.set(true)" />
-        }
-        @else{
+        } @else {
         <p-button icon="pi pi-check-circle" [label]="'action.complete'|translate" (onClick)="complete()" />
         }
     </div>
+
 </div>

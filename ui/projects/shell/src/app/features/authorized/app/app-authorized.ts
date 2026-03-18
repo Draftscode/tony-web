@@ -106,19 +106,26 @@ export default class App {
   }
 
   private readonly divisionStore = inject(DivisionStore);
+  protected onSearchFocus(control: AutoComplete): void {
+    control.show();
+    control.loading = false;
+  }
+
   protected async selectItem(item: { kind: string; id: string; name: string; value: string }) {
     switch (item.kind) {
 
       case 'info': {
         const ref = this.dialogService.open(GenericDialog, {
           data: {
-            contents: item.value
+            contents: item.value,
+            name: item.name,
+            kind: item.kind,
           },
           modal: true,
           closable: true,
-          width: '420px',
-          maximizable: true,
-          header: item.name,
+          showHeader: false,
+          width: '500px',
+          maximizable: false,
         });
         if (!ref) { return; }
         const result = await lastValueFrom(ref.onClose);

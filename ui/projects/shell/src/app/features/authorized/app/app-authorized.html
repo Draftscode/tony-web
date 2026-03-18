@@ -7,7 +7,8 @@
 <app-main-menu [items]="menuItems()" [expandOnHover]="true" [isDragAndDropDisabled]="true" #mainMenu
     class="flex w-full h-full w-full bg-surface-50 dark:bg-surface-950" [mode]="menuMode">
     <ng-template #start>
-        <div class="px-3 py-3 flex justify-between items-center w-full border-b border-surface-100 dark:border-surface-800 mb-1">
+        <div
+            class="px-3 py-3 flex justify-between items-center w-full border-b border-surface-100 dark:border-surface-800 mb-1">
             @if(mainMenu.isMouseOver() || menuMode !== 'slim') {
             <div class="h-[28px] items-center flex">
                 <img [src]="'./images/logo-raw-no-text'+(settingsStore.isDark()?'-dark':'')+'.png'"
@@ -31,7 +32,8 @@
                 <p-avatar [label]="avatarLabel()" shape="circle"
                     [pt]="{root: {class: 'bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 font-semibold shrink-0'}}" />
                 <div class="flex flex-col min-w-0">
-                    <span class="text-sm font-semibold text-surface-700 dark:text-surface-200 truncate">{{accountStore.me.value()?.username}}</span>
+                    <span
+                        class="text-sm font-semibold text-surface-700 dark:text-surface-200 truncate">{{accountStore.me.value()?.username}}</span>
                     <span class="text-xs text-surface-400 dark:text-surface-500">v{{version}}</span>
                 </div>
             </div>
@@ -82,7 +84,8 @@
                     <ng-container [ngTemplateOutlet]="searchTemplate" />
                     }
                 </div>
-                <p-card class="rounded-full" [pt]="{root: {class: 'shadow-sm'}, body: {class: 'p-1'}, content: {class: 'p-0'}}">
+                <p-card class="rounded-full"
+                    [pt]="{root: {class: 'shadow-sm'}, body: {class: 'p-1'}, content: {class: 'p-0'}}">
                     <p-button icon="pi pi-cog" severity="secondary" [text]="true" [rounded]="true"
                         (onClick)="settingsStore.toggle(true)" />
                 </p-card>
@@ -101,23 +104,62 @@
     <p-iconfield>
         <p-inputicon class="pi pi-search" />
         <p-autocomplete #control optionValue="name" optionLabel="name" [completeOnFocus]="true"
+            (onFocus)="onSearchFocus(control)" [showClear]="control.value" (onClear)="query$.next('')"
             (onSelect)="selectItem($event.value)" inputStyleClass="rounded-full" size="small" [group]="true"
             [placeholder]="'label.search'|translate" (completeMethod)="query$.next($event.query)"
             [suggestions]="searchItems()">
             <ng-template let-item #item>
-                <div class="flex h-[24px] items-center justify-between gap-2 w-full">
-                    <div [innerHTML]="item.name" class="min-h-0 min-w-0 overflow-hidden max-w-[300px] text-ellipsis">
-                    </div>
-                    <p-button (onClick)="selectItem(item)" size="small" icon="pi pi-chevron-right" [text]="true" />
+                <div class="flex items-center justify-between gap-3 w-full py-0.5">
+                    <span [innerHTML]="item.name"
+                        class="text-sm text-surface-700 dark:text-surface-200 truncate max-w-[260px]"></span>
+                    <span
+                        class="flex shrink-0 items-center gap-1 px-2 py-0.5 rounded-md bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 text-xs font-medium">
+                        <i class="pi pi-window-maximize text-xs"></i>
+                        <span>Öffnen</span>
+                    </span>
                 </div>
             </ng-template>
             <ng-template let-group #group>
-                <div class=" flex gap-2 items-center">
-                    @let icon = group.label === 'offer'? 'briefcase' :group.label === 'ip.asset' ?
-                    'shield': group.label === 'strategy'?'image' : group.label ===
-                    'jurisdiction'?'flag':group.label ==='options'?'address-book':'th-large';
-                    <i [class]="`pi pi-${icon}`"></i>
-                    <span>{{ `group.${group.label}.label`|translate }}</span>
+                @let icon = group.label === 'offer' ? 'briefcase' : group.label === 'ip.asset' ?
+                'shield' : group.label === 'strategy' ? 'image' : group.label ===
+                'jurisdiction' ? 'flag' : group.label === 'options' ? 'address-book' : 'th-large';
+                @let color = group.label === 'offer' ? 'blue' : group.label === 'ip.asset' ?
+                'green' : group.label === 'strategy' ? 'orange' : group.label ===
+                'jurisdiction' ? 'red' : group.label === 'options' ? 'purple' : 'violet';
+                <div class="flex items-center gap-3 py-1">
+                    @if(color === 'blue') {
+                    <span
+                        class="flex w-8 h-8 shrink-0 justify-center items-center rounded-lg bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400">
+                        <i [class]="'pi pi-' + icon + ' text-sm'"></i>
+                    </span>
+                    } @else if(color === 'green') {
+                    <span
+                        class="flex w-8 h-8 shrink-0 justify-center items-center rounded-lg bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400">
+                        <i [class]="'pi pi-' + icon + ' text-sm'"></i>
+                    </span>
+                    } @else if(color === 'orange') {
+                    <span
+                        class="flex w-8 h-8 shrink-0 justify-center items-center rounded-lg bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400">
+                        <i [class]="'pi pi-' + icon + ' text-sm'"></i>
+                    </span>
+                    } @else if(color === 'red') {
+                    <span
+                        class="flex w-8 h-8 shrink-0 justify-center items-center rounded-lg bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400">
+                        <i [class]="'pi pi-' + icon + ' text-sm'"></i>
+                    </span>
+                    } @else if(color === 'purple') {
+                    <span
+                        class="flex w-8 h-8 shrink-0 justify-center items-center rounded-lg bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400">
+                        <i [class]="'pi pi-' + icon + ' text-sm'"></i>
+                    </span>
+                    } @else {
+                    <span
+                        class="flex w-8 h-8 shrink-0 justify-center items-center rounded-lg bg-violet-100 dark:bg-violet-900/40 text-violet-600 dark:text-violet-400">
+                        <i [class]="'pi pi-' + icon + ' text-sm'"></i>
+                    </span>
+                    }
+                    <span class="text-sm font-semibold text-surface-800 dark:text-surface-100">{{
+                        `group.${group.label}.label` | translate }}</span>
                 </div>
             </ng-template>
         </p-autocomplete>
