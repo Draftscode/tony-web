@@ -59,7 +59,7 @@ FROM base AS production
 COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/package*.json ./
-COPY --from=builder /usr/src/app/uploads ./uploads
+RUN mkdir -p ./uploads
 
 EXPOSE 3000
 
