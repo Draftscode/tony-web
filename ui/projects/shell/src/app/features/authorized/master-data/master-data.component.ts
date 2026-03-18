@@ -8,7 +8,7 @@ import { AccountStore } from "../../../data-access/store/account.store";
     templateUrl: 'master-data.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [RouterOutlet, CardModule],
-    host: { class: 'flex w-full justify-center' },
+    host: { class: 'flex w-full h-full flex-col justify-center' },
 })
 export default class MasterDataComponent {
     protected readonly me = inject(AccountStore).me.value;

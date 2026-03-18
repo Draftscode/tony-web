@@ -2,6 +2,7 @@ import { TitleCasePipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, signal } from "@angular/core";
 import { TranslatePipe } from "@ngx-translate/core";
 import { ButtonModule } from "primeng/button";
+import { CardModule } from "primeng/card";
 import { DividerModule } from "primeng/divider";
 import { PopoverModule } from "primeng/popover";
 import { TableLazyLoadEvent } from "primeng/table";
@@ -14,20 +15,12 @@ import { TableComponent, TableConfig } from "../../../../ui/table/table.componen
     selector: 'app-division-list',
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        TableComponent, SearchComponent,
+        TableComponent, SearchComponent, CardModule,
         ButtonModule, PopoverModule, DividerModule,
         TranslatePipe, TitleCasePipe
     ],
     templateUrl: 'division-list.component.html',
-    host: { class: 'flex w-full h-full justify-center flex-col overflow-auto' },
-    styles: `
-    :host ::ng-deep {
-        .p-card-body,
-        .p-card-content {
-            @apply flex flex-col overflow-auto h-full w-full
-        }
-    }
-    `
+    host: { class: 'contents' },
 })
 export default class DivisionListComponent {
     protected readonly divisionStore = inject(DivisionStore);

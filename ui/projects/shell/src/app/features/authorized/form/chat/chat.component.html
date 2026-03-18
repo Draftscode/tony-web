@@ -1,6 +1,6 @@
 <span class="text-xl font-semibold">Notizen</span>
-<div class="flex flex-col gap-2 overflow-auto min-h-[100px] w-full bg-gray-200 rounded p-2 max-h-[420px]">
-    <div class="flex h-full flex-col gap-2 w-full min--0 overflow-auto" #scroller>
+<div class="flex flex-col gap-2 overflow-auto min-h-[100px] w-full bg-gray-200 rounded p-2 max-h-[420px]" #scroller>
+    <div class="flex h-full flex-col gap-2 w-full min--0">
         <div class="w-full flex flex-col gap-2 p-2">
             @for(message of messages().items; track message.id) {
             @let me = message.userId === userId();

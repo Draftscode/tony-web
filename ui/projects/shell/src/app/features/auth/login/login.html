@@ -1,29 +1,108 @@
-<div class="flex w-full h-full bg-surface-100 dark:bg-surface-950">
-    <p-card class="m-auto">
-        <form [formGroup]="formGroup" class="flex gap-2 flex-col p-4 min-w-[300px]" (ngSubmit)="submit()">
-            <img [src]="`./images/logo/logo-raw${themeService.isDark()?'-dark':''}-w420.png`" alt="Logo"
-                class="object-contain h-[100px]">
-            <span class="text-4xl font-semibold w-full text-center my-8">
-                {{'label.login'|translate}}
-            </span>
+<div class="min-h-screen w-full flex items-center justify-center relative overflow-hidden bg-[#06040f]">
 
+    <!-- Abstract background blobs -->
+    <div class="absolute inset-0 pointer-events-none">
+        <!-- Violet orb — top right -->
+        <div class="absolute -top-48 -right-24 w-[650px] h-[650px] rounded-full bg-violet-600/35 blur-[130px]"></div>
+        <!-- Cyan orb — bottom left -->
+        <div class="absolute -bottom-48 -left-24 w-[550px] h-[550px] rounded-full bg-cyan-500/30 blur-[110px]"></div>
+        <!-- Fuchsia orb — center left -->
+        <div class="absolute top-1/3 -left-16 w-[320px] h-[450px] rounded-full bg-fuchsia-600/22 blur-[90px]"></div>
+        <!-- Indigo orb — upper left -->
+        <div class="absolute top-16 left-1/4 w-[260px] h-[260px] rounded-full bg-indigo-500/25 blur-[70px]"></div>
+        <!-- Amber accent — bottom right -->
+        <div class="absolute bottom-24 right-1/4 w-[220px] h-[220px] rounded-full bg-amber-500/15 blur-[70px]"></div>
+        <!-- Rose accent — top center -->
+        <div class="absolute -top-10 left-1/2 w-[300px] h-[200px] rounded-full bg-rose-500/15 blur-[80px]"></div>
+
+        <!-- Geometric rings -->
+        <div class="absolute top-[12%] right-[8%] w-80 h-80 rounded-full border border-white/[0.04]"></div>
+        <div class="absolute top-[8%] right-[4%] w-[26rem] h-[26rem] rounded-full border border-white/[0.025]"></div>
+        <div class="absolute bottom-[18%] left-[12%] w-56 h-56 rounded-full border border-white/[0.04]"></div>
+        <div class="absolute bottom-[14%] left-[8%] w-80 h-80 rounded-full border border-white/[0.02]"></div>
+
+        <!-- Small floating geometric squares -->
+        <div class="absolute top-[30%] right-[18%] w-6 h-6 border border-violet-400/20 rotate-12"></div>
+        <div class="absolute top-[55%] right-[12%] w-4 h-4 border border-cyan-400/25 rotate-45"></div>
+        <div class="absolute top-[22%] left-[18%] w-5 h-5 border border-fuchsia-400/20 -rotate-12"></div>
+        <div class="absolute bottom-[35%] left-[22%] w-3 h-3 bg-indigo-400/20 rotate-45"></div>
+        <div class="absolute bottom-[28%] right-[22%] w-4 h-4 border border-amber-400/20 rotate-12"></div>
+    </div>
+
+    <!-- Dot-grid overlay -->
+    <div class="absolute inset-0 pointer-events-none opacity-[0.12]"
+        style="background-image: radial-gradient(circle, rgba(255,255,255,0.2) 1px, transparent 1px); background-size: 28px 28px;">
+    </div>
+
+    <!-- Vignette overlay -->
+    <div class="absolute inset-0 pointer-events-none"
+        style="background: radial-gradient(ellipse at center, transparent 40%, rgba(6,4,15,0.6) 100%);">
+    </div>
+
+    <!-- Login card -->
+    <div class="relative w-full max-w-sm px-4 z-10">
+        <div class="rounded-3xl px-8 py-10 flex flex-col gap-6 backdrop-blur-2xl"
+            style="background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 32px 64px -16px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04), inset 0 1px 0 rgba(255,255,255,0.08);">
+
+            <!-- Logo -->
+            <div class="flex flex-col items-center gap-3">
+                <img src="./images/logo/logo-raw-dark-w420.png" alt="tonym" class="h-10 object-contain drop-shadow-lg">
+                <span class="text-xs font-medium tracking-[0.2em] uppercase text-white/35">{{'label.login' | translate}}</span>
+            </div>
+
+            <!-- Error message -->
             @if(error()) {
-            <p-message class="max-w-[300px] text-center" severity="error">{{'auth.error.login'|translate}}</p-message>
+            <p-message severity="error" styleClass="w-full justify-start text-sm">
+                {{'auth.error.login' | translate}}
+            </p-message>
             }
 
-            <div class="flex flex-col">
-                <label for="username">{{'person.username'|translate}}</label>
-                <input id="username" formControlName="username" pInputText />
-            </div>
-            <div class="flex flex-col">
-                <label for="password">{{'label.password'|translate}}</label>
-                <p-password inputStyleClass="w-full" [toggleMask]="true" inputId="password" id="password"
-                    formControlName="password" [feedback]="false" />
-            </div>
-            <p-divider />
-            <div class="flex justify-end">
-                <p-button type="submit" [disabled]="formGroup.invalid" [label]="'label.login'|translate" />
-            </div>
-        </form>
-    </p-card>
+            <!-- Form -->
+            <form [formGroup]="formGroup" class="flex flex-col gap-4" (ngSubmit)="submit()" autocomplete="on">
+
+                <!-- Username -->
+                <div class="flex flex-col gap-1.5">
+                    <label for="username" class="text-xs font-semibold tracking-wide uppercase text-white/50">
+                        {{'person.username' | translate}}
+                    </label>
+                    <input
+                        id="username"
+                        pInputText
+                        formControlName="username"
+                        autocomplete="username"
+                        class="w-full"
+                        [placeholder]="'person.username' | translate"
+                    />
+                </div>
+
+                <!-- Password -->
+                <div class="flex flex-col gap-1.5">
+                    <label for="password" class="text-xs font-semibold tracking-wide uppercase text-white/50">
+                        {{'label.password' | translate}}
+                    </label>
+                    <p-password
+                        inputId="password"
+                        formControlName="password"
+                        [toggleMask]="true"
+                        [feedback]="false"
+                        autocomplete="current-password"
+                        styleClass="w-full"
+                        inputStyleClass="w-full"
+                        [placeholder]="'label.password' | translate"
+                    />
+                </div>
+
+                <!-- Submit -->
+                <p-button
+                    type="submit"
+                    [disabled]="formGroup.invalid"
+                    [label]="'label.login' | translate"
+                    styleClass="w-full mt-2"
+                    icon="pi pi-sign-in"
+                    iconPos="right"
+                />
+
+            </form>
+        </div>
+    </div>
 </div>

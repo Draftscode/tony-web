@@ -21,15 +21,7 @@ import { TableComponent, TableConfig } from "../../../../ui/table/table.componen
         TranslatePipe, TitleCasePipe
     ],
     templateUrl: 'insurer-list.component.html',
-    host: { class: 'flex w-full h-full justify-center flex-col overflow-auto' },
-    styles: `
-    :host ::ng-deep {
-        .p-card-body,
-        .p-card-content {
-            @apply flex flex-col overflow-auto h-full w-full
-        }
-    }
-    `
+    host: { class: 'contents' },
 })
 export default class InsurerListComponent {
     protected readonly insurerStore = inject(InsurerStore);

@@ -20,14 +20,15 @@ export class UserService {
         return this.http.delete<void>(`${environment.origin}/users/${id}`);
     }
 
-    editUser(id: number, user: User) {
-        (Object.keys(user) as (keyof User)[]).forEach(key => {
-            if (!user[key]) {
-                delete user[key];
+    editUser(id: number, user: User & { newPassword?: string | null }) {
+        const payload: Partial<typeof user> = { ...user };
+        (Object.keys(payload) as (keyof typeof payload)[]).forEach(key => {
+            if (key !== 'newPassword' && !payload[key]) {
+                delete payload[key];
             }
         });
 
-        return this.http.put<User>(`${environment.origin}/users/${id}`, user);
+        return this.http.put<User>(`${environment.origin}/users/${id}`, payload);
     }
 
     editMe(user: Partial<User>) {

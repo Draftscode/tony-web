@@ -44,4 +44,12 @@ export class MessageService {
     readMessage(messageId: number) {
         return this.http.delete(`${environment.origin}/messages/${messageId}`);
     }
+
+    countUnread(i: Signal<string>) {
+        return httpResource<number>(() => ({
+            url: `${environment.origin}/messages/count`,
+            method: 'GET',
+            params: { i: i() }
+        }), { defaultValue: 0 });
+    }
 }

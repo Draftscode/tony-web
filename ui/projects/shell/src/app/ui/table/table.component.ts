@@ -1,5 +1,6 @@
 import { NgTemplateOutlet } from "@angular/common";
 import { ChangeDetectionStrategy, Component, contentChild, input, output, TemplateRef } from "@angular/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { ColumnFilter, TableLazyLoadEvent, TableModule } from "primeng/table";
 
 type TableColumn<Row> = {
@@ -18,7 +19,7 @@ export type TableConfig<Row> = {
 @Component({
     selector: 'app-table',
     templateUrl: 'table.component.html',
-    imports: [TableModule, NgTemplateOutlet],
+    imports: [TableModule, NgTemplateOutlet, TranslatePipe],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableComponent<Row> {

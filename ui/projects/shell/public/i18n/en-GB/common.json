@@ -60,7 +60,11 @@
         "fileList": {
             "subtitle": "Manage all client files"
         },
+        "userList": {
+            "subtitle": "User management"
+        },
         "password": "Password",
+        "newPassword": "New password",
         "login": "Login",
         "logout": "Logout",
         "user": "User",
@@ -239,6 +243,9 @@
         "list": {
             "empty": "No results."
         },
+        "table": {
+            "empty": "No entries found"
+        },
         "create": {
             "value": "Create {{value}}"
         },
@@ -342,6 +349,7 @@
     "customer": {
         "label": "Client",
         "plural": "Clients",
+        "subtitle": "Manage all clients",
         "status": {
             "label": "Customer status",
             "terminated": "Terminated",
@@ -357,6 +365,7 @@
     "insurer": {
         "label": "Insurer",
         "plural": "Insurances",
+        "subtitle": "Manage all insurers",
         "logo": "logo",
         "name": "Name",
         "blocks": "Modules"
@@ -381,5 +390,17 @@
     },
     "validation": {
         "required": "Required field"
+    },
+    "dashboard": {
+        "label": "Dashboard",
+        "welcome": "Welcome back.",
+        "customers": "Customers",
+        "files": "Files",
+        "insurers": "Insurers",
+        "contracts": "Contracts",
+        "unreadMessages": "Messages",
+        "recentFiles": "Recently modified files",
+        "expiringSoon": "Contracts expiring soon",
+        "expiringSoonHint": "Contracts expiring within the next 30 days"
     }
 }

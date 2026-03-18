@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, inject, signal } from "@angular/cor
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslatePipe } from "@ngx-translate/core";
 import { ButtonModule } from "primeng/button";
+import { CardModule } from "primeng/card";
 import { DividerModule } from "primeng/divider";
 import { PopoverModule } from "primeng/popover";
 import { TableLazyLoadEvent } from "primeng/table";
@@ -18,20 +19,12 @@ import { CustomerStatusFilterComponent } from "./customer-status-filter.componen
     selector: 'app-customer-list',
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        TableComponent, SearchComponent,
+        TableComponent, SearchComponent, CardModule,
         ButtonModule, PopoverModule, DividerModule, CustomerStatusFilterComponent,
         TranslatePipe, CustomerStatusComponent, TitleCasePipe
     ],
     templateUrl: 'customer-list.component.html',
-    host: { class: 'flex w-full flex-col h-full justify-center overflow-auto' },
-    styles: `
-    :host ::ng-deep {
-        .p-card-body,
-        .p-card-content {
-            @apply flex flex-col overflow-auto h-full w-full
-        }
-    }
-    `
+    host: { class: 'contents' },
 })
 export default class CustomerListComponent {
     protected readonly customerStore = inject(CustomerStore);

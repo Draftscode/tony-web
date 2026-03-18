@@ -60,7 +60,11 @@
         "fileList": {
             "subtitle": "Alle Mandantendateien verwalten"
         },
+        "userList": {
+            "subtitle": "Benutzerverwaltung"
+        },
         "password": "Passwort",
+        "newPassword": "Neues Passwort",
         "login": "Anmelden",
         "logout": "Abmelden",
         "user": "Benutzer",
@@ -109,6 +113,9 @@
         "hello": "Hallo {{value}}",
         "list": {
             "empty": "Keine Ergebnisse."
+        },
+        "table": {
+            "empty": "Keine Einträge gefunden"
         },
         "create": {
             "value": "{{value}} erstellen"
@@ -342,6 +349,7 @@
     "customer": {
         "label": "Mandant",
         "plural": "Mandanten",
+        "subtitle": "Alle Mandanten verwalten",
         "status": {
             "label": "Kundenstatus",
             "terminated": "Beendet",
@@ -357,6 +365,7 @@
     "insurer": {
         "label": "Versicherer",
         "plural": "Versicherungen",
+        "subtitle": "Alle Versicherer verwalten",
         "logo": "logo",
         "name": "Name",
         "blocks": "Bausteine"
@@ -381,5 +390,17 @@
     },
     "validation": {
         "required": "Pflichtfeld"
+    },
+    "dashboard": {
+        "label": "Dashboard",
+        "welcome": "Willkommen zurück.",
+        "customers": "Kunden",
+        "files": "Dateien",
+        "insurers": "Versicherer",
+        "contracts": "Verträge",
+        "unreadMessages": "Nachrichten",
+        "recentFiles": "Zuletzt geänderte Dateien",
+        "expiringSoon": "Bald ablaufende Verträge",
+        "expiringSoonHint": "Verträge laufen in den nächsten 30 Tagen ab"
     }
 }

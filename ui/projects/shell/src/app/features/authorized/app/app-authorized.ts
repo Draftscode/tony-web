@@ -29,6 +29,7 @@ import { BreadcrumbStore } from '../../../data-access/store/breadcrumb.store';
 import { DivisionStore } from '../../../data-access/store/division.store';
 import { SearchStore } from '../../../data-access/store/search.store';
 import { SettingsStore } from '../../../data-access/store/settings.store';
+import { UnreadStore } from '../../../data-access/store/unread.store';
 import { GenericDialog } from '../../../dialogs/generic/generic.dialog';
 import { getMasterDataItems } from '../master-data/master-data.items';
 import { SettingsComponent } from '../settings/settings.component';
@@ -61,6 +62,7 @@ export default class App {
   protected readonly isMedium = toSignal(this.breakpointObserver.observe([Breakpoints.Medium]).pipe(map(s => s.matches)));
   protected readonly avatarLabel = computed(() => this.accountStore.me.value()?.username.slice(0, 1).toUpperCase() ?? '');
 
+  private readonly unreadStore = inject(UnreadStore);
   private readonly searchStore = inject(SearchStore);
   protected readonly query$ = new Subject<string | null>();
   protected readonly query = toSignal(this.query$.pipe(debounceTime(500), startWith(undefined)));
@@ -76,11 +78,20 @@ export default class App {
 
   protected readonly menuItems = computed<MenuItem[]>(() => {
     const items: MenuItem[] = [{
+      key: 'dashboard',
+      routerLink: ['dashboard'],
+      label: 'dashboard.label',
+      icon: 'pi pi-home',
+      iconClass: 'bg-teal-100 dark:bg-teal-900/40 text-teal-600 dark:text-teal-400'
+    }, {
       key: 'files',
       routerLink: ['files'],
       label: 'label.files',
       icon: 'pi pi-folder-open',
-      iconClass: 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400'
+      iconClass: 'bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400',
+      badge: this.unreadStore.count.hasValue() && this.unreadStore.count.value() > 0
+        ? String(this.unreadStore.count.value())
+        : undefined,
     }];
 
     if (this.accountStore.me.value()?.roles.find(role => role.name === 'admin')) {

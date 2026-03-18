@@ -1,11 +1,11 @@
-import { Module } from "@nestjs/common";
-import { NotesController } from "./notes.controller";
-import { NotesService } from "./notes.service";
+import { Module } from '@nestjs/common';
+import { NotesController } from './notes.controller';
+import { NotesService } from './notes.service';
 
 @Module({
-    imports: [],
-    exports: [NotesService],
-    providers: [NotesService],
-    controllers: [NotesController]
+  imports: [],
+  exports: [NotesService],
+  providers: [NotesService],
+  controllers: [NotesController],
 })
-export class NotesModule { }
+export class NotesModule {}

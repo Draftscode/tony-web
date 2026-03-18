@@ -13,6 +13,7 @@ import { MessagesModule } from './features/messages/messages.module';
 import { NotesModule } from './features/notes/notes.module';
 import { RolesModule } from './features/roles/roles.module';
 import { SearchModule } from './features/search/search.modue';
+import { StatsModule } from './features/stats/stats.module';
 import { UserModule } from './features/users/users.module';
 
 @Module({
@@ -25,12 +26,12 @@ import { UserModule } from './features/users/users.module';
     SearchModule,
     NotesModule,
     UserModule,
+    StatsModule,
     ScheduleModule.forRoot(),
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) =>
-      ({
+      useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         host: configService.get('DATABASE_HOST'),
         port: configService.get('DATABASE_PORT'),
@@ -52,4 +53,4 @@ import { UserModule } from './features/users/users.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

@@ -60,7 +60,11 @@
         "fileList": {
             "subtitle": "Összes ügyfél fájl kezelése"
         },
+        "userList": {
+            "subtitle": "Felhasználókezelés"
+        },
         "password": "Jelszó",
+        "newPassword": "Új jelszó",
         "login": "Bejelentkezés",
         "logout": "Kijelentkezés",
         "user": "Felhasználó",
@@ -111,6 +115,9 @@
         "hello": "Helló {{value}}",
         "list": {
             "empty": "Nincs találat."
+        },
+        "table": {
+            "empty": "Nem található bejegyzés"
         },
         "create": {
             "value": "{{value}} létrehozása"
@@ -344,6 +351,7 @@
     "customer": {
         "label": "Mandátum (Ügyfél)",
         "plural": "Mandátumok (Ügyfelek)",
+        "subtitle": "Összes ügyfél kezelése",
         "status": {
             "label": "Ügyfélstátusz",
             "terminated": "Befejezett",
@@ -359,6 +367,7 @@
     "insurer": {
         "label": "Biztosító",
         "plural": "Biztosítások",
+        "subtitle": "Összes biztosító kezelése",
         "logo": "logó",
         "name": "Név",
         "blocks": "Modulok"
@@ -383,5 +392,17 @@
     },
     "validation": {
         "required": "Kötelező mező"
+    },
+    "dashboard": {
+        "label": "Dashboard",
+        "welcome": "Üdvözöljük vissza.",
+        "customers": "Ügyfelek",
+        "files": "Fájlok",
+        "insurers": "Biztosítók",
+        "contracts": "Szerződések",
+        "unreadMessages": "Üzenetek",
+        "recentFiles": "Utoljára módosított fájlok",
+        "expiringSoon": "Hamarosan lejáró szerződések",
+        "expiringSoonHint": "A következő 30 napon belül lejáró szerződések"
     }
 }

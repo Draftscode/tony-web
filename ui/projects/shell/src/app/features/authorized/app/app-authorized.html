@@ -64,25 +64,7 @@
                     <p-button icon="pi pi-bars" severity="secondary" [text]="true" [rounded]="true"
                         (onClick)="mainMenu.toggle()" />
                     }
-                    <!-- @if(!isVerySmall() && !isSmall()) {
-                    <p-card [pt]="{root: {class: 'shadow-sm'}, body: {class: 'py-0 px-4'}, content: {class: 'p-0'}}">
-                        <p-breadcrumb styleClass="border-0 bg-transparent px-0 py-1.5 text-sm" [model]="breadcrumbStore.pruned()"
-                            [home]="breadcrumbStore.home()">
-                            <ng-template #separator>
-                                <span class="text-surface-300 dark:text-surface-600 mx-1">/</span>
-                            </ng-template>
-                            <ng-template #item let-item>
-                                <a class="cursor-pointer text-surface-600 dark:text-surface-300 hover:text-primary-500 transition-colors duration-150 flex items-center gap-1" [queryParams]="item.queryParams" [routerLink]="item.url">
-                                    @if(item.icon) { <i [class]="item.icon + ' text-xs'"></i> }
-                                    <span>{{item.label | translate}}</span>
-                                </a>
-                            </ng-template>
-                        </p-breadcrumb>
-                    </p-card>
-                    } -->
-                    @if(!isVerySmall()) {
                     <ng-container [ngTemplateOutlet]="searchTemplate" />
-                    }
                 </div>
                 <p-card class="rounded-full"
                     [pt]="{root: {class: 'shadow-sm'}, body: {class: 'p-1'}, content: {class: 'p-0'}}">
@@ -90,7 +72,7 @@
                         (onClick)="settingsStore.toggle(true)" />
                 </p-card>
             </div>
-            <div class="min-h-0 flex flex-col overflow-auto p-3">
+            <div class="min-h-0 flex flex-col overflow-hidden p-3 pt-0">
                 <router-outlet />
             </div>
         </div>

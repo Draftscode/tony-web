@@ -36,6 +36,7 @@ export class UserDialog {
         firstname: new FormControl<string | null>(null, []),
         lastname: new FormControl<string | null>(null, []),
         password: new FormControl<string | null>(null, []),
+        newPassword: new FormControl<string | null>(null, []),
         brokers: new FormControl<Broker[]>([]),
         roles: new FormControl<Role[]>([]),
         users: new FormControl<User[]>([]),
@@ -61,9 +62,9 @@ export class UserDialog {
     }
 
     protected close() {
-        const data = {
-            ...this.formGroup.getRawValue(),
-        };
+        const raw = this.formGroup.getRawValue();
+        const { newPassword, ...rest } = raw;
+        const data = newPassword ? { ...rest, newPassword } : rest;
 
         this.pDialogRef.close({ type: 'manually', data });
     }

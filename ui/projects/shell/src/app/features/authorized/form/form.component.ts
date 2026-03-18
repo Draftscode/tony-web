@@ -205,6 +205,7 @@ export default class FormComponent {
             untracked(async () => {
 
                 const content = await this.fileStore.readFile<Content>(filename);
+                if (!content) { return; }
                 this._formGroup.patchValue(content);
                 this._formGroup.controls.groups.clear();
                 this._formGroup.controls.persons.clear();

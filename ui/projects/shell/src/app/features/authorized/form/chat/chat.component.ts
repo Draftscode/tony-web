@@ -1,5 +1,5 @@
 import { DatePipe } from "@angular/common";
-import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, untracked, viewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, output, untracked, viewChild } from "@angular/core";
 import { TranslatePipe } from "@ngx-translate/core";
 import { Button } from "primeng/button";
 import { Card } from "primeng/card";
@@ -7,6 +7,7 @@ import { TextareaModule } from "primeng/textarea";
 import { DataFile } from "../../../../data-access/provider/file.service";
 import { AccountStore } from "../../../../data-access/store/account.store";
 import { MessageStore } from "../../../../data-access/store/message.store";
+import { UnreadStore } from "../../../../data-access/store/unread.store";
 
 @Component({
     selector: 'app-chat',
@@ -18,6 +19,8 @@ import { MessageStore } from "../../../../data-access/store/message.store";
 export class ChatComponent {
     private readonly accountStore = inject(AccountStore)
     protected readonly messageStore = inject(MessageStore);
+    private readonly unreadStore = inject(UnreadStore);
+    readonly messagesRead = output<number>();
 
     protected readonly userId = computed(() => this.accountStore.me.hasValue() ? this.accountStore.me.value()?.id : null);
 
@@ -37,15 +40,18 @@ export class ChatComponent {
                 for (const m of file.messages) {
                     await this.messageStore.readMessage(m.id);
                 }
+                this.unreadStore.refresh();
+                this.messagesRead.emit(file.id);
             })
         })
 
         effect(() => {
-
-            const s = this.scroller()?.nativeElement;
             this.messages();
-            if (!s || !this.messages()) { return; }
-            s.scrollTop = s.scrollHeight;
+            untracked(() => {
+                const s = this.scroller()?.nativeElement;
+                if (!s) { return; }
+                setTimeout(() => { s.scrollTop = s.scrollHeight; }, 0);
+            });
         })
     }
 

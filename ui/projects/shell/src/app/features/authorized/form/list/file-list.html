@@ -60,7 +60,7 @@
                 </div>
             </div>
             <div class="flex gap-1 items-center">
-                @let count = item.messages.length ? item.messages.length +'':'';
+                @let count = (!clearedFileIds().has(item.id) && item.messages.length) ? item.messages.length +'' : '';
                 <p-button badgeSeverity="danger" [badge]="count"
                     (onClick)="$event.stopPropagation(); chat.toggle($event)" icon="pi pi-comments"
                     [text]="true" [rounded]="true" size="small" severity="secondary"
@@ -81,7 +81,7 @@
         </p-popover>
         <p-popover #chat>
             <ng-template #content>
-                <app-chat class="flex flex-col w-[420px] max-w-full" [file]="item" [filename]="item.filename" />
+                <app-chat class="flex flex-col w-[420px] max-w-full" [file]="item" [filename]="item.filename" (messagesRead)="onMessagesRead($event)" />
             </ng-template>
         </p-popover>
         }

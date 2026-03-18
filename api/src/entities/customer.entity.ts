@@ -1,7 +1,7 @@
 import type { Relation } from 'typeorm';
-import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 import { BrokerEntity } from './broker.entity';
-import { ContractEntity } from "./contract.entity";
+import { ContractEntity } from './contract.entity';
 import { LinkEntity } from './link.entity';
 
 export type CustomerAddress = {
@@ -11,7 +11,7 @@ export type CustomerAddress = {
   street: string;
   streetNo: string;
   zip: string;
-}
+};
 
 @Entity()
 export class CustomerEntity {
@@ -27,7 +27,7 @@ export class CustomerEntity {
   @Column()
   lastname: string;
 
-  @Column({ type: "jsonb", nullable: true })
+  @Column({ type: 'jsonb', nullable: true })
   mainAddress: CustomerAddress;
 
   @OneToMany(() => ContractEntity, (contract) => contract.customer)
@@ -68,7 +68,6 @@ export class CustomerEntity {
     generatedType: 'STORED', // or 'VIRTUAL' depending on DB
   })
   status: string;
-
 
   @ManyToOne(() => BrokerEntity, (broker) => broker.customers)
   broker: Relation<BrokerEntity>;

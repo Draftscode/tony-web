@@ -1,40 +1,64 @@
 @let customers = customerStore.customers.value();
-<app-list-search [query]="customerStore.filter.query()" (queryChange)="customerStore.search({query: $event})" />
-<app-table [sortField]="customerStore.filter.sortField()" [sortOrder]="customerStore.filter.sortOrder()"
-    class="w-full h-full overflow-auto" (lazyLoad)="onLazyLoad($event)" [rowsPerPage]="20"
-    [totalRows]="customers?.total ?? 0" [items]="customers?.items ?? []" [config]="customerTableConfig()"
-    [disabled]="customerStore.isLoading()">
-    <ng-template #column let-column>
-        {{column.label | translate | titlecase }}
-    </ng-template>
-    <ng-template #filter let-column let-fcb="filterCallback">
-        @switch(column.key) {
-        @case ('status') {
-        <app-customer-status-filter (valueChange)="fcb($event,column.field)" />
-        }
-        }
-    </ng-template>
-    <ng-template #cell let-row let-column="column">
-        @switch(column.key) {
-        @case ('status') {
-        <app-customer-status [status]="row.status" />
-        }
-        @case ('files') {
-        <div class="flex flex-col">
-            @for(file of row.files;track file) {
-            <a
-                [href]="`https://www.maklerinfo.biz/service/bd/employee/1.0/rest/00GKFG_RZB6QA/archiveintraege/${file}.png`">{{file}}</a>
-            }
+<div class="flex flex-col w-full h-full">
+
+    <!-- Header -->
+    <div class="flex gap-3 justify-between items-start">
+        <div class="flex items-center gap-3 pb-4">
+            <span
+                class="flex w-10 h-10 shrink-0 justify-center items-center rounded-xl bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400">
+                <i class="pi pi-users text-base"></i>
+            </span>
+            <div class="flex flex-col min-w-0">
+                <span
+                    class="text-base font-semibold text-surface-800 dark:text-surface-100">{{'customer.plural'|translate}}</span>
+                <span class="text-xs text-surface-400 dark:text-surface-500">{{'customer.subtitle'|translate}}</span>
+            </div>
         </div>
-        }
-        @case ('actions') {
-        <div class="flex w-full justify-end gap-1">
-            <p-button size="small" [text]="true" (onClick)="onRowClick({row})" icon="pi pi-chevron-right" />
+        <!-- Search -->
+        <app-list-search [query]="customerStore.filter.query()" (queryChange)="customerStore.search({query: $event})" />
+    </div>
+    <p-divider />
+    <div class="flex flex-col gap-3 overflow-auto min-h-0 h-full">
+        <!-- Table -->
+        <div class="rounded-xl border border-surface-200 dark:border-surface-700">
+            <app-table [sortField]="customerStore.filter.sortField()" [sortOrder]="customerStore.filter.sortOrder()"
+                class="w-full" (lazyLoad)="onLazyLoad($event)" [rowsPerPage]="20" [totalRows]="customers?.total ?? 0"
+                [items]="customers?.items ?? []" [config]="customerTableConfig()"
+                [disabled]="customerStore.isLoading()">
+                <ng-template #column let-column>
+                    {{column.label | translate | titlecase }}
+                </ng-template>
+                <ng-template #filter let-column let-fcb="filterCallback">
+                    @switch(column.key) {
+                    @case ('status') {
+                    <app-customer-status-filter (valueChange)="fcb($event,column.field)" />
+                    }
+                    }
+                </ng-template>
+                <ng-template #cell let-row let-column="column">
+                    @switch(column.key) {
+                    @case ('status') {
+                    <app-customer-status [status]="row.status" />
+                    }
+                    @case ('files') {
+                    <div class="flex flex-col">
+                        @for(file of row.files;track file) {
+                        <a
+                            [href]="`https://www.maklerinfo.biz/service/bd/employee/1.0/rest/00GKFG_RZB6QA/archiveintraege/${file}.png`">{{file}}</a>
+                        }
+                    </div>
+                    }
+                    @case ('actions') {
+                    <div class="flex w-full justify-end gap-1">
+                        <p-button size="small" [text]="true" (onClick)="onRowClick({row})" icon="pi pi-chevron-right" />
+                    </div>
+                    }
+                    @default {
+                    {{row[column.key]}}
+                    }
+                    }
+                </ng-template>
+            </app-table>
         </div>
-        }
-        @default {
-        {{row[column.key]}}
-        }
-        }
-    </ng-template>
-</app-table>
+    </div>
+</div>

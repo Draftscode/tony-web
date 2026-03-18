@@ -36,6 +36,8 @@ export default class FileList {
     private readonly router = inject(Router);
     private readonly activatedRoute = inject(ActivatedRoute);
 
+    protected readonly clearedFileIds = signal(new Set<number>());
+
     protected readonly query$ = new Subject<string>();
     protected readonly query = toSignal<string>(this.query$.pipe(debounceTime(450), startWith(''), map(v => v ?? '')));
 
@@ -61,6 +63,10 @@ export default class FileList {
 
     protected async onImport(event: FileSelectEvent) {
         this.fileStore.importFiles(Array.from(event.files));
+    }
+
+    protected onMessagesRead(fileId: number) {
+        this.clearedFileIds.update(ids => new Set([...ids, fileId]));
     }
 
 }

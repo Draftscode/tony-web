@@ -24,7 +24,11 @@ export const routes: Routes = [{
     children: [{
         path: '',
         pathMatch: 'full',
-        redirectTo: 'files'
+        redirectTo: 'dashboard'
+    }, {
+        path: 'dashboard',
+        resolve: [resolveBreadcrumb({ label: 'Dashboard' })],
+        loadComponent: () => import('./features/authorized/dashboard/dashboard'),
     }, {
         path: 'files',
         resolve: [resolveBreadcrumb({ label: 'Dateien' })],

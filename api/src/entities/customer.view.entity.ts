@@ -19,13 +19,16 @@ import { DataSource, ViewColumn, ViewEntity } from 'typeorm';
       .addSelect('c.files', 'files')
       .addSelect('c."brokerId"', 'brokerId')
       // Compute status
-      .addSelect(`
+      .addSelect(
+        `
         CASE
           WHEN c."isAlive" = false OR c.blocked = true OR c."terminatedAt" IS NOT NULL THEN 'terminated'
           WHEN COUNT(ct.id) = 0 THEN 'new'
           ELSE 'advanced'
         END
-      `, 'status')
+      `,
+        'status',
+      )
       .addSelect('COUNT(ct.id)', 'contractsCount')
       .addSelect('COUNT(l.id)', 'linkCount')
       .from('customer_entity', 'c')
