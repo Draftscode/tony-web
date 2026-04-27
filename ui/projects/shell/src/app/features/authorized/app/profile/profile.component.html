@@ -46,7 +46,7 @@
                 <span class="text-xs text-surface-400">{{'label.upload.dropzone.subtitle'|translate}}</span>
                 <p-fileupload #upload [auto]="true" [multiple]="false" mode="basic" [uploadButtonProps]="{label:''}"
                     [chooseButtonProps]="{label:'',size:'small',text: true, styleClass: 'opacity-0 absolute'}"
-                    chooseIcon="pi pi-upload" name="import[]" accept="" maxFileSize="1000000"
+                    chooseIcon="pi pi-upload" name="import[]" accept="" maxFileSize="5000000"
                     (onSelect)="onImport($event)" class="opacity-0 absolute w-0 h-0 overflow-hidden">
                 </p-fileupload>
             </label>
